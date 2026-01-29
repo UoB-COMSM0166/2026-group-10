@@ -27,12 +27,15 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 GROUP PHOTO. Add a group photo here.
 
-- Group member 1, name, email, role
-- Group member 2, name, email, role
-- Group member 3, name, email, role
-- Group member 4, name, email, role
-- Group member 5, name, email, role
-- Group member 6, name, email, role
+
+| Name | Email | Username|  
+| ---------- | --------- | -------|
+| Dhanitha Rajapaksa| we25139@bristol.ac.uk | dhanitha-26|
+| name      | email     | github username |
+| name      | email     | github username |
+| name      | email     | github username |
+| name      | email     | github username |
+| name      | email     | github username |
 
 ## Project Report
 
