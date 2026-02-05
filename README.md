@@ -31,7 +31,7 @@ GROUP PHOTO. Add a group photo here.
 | Name | Email | Username|  
 | ---------- | --------- | -------|
 | Dhanitha Rajapaksa| we25139@bristol.ac.uk | dhanitha-26|
-| name      | email     | github username |
+| Cenarius Lu | ig25518@bristol.ac.uk | Shadow-Song |
 | name      | email     | github username |
 | name      | email     | github username |
 | name      | email     | github username |
