@@ -38,7 +38,7 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 | Cenarius Lu        | ig25518@bristol.ac.uk | Shadow-Song     |
 | Rajmugundhan nagappan| je25549@bristol.ac.uk  github username |
 | Ayush Raizada      | ff25412@bristol.ac.uk | Raizada8 |
-| name               | email                 | github username |
+| James Crossley     | qe25280@bristol.ac.uk | jamescr1        |
 | name               | email                 | github username |
 
 ## 📚 Project Report
