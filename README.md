@@ -36,8 +36,8 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 | ------------------ | --------------------- | --------------- |
 | Dhanitha Rajapaksa | we25139@bristol.ac.uk | dhanitha-26     |
 | Cenarius Lu        | ig25518@bristol.ac.uk | Shadow-Song     |
-| Rajmugundhan nagappan          | je25549@bristol.ac.uk       | github username |
-| name               | email                 | github username |
+| Rajmugundhan nagappan| je25549@bristol.ac.uk  github username |
+| Ayush Raizada      | ff25412@bristol.ac.uk | Raizada8 |
 | name               | email                 | github username |
 | name               | email                 | github username |
 
