@@ -1,5 +1,6 @@
 # 2026-group-10
 2026 COMSM0166 group 10
+<img width="1536" height="1024" alt="OnionModel" src="https://github.com/user-attachments/assets/cf7378e0-df6b-412b-a23e-d2828c18802a" />
 
 # COMSM0166 Project Template
 A project template for the Software Engineering Discipline and Practice module (COMSM0166).
@@ -62,7 +63,7 @@ With this direction established, we divided the research effort. Each team membe
   <summary><strong>Game ideas and analysis</strong></summary>
 
   Stakeholders
-  <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/fc6629d7-6f11-4dc5-97a8-7eb408f5c4ab" />
+
   
 
 
