@@ -1,6 +1,5 @@
 # 2026-group-10
 2026 COMSM0166 group 10
-<img width="1536" height="1024" alt="OnionModel" src="https://github.com/user-attachments/assets/cf7378e0-df6b-412b-a23e-d2828c18802a" />
 
 # COMSM0166 Project Template
 A project template for the Software Engineering Discipline and Practice module (COMSM0166).
@@ -62,7 +61,7 @@ With this direction established, we divided the research effort. Each team membe
 <details>
   <summary><strong>Game ideas and analysis</strong></summary>
 
-  Stakeholders
+
 
   
 
@@ -99,6 +98,8 @@ By Week 3, we had translated these ideas into a paper prototype during the works
 - 15% ~750 words
 - Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories. 
 
+### Stakeholders
+<img width="1536" height="1024" alt="OnionModel" src="https://github.com/user-attachments/assets/cf7378e0-df6b-412b-a23e-d2828c18802a" />
 ### Design
 
 - 15% ~750 words 
