@@ -109,6 +109,7 @@ By Week 3, we had translated these ideas into a paper prototype during the works
 |Dynamic Strategic Combat System | As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement| Given that I am playing a map, when enemies are present, then I should encounter two different types of enemy with different maximum health attributes |
 
 **Reflection on the process of creating epics, user stories and acceptance requirements**
+
 Through the process of creating epics, user stories and acceptance requirements, we obtained a greater awareness of the range of stakeholders our game has. We also developed a deeper understanding of the context that our game exists in.
 
 By creating epics, we learned of the different sub-categories of users our game may have, such as users with visual impairments and users with other disabilities. An increased awareness of the importance of the different categories of developers involved in the game, such as ‘front-end developers’ and ‘back-end developers’ was also acquired.
