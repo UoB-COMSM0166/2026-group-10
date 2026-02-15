@@ -106,8 +106,7 @@ By Week 3, we had translated these ideas into a paper prototype during the works
 |-----------------|----------------|----------------|
 |Varied and exciting gameplay experience   |As a casual gamer, I want the game to have a variety of tools available to me so that the game is interesting for me and holds my attention   | Given that I am playing on a map in the game, when I choose which tower to construct, then I should be able to choose from at least two different types of towers   |
 | Progressive Map Experience    | As a passionate gamer, I want to be able to progress from one map to the next map as if the game is a progressive story so that the game feels exciting and fulfilling   |Given that I am playing the game, when I have successfully completed the first map, then I should be able to play on a second map which is different to the first   |
-|Dynamic Strategic Combat System | As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement
-| Given that I am playing a map, when combating against the enemy I should fight against two different types of enemy with different maximum health attributes |
+|Dynamic Strategic Combat System | As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement| Given that I am playing a map, when combating against the enemy I should fight against two different types of enemy with different maximum health attributes |
 
 
 ### Design
