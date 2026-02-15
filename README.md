@@ -98,15 +98,26 @@ By Week 3, we had translated these ideas into a paper prototype during the works
 - 15% ~750 words
 - Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories. 
 
-### Stakeholders
+## Stakeholders
 <img width="1536" height="1024" alt="OnionModel" src="https://github.com/user-attachments/assets/cf7378e0-df6b-412b-a23e-d2828c18802a" />
 
-### Epics, User Stories and Acceptance Criteria
+## Epics, User Stories and Acceptance Criteria
 | Epic                             | User Story     |Acceptance Criteria |
 |-----------------|----------------|----------------|
 |Varied and exciting gameplay experience   |As a casual gamer, I want the game to have a variety of tools available to me so that the game is interesting for me and holds my attention   | Given that I am playing on a map in the game, when I choose which tower to construct, then I should be able to choose from at least two different types of towers   |
 | Progressive Map Experience    | As a passionate gamer, I want to be able to progress from one map to the next map as if the game is a progressive story so that the game feels exciting and fulfilling   |Given that I am playing the game, when I have successfully completed the first map, then I should be able to play on a second map which is different to the first   |
 |Dynamic Strategic Combat System | As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement| Given that I am playing a map, when enemies are present, then I should encounter two different types of enemy with different maximum health attributes |
+
+**Reflection on the process of creating epics, user stories and acceptance requirements**
+Through the process of creating epics, user stories and acceptance requirements, we obtained a greater awareness of the range of stakeholders our game has. We also developed a deeper understanding of the context that our game exists in.
+
+By creating epics, we learned of the different sub-categories of users our game may have, such as users with visual impairments and users with other disabilities. An increased awareness of the importance of the different categories of developers involved in the game, such as ‘front-end developers’ and ‘back-end developers’ was also acquired.
+
+Creating user stories permitted us to obtain a better insight into the perspective of the user of our game and what features they might value in our game. As a result of this process, a greater appreciation of the reasons why users might highly value certain features of the game, such as a dynamic strategic combat system or progressive map experience, was developed.
+
+The process of producing acceptance criteria helped to give precise, actionable data to the team with regards to how a specific feature, or aspect of the game, should be implemented. Generating acceptance criteria also provided the team with measurable criteria against which we could measure the success of our sprints and general game development.
+
+By considering the plethora of stakeholders around our game, we gained a better understanding of the diverse range of people who may have interests in our game and the importance of considering these people when making decisions regarding the development of our game.
 
 
 ### Design
