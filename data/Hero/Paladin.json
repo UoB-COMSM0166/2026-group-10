@@ -1,0 +1,20 @@
+{
+    "name": "Paladin",
+    "mainAttribute": "strength",
+    "description": "...",
+    "baseAttribute": {
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0
+    },
+    "attributeGrowth": {
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0
+    },
+    "baseStat": {
+        "hp": 100,
+        "mp": 100,
+        "attackCD": 10
+    }
+}
