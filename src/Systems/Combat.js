@@ -1,5 +1,5 @@
 export class Combat {
-    // damage = attack damage * (100 / (100 + armor))
+    // TODO: damage = attack damage * (100 / (100 + armor))
     static damage(source, target, damage) {
 
     }

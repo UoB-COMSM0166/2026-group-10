@@ -8,12 +8,12 @@ export class Movement {
         }
     }
 
-    // Update the entity's velocity to move towards the target spot, with a given speed
+    // TODO: Update the entity's velocity to move towards the target spot, with a given speed
     static navigateToSpot(entity, targetSpot, speed) {
 
     }
 
-    // Update the entity's velocity to move towards the target entity, with a given speed
+    // TODO: Update the entity's velocity to move towards the target entity, with a given speed
     static navigateToEntity(entity, targetEntity, speed) {
         
     }

@@ -7,11 +7,13 @@ export class Enemy {
         return enemy;
     }
 
+    // TODO: 初始化敌人数据，比如HP、攻击力、移动速度等
+    // TODO: This function will be called when the enemy is created to initialize its data (HP, attack power, movement speed, etc.)
     static initEnemyData(json, enemy) {
     }
 
-    // 触发敌人死亡逻辑，比如赏金、经验、亡语效果等
-    // This function will be called when the enemy's HP drops to 0 or below (bonus, experience, deathrattle effects, etc.)
+    // TODO: 触发敌人死亡逻辑，比如赏金、经验、亡语效果等
+    // TODO: This function will be called when the enemy's HP drops to 0 or below (bonus, experience, deathrattle effects, etc.)
     static die(enemy) {
 
     }
