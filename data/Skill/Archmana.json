@@ -1,0 +1,82 @@
+{
+    "Blizzard": {
+        "Q": [
+            {
+                "name": "Blizzard",
+                "description": "Casts a blizzard that damages and slows enemies in the area.",
+                "damage": [100, 150, 200],
+                "slow": [15, 20, 25],
+                "duration": [5, 6, 7],
+                "cooldown": [10, 9, 7],
+                "manaCost": [50, 55, 60]
+            }
+        ],
+        "W": [
+            {
+            
+            }
+        ],
+        "E": [
+            {
+            
+            }
+        ],
+        "R": [
+            {
+            
+            }
+        ],
+        "D": [
+            {
+            
+            }
+        ],
+        "F": [
+            {
+            
+            }
+        ]
+    },
+
+    "Flame": {
+        "Q": {
+
+        },
+        "W": {
+
+        },
+        "E": {
+
+        },
+        "R": {
+
+        },
+        "D": {
+
+        },
+        "F": {
+
+        }
+    },
+
+    "Lightning": {
+        "Q": {
+
+        },
+        "W": {
+
+        },
+        "E": {
+
+        },
+        "R": {
+
+        },
+        "D": {
+
+        },
+        "F": {
+
+        }
+    }
+}

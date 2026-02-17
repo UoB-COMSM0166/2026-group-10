@@ -15,6 +15,5 @@ export class Enemy {
     // TODO: 触发敌人死亡逻辑，比如赏金、经验、亡语效果等
     // TODO: This function will be called when the enemy's HP drops to 0 or below (bonus, experience, deathrattle effects, etc.)
     static die(enemy) {
-
     }
 }

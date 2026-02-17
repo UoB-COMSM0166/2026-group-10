@@ -1,6 +1,6 @@
-import { Entity } from '../Entity.js';
+import { Entity } from './Entity.js';
 
-export class Hero {
+export default class Hero {
     static createHero(id, position) {
         const hero = new Entity(id);
         hero.setComponent('position', position);

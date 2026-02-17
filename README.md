@@ -32,14 +32,15 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ### Group Members 
 -----
 
-| Name               | Email                 | Github Username |
-| ------------------ | --------------------- | --------------- |
-| Dhanitha Rajapaksa | we25139@bristol.ac.uk | dhanitha-26     |
-| Cenarius Lu        | ig25518@bristol.ac.uk | Shadow-Song     |
-| Rajmugundhan nagappan          | je25549@bristol.ac.uk       | github username |
-| name               | email                 | github username |
-| name               | email                 | github username |
-| name               | email                 | github username |
+| Name                 | Email                 | Github Username       |
+| -------------------- | --------------------- | --------------------- |
+| Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |
+| Cenarius Lu          | ig25518@bristol.ac.uk | Shadow-Song           |
+| Rajmugundhan nagappan| je25549@bristol.ac.uk | Rajmugundhan2002-tech |
+| Ayush Raizada        | ff25412@bristol.ac.uk | Raizada8              |
+| James Crossley       | qe25280@bristol.ac.uk | jamescr1              |
+| Jinhao Han           | bt25224@bristol.ac.uk | memoryzea             |
+
 
 ## 📚 Project Report
 

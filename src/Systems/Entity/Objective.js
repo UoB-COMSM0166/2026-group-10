@@ -1,0 +1,20 @@
+export default class Objective {
+    static createObjective(id, position, hp) {
+        const objective = new Entity(id);
+        objective.setComponent('position', position);
+        objective.setComponent('hp', hp);
+        return objective;
+    }
+    
+    static takeDamage(objective, damage) {
+        const currentHp = objective.getComponent('hp');
+        if (currentHp === null) return;
+
+        const newHp = currentHp - damage;
+        objective.setComponent('hp', newHp);
+
+        if (newHp <= 0) {
+            this.die(objective);
+        }
+    }
+}
