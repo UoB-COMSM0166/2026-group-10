@@ -11,7 +11,7 @@
     "paths": {
         "A": {
             "spawn": {"x": 800, "y": 90},
-            "way_points": [
+            "waypoints": [
                 {"x": 800, "y": 90},
                 {"x": 640, "y": 180},
                 {"x": 640, "y": 360},
@@ -20,7 +20,7 @@
         },
         "B": {
             "spawn": {"x": 1120, "y": 450},
-            "way_points": [
+            "waypoints": [
                 {"x": 1120, "y": 450},
                 {"x": 640, "y": 360},
                 {"x": 320, "y": 540}
@@ -44,18 +44,20 @@
                 }
             ]
         },
-
         {
             "start_tick": 36000,
-            "B": {
-                "name": "Ghoul",
-                "HP": 100,
-                "MP": 0,
-                "speed": 1.2,
-                "damage": 8,
-                "spawn_cd": 240,
-                "amount": 11
-            }
+            "spawns": [
+                {
+                    "path": "B",
+                    "name": "Ghoul",
+                    "HP": 100,
+                    "MP": 0,
+                    "speed": 1.2,
+                    "damage": 8,
+                    "spawn_cd": 240,
+                    "amount": 11
+                }
+            ]
         }
     ]
 }

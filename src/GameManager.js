@@ -31,8 +31,7 @@ export default class GameManager {
         this.objective = Objective.createObjective(this.generateID(), this.map.objective, 100);
         this.hero = Hero.createHero(this.generateID(), this.map.hero, hero);
         Hero.calculateStats(this.hero, this.heroJson, this.hero.getComponent('level'));
-        
-        this.heroMoveTarget = null;
+
         this.enemies = [];
         
         this.waveState = {
@@ -68,28 +67,20 @@ export default class GameManager {
     tick() {
         this.clock.updateTick();
 
-        // Update hero movement
-        if (this.heroMoveTarget) {
-            const heroStats = this.hero.getComponent('stats');
-            const speed = heroStats.speed;
-            Movement.navigateToSpot(this.hero, this.heroMoveTarget, speed);
-
-            const pos = this.hero.getComponent('position');
-            if (pos.x === this.heroMoveTarget.x && pos.y === this.heroMoveTarget.y) {
-                this.heroMoveTarget = null;
-            }
-        }
-
-        // Update enemy movement along waypoints
-        for (const enemy of this.enemies) {
-            const speed = enemy.getComponent('speed');
-            Enemy.moveAlongWaypoints(enemy, speed);
+        const heroSpeed = this.hero.getComponent('stats')?.speed || 0;
+        if (heroSpeed > 0) {
+            Movement.moveAlongWaypoints(this.hero, heroSpeed);
         }
 
         // Apply movement to all entities
         Movement.calculateMovement(this.hero);
         for (const enemy of this.enemies) {
+            const enemySpeed = enemy.getComponent('speed') || 0;
+            if (enemySpeed > 0) {
+                Movement.moveAlongWaypoints(enemy, enemySpeed);
+            }
             Movement.calculateMovement(enemy);
+            
         }
     }
 
@@ -150,24 +141,27 @@ export default class GameManager {
         };
     }
 
-    handleRightClick(x, y) {
+    handleRightClick(x, y, append = false) {
         // Check if click is within canvas bounds
         if (x < 0 || x > this.map.width || y < 0 || y > this.map.height) {
             // Click is outside the canvas, ignore it
             return false;
         }
         
-        // Set hero move target
         const targetSpot = { x, y };
-        console.log(`Hero moving to: ${x}, ${y}`);
-        this.heroMoveTarget = targetSpot;
+        if (!append) {
+            this.hero.setComponent('waypoints', []);
+        }
+
+        console.log(`Hero moving to: ${x}, ${y}, append=${append}`);
+        Hero.appendWaypoint(this.hero, targetSpot);
         return true;
     }
 
     handleButton(key) {
         if (key === 's' || key === 'S') {
             console.log('Hero stopped');
-            this.heroMoveTarget = null;
+            this.hero.setComponent('waypoints', []);
             Movement.stop(this.hero);
         }
     }

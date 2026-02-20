@@ -8,7 +8,6 @@ export default class Movement {
         }
     }
 
-    // TODO: Update the entity's velocity to move towards the target spot, with a given speed
     static navigateToSpot(entity, targetSpot, speed) {
         const pos = entity.getComponent('position');
         const vel = entity.getComponent('velocity');
@@ -31,6 +30,27 @@ export default class Movement {
         const scale = speed / dist;
         vel.vx = dx * scale;
         vel.vy = dy * scale;
+    }
+
+    static moveAlongWaypoints(entity, speed) {
+        const waypoints = entity.getComponent('waypoints');
+        const vel = entity.getComponent('velocity');
+        if (!Array.isArray(waypoints) || waypoints.length === 0) {
+            if (vel) {
+                vel.vx = 0;
+                vel.vy = 0;
+            }
+            return;
+        }
+
+        const targetSpot = waypoints[0];
+        this.navigateToSpot(entity, targetSpot, speed);
+
+        const pos = entity.getComponent('position');
+        if (pos && pos.x === targetSpot.x && pos.y === targetSpot.y) {
+            waypoints.shift();
+            entity.setComponent('waypoints', waypoints);
+        }
     }
 
     static navigateToEntity(entity, targetEntity, speed) {

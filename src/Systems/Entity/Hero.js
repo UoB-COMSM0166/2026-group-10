@@ -100,5 +100,12 @@ export default class Hero {
             spellAmp: spellAmp
         });
     }
+
+    static appendWaypoint(hero, waypoint) {
+        const waypoints = hero.getComponent('waypoints');
+        const queue = Array.isArray(waypoints) ? waypoints : [];
+        queue.push(waypoint);
+        hero.setComponent('waypoints', queue);
+    }
 }
 

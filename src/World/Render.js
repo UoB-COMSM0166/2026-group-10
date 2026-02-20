@@ -39,9 +39,9 @@ export default class Render {
                 p5.stroke(255, 255, 0);
                 p5.strokeWeight(5);
                 p5.noFill();
-                for (var i=0; i<path.way_points.length-1; i++) {
-                    const point1 = path.way_points[i];
-                    const point2 = path.way_points[i+1];
+                for (var i=0; i<path.waypoints.length-1; i++) {
+                    const point1 = path.waypoints[i];
+                    const point2 = path.waypoints[i+1];
                     p5.line(point1.x, point1.y, point2.x, point2.y);
                 }
             }

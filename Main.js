@@ -26,10 +26,11 @@ new p5(p => {
         gameManager.loop();
     }
 
-    p.mousePressed = () => {
+    p.mousePressed = (event) => {
         // Handle right click
         if (p.mouseButton === p.RIGHT) {
-            gameManager.handleRightClick(p.mouseX, p.mouseY);
+            const append = Boolean(event?.shiftKey);
+            gameManager.handleRightClick(p.mouseX, p.mouseY, append);
             return false; // Prevent default context menu
         }
     }

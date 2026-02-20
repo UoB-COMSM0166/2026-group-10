@@ -10,9 +10,7 @@ export default class Entity {
             position: new Map([[this.id, position]]),
             // velocity: Map of entity ID to { vx, vy }
             velocity: new Map([[this.id, { vx: 0, vy: 0 }]]),
-            // target: a pointer to the target entity
-            target: null,
-            // size: Hitbox size, Map of entity ID to { width, height }
+            waypoints: new Map([[this.id, []]]),
         };
     }
 
