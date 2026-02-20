@@ -1,4 +1,4 @@
-export class Combat {
+export default class Combat {
     // TODO: damage = attack damage * (100 / (100 + armor))
     static damage(source, target, damage) {
 

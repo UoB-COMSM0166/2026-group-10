@@ -1,4 +1,4 @@
-export default class GameTrigger {
+export default class EventTrigger {
     constructor() {
         this.listeners = {};
     }

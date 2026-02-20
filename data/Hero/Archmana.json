@@ -3,14 +3,14 @@
     "mainAttribute": "intelligence",
     "description": "...",
     "baseAttribute": {
-        "strength": 0,
-        "agility": 0,
-        "intelligence": 0
+        "strength": 5,
+        "agility": 8,
+        "intelligence": 10
     },
     "attributeGrowth": {
-        "strength": 0,
-        "agility": 0,
-        "intelligence": 0
+        "strength": 1,
+        "agility": 2,
+        "intelligence": 4
     },
     "baseStat": {
         "hp": 100,

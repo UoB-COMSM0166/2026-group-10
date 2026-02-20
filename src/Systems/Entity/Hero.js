@@ -1,17 +1,18 @@
-import { Entity } from './Entity.js';
+import Entity from './Entity.js';
 
 export default class Hero {
-    static createHero(id, position) {
-        const hero = new Entity(id);
-        hero.setComponent('position', position);
+    static createHero(id, position, json) {
+        const hero = new Entity(id, json.name, position);
         hero.setComponent('velocity', { vx: 0, vy: 0 });
+        hero.addComponent('stats', null); // Will be calculated based on the base stats and attributes
+
+        Hero.initHeroData(hero, json);
 
         return hero;
     }
 
-    static initHeroData(json, hero) {
+    static initHeroData(hero, json) {
         // Based on the JSON data, initialize the hero's components
-        hero.addComponent('name', json.name);
         hero.addComponent('mainAttribute', json.mainAttribute);
         hero.addComponent('description', json.description);
         hero.addComponent('baseAttribute', json.baseAttribute);
@@ -23,7 +24,7 @@ export default class Hero {
         hero.addComponent('effects', []); // List of active effects on the hero
 
         // Calculate derived stats. Dirty flag indicates whether the stat needs to be recalculated (e.g., casted by a buff, equipping items, etc.)
-        const stats = Hero.calculateStats(json);
+        const stats = Hero.calculateStats(hero, json, 1);
         hero.addComponent('stats', stats);
         hero.addComponent('dirty', {
             maxHP: false,
@@ -69,11 +70,25 @@ export default class Hero {
     }
 
     // Calculate the status screens (HP, MP, etc.) based on the base stats and attributes.
-    static calculateStats(json) {        
+    static calculateStats(hero, json, lv = 1) {        
         // 计算状态屏幕（HP、MP等）基于基础属性和属性成长（不包括buff，装备加成）
         // TODO: Calculate the status screens (HP, MP, etc.) based on the base stats and attribute growth (not including buffs, equipment bonuses, etc.)
 
-        return {
+        const strength = json.baseAttribute.strength + json.attributeGrowth.strength * (lv - 1);
+        const agility = json.baseAttribute.agility + json.attributeGrowth.agility * (lv - 1);
+        const intelligence = json.baseAttribute.intelligence + json.attributeGrowth.intelligence * (lv - 1);
+
+        const maxHP = json.baseStat.hp + strength * 20;
+        const hpRegen = strength * 0.1;
+        const maxMP = json.baseStat.mp + intelligence * 12;
+        const mpRegen = intelligence * 0.05;
+        const attackDamage = strength * 2 + agility * 1.5;
+        const speed = agility * 1.5;
+        const attackCD = Math.max(0.1, json.baseStat.attackCD - agility * 0.01);
+        const armor = agility * 0.3;
+        const spellAmp = intelligence * 0.5;
+
+        hero.setComponent('stats', {
             maxHP: maxHP,
             hpRegen: hpRegen,
             maxMP: maxMP,
@@ -83,7 +98,7 @@ export default class Hero {
             attackCD: attackCD,
             armor: armor,
             spellAmp: spellAmp
-        }
+        });
     }
 }
 

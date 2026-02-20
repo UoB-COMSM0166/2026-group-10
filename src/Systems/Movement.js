@@ -18,13 +18,17 @@ export default class Movement {
         const dy = targetSpot.y - pos.y;
         const distSq = dx * dx + dy * dy;
 
-        if (distSq === 0) {
+        const dist = Math.sqrt(distSq);
+        if (dist <= speed) {
+            // Snap to target to avoid overshooting and velocity sign flipping.
+            pos.x = targetSpot.x;
+            pos.y = targetSpot.y;
             vel.vx = 0;
             vel.vy = 0;
             return;
         }
 
-        const scale = speed / Math.sqrt(distSq);
+        const scale = speed / dist;
         vel.vx = dx * scale;
         vel.vy = dy * scale;
     }
@@ -40,14 +44,22 @@ export default class Movement {
         const dy = targetPos.y - pos.y;
         const distSq = dx * dx + dy * dy;
 
-        if (distSq === 0) {
+        const dist = Math.sqrt(distSq);
+        if (dist <= speed) {
+            // Snap to target to avoid overshooting and velocity sign flipping.
+            pos.x = targetPos.x;
+            pos.y = targetPos.y;
             vel.vx = 0;
             vel.vy = 0;
             return;
         }
 
-        const scale = speed / Math.sqrt(distSq);
+        const scale = speed / dist;
         vel.vx = dx * scale;
         vel.vy = dy * scale;
+    }
+
+    static stop(entity) {
+        entity.setComponent('velocity', { vx: 0, vy: 0 });
     }
 }

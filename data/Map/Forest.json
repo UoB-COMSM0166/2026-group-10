@@ -1,0 +1,61 @@
+{
+    "name": "Forest",
+    "description": "The undead army wants to corrupt our Sunwell to resurrect their liches. You must hold out until the Sunwell is completely transferred!",
+    "chapter": 1,
+
+    "size": {"width": 1280, "height": 720},
+
+    "objective": {"x": 320, "y": 540},
+    "hero": {"x": 420, "y": 540},
+    
+    "paths": {
+        "A": {
+            "spawn": {"x": 800, "y": 90},
+            "way_points": [
+                {"x": 800, "y": 90},
+                {"x": 640, "y": 180},
+                {"x": 640, "y": 360},
+                {"x": 320, "y": 540}
+            ]
+        },
+        "B": {
+            "spawn": {"x": 1120, "y": 450},
+            "way_points": [
+                {"x": 1120, "y": 450},
+                {"x": 640, "y": 360},
+                {"x": 320, "y": 540}
+            ]
+        }
+    },
+
+    "waves": [
+        {
+            "start_tick": 180,
+            "spawns": [
+                {
+                    "path": "A",
+                    "name": "Zombie", 
+                    "HP": 80,
+                    "MP": 0,
+                    "speed": 0.8,
+                    "damage": 5,
+                    "spawn_cd": 180,
+                    "amount": 5
+                }
+            ]
+        },
+
+        {
+            "start_tick": 36000,
+            "B": {
+                "name": "Ghoul",
+                "HP": 100,
+                "MP": 0,
+                "speed": 1.2,
+                "damage": 8,
+                "spawn_cd": 240,
+                "amount": 11
+            }
+        }
+    ]
+}

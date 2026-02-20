@@ -1,15 +1,18 @@
-export class Entity {
+export default class Entity {
     // Every thing is an entity, Hero, Enemy, Projectile(Bullet, Fireball), status effect, etc.)
 
-    constructor(id) {
+    constructor(id, name, position) {
         this.id = id;
         this.components = {
+            // catagory of the entity
+            name: new Map([[this.id, name]]),
             // position: Map of entity ID to { x, y }
-            position: null,
+            position: new Map([[this.id, position]]),
             // velocity: Map of entity ID to { vx, vy }
-            velocity: null,
+            velocity: new Map([[this.id, { vx: 0, vy: 0 }]]),
             // target: a pointer to the target entity
-            target: null
+            target: null,
+            // size: Hitbox size, Map of entity ID to { width, height }
         };
     }
 
