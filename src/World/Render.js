@@ -1,7 +1,6 @@
 export default class Render {
-
     static renderingObjective(p5, objective) {
-        const pos = objective.getComponent('position');
+        const pos = objective.position;
         if (pos) {
             p5.stroke(0);
             p5.strokeWeight(2);
@@ -10,10 +9,9 @@ export default class Render {
         }
     }
 
-    static renderingEnemy(p5, entities) {
-        for (const entity of entities) {
-            // console.log('Rendering entity:', entity.getComponent('name'));
-            const pos = entity.getComponent('position');
+    static renderingEnemy(p5, enemies) {
+        for (const entity of enemies) {
+            const pos = entity.position;
             if (pos) {
                 p5.stroke(0);
                 p5.strokeWeight(2);
@@ -24,7 +22,7 @@ export default class Render {
     }
 
     static renderingHero(p5, hero) {
-        const pos = hero.getComponent('position');
+        const pos = hero.position;
         if (pos) {
             p5.stroke(0);
             p5.strokeWeight(2);
@@ -36,9 +34,20 @@ export default class Render {
     static renderingPath(p5, map) {
         if (map.paths) {
             for (const [id, path] of Object.entries(map.paths)) {
+                p5.fill(255, 255, 0);
+                // Mark the ID of the path at the first waypoint
+                if (path.waypoints && path.waypoints.length > 0) {
+                    const firstPoint = path.waypoints[0];
+                    p5.stroke(0, 0, 0);
+                    p5.strokeWeight(4);
+                    p5.textSize(40);
+                    p5.text(id, firstPoint.x + 5, firstPoint.y - 5);
+                }
+
                 p5.stroke(255, 255, 0);
                 p5.strokeWeight(5);
                 p5.noFill();
+                // Draw the path
                 for (var i=0; i<path.waypoints.length-1; i++) {
                     const point1 = path.waypoints[i];
                     const point2 = path.waypoints[i+1];

@@ -6,15 +6,16 @@ export default class UI {
 
 	drawHeroWaypoints() {
 		const p = this.p5;
-		const hero = this.gameManager?.hero;
-		const waypoints = hero?.getComponent('waypoints');
+		const hero = this.gameManager.hero;
+		const waypoints = hero.waypoint;
 		if (!Array.isArray(waypoints) || waypoints.length === 0) {
+			// console.log(waypoints);
 			return;
 		}
 
 		p.push();
-		p.stroke(0, 160, 0);
-		p.fill(0, 160, 0);
+		p.stroke(0, 200, 0);
+		p.fill(0, 200, 0);
 		p.textAlign(p.LEFT, p.TOP);
 
 		for (let i = 0; i < waypoints.length; i++) {

@@ -3,10 +3,9 @@ import UI from './World/UI.js';
 import Map from './World/Map.js';
 import Render from './World/Render.js';
 
-import Objective from './Systems/Entity/Objective.js';
-import Hero from './Systems/Entity/Hero.js';
-import Enemy from './Systems/Entity/Enemy.js';
-import Movement from './Systems/Movement.js';
+import Objective from './Entity/Unit/Objective.js';
+import Hero from './Entity/Unit/Hero.js';
+// import Enemy from './Systems/Entity/Enemy.js';
 
 const TICK_RATE = 60;
 const FIXED_STEP_MS = 1000 / TICK_RATE;
@@ -28,9 +27,8 @@ export default class GameManager {
         this.heroJson = hero;
         this.enemyData = enemyData;
         this.map = new Map(map);
-        this.objective = Objective.createObjective(this.generateID(), this.map.objective, 100);
-        this.hero = Hero.createHero(this.generateID(), this.map.hero, hero);
-        Hero.calculateStats(this.hero, this.heroJson, this.hero.getComponent('level'));
+        this.objective = new Objective(this.map.objective, 100);
+        this.hero = new Hero(hero, this.map.hero)
 
         this.enemies = [];
         
@@ -67,20 +65,19 @@ export default class GameManager {
     tick() {
         this.clock.updateTick();
 
-        const heroSpeed = this.hero.getComponent('stats')?.speed || 0;
-        if (heroSpeed > 0) {
-            Movement.moveAlongWaypoints(this.hero, heroSpeed);
-        }
+        this.updateMovement();
+    }
 
-        // Apply movement to all entities
-        Movement.calculateMovement(this.hero);
+    updateMovement() {
+        const heroSpeed = this.hero.speed || 0;
+        if (heroSpeed > 0) {
+            this.hero.moveAlongWaypoint();
+        }
         for (const enemy of this.enemies) {
-            const enemySpeed = enemy.getComponent('speed') || 0;
+            const enemySpeed = enemy.speed || 0;
             if (enemySpeed > 0) {
-                Movement.moveAlongWaypoints(enemy, enemySpeed);
+                enemy.moveAlongWaypoint();
             }
-            Movement.calculateMovement(enemy);
-            
         }
     }
 
@@ -150,25 +147,25 @@ export default class GameManager {
         
         const targetSpot = { x, y };
         if (!append) {
-            this.hero.setComponent('waypoints', []);
+            this.hero.clearWaypoints();
         }
 
-        console.log(`Hero moving to: ${x}, ${y}, append=${append}`);
-        Hero.appendWaypoint(this.hero, targetSpot);
+        // console.log(`Hero moving to: ${x}, ${y}, append=${append}`);
+        this.hero.appendWaypoint(targetSpot);
         return true;
     }
 
     handleButton(key) {
         if (key === 's' || key === 'S') {
             console.log('Hero stopped');
-            this.hero.setComponent('waypoints', []);
-            Movement.stop(this.hero);
+            this.hero.clearWaypoints();
+            this.hero.stop();
         }
     }
 
     loop() {
         this.update();
-        console.log("current tick:", this.now());
+        // console.log("current tick:", this.now());
 
         Render.renderingPath(this.p5, this.map);
         Render.renderingObjective(this.p5, this.objective);
@@ -177,7 +174,10 @@ export default class GameManager {
             Render.renderingEnemy(this.p5, this.enemies);
         }
 
+        this.hero.calculateMovement();
+
         Render.renderingHero(this.p5, this.hero);
+        // console.log(`Hero position: (${this.hero.position.x.toFixed(2)}, ${this.hero.position.y.toFixed(2)})`);
 
         // Render UI on top
         if (this.ui) {
