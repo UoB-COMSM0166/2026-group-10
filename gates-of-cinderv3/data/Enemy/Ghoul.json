@@ -1,0 +1,7 @@
+{
+    "name": "Ghoul",
+    "HP": 60,
+    "MP": 0,
+    "speed": 1,
+    "damage": 2
+}
