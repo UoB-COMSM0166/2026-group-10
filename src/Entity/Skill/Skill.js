@@ -8,15 +8,31 @@ export default class Skill {
 
         // 数值面板
         this.damage = json.damage || null;
-        this.cooldown = json.cooldown || null;
+        this.cooldown = json.cooldown || 0;
+        this.currentCooldown = 0;
         this.manaCost = json.manaCost || 0;
         this.speed = json.speed || null;
         this.hitbox = json.hitbox || null;
+        this.damagePeriod = Math.max(1, json.damagePeriod || 1);
 
         // 效果面板
         // "Slow", "Stun", "DamageOverTick", etc.
         this.effectType = json.effectType || null;
         this.effectValue = json.effectValue || null;
         this.duration = json.duration || null;
-    } 
+    }
+
+    canCast() {
+        return this.currentCooldown <= 0;
+    }
+
+    startCooldown() {
+        this.currentCooldown = this.cooldown;
+    }
+
+    tickCooldown() {
+        if (this.currentCooldown > 0) {
+            this.currentCooldown -= 1;
+        }
+    }
 }

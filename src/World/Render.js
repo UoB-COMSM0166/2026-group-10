@@ -5,7 +5,7 @@ export default class Render {
             p5.stroke(0);
             p5.strokeWeight(2);
             p5.fill(0, 0, 255);
-            p5.rect(pos.x - 20, pos.y - 20, 40, 40);
+            p5.rect(pos.x - objective.hitbox.width / 2, pos.y - objective.hitbox.height / 2, objective.hitbox.width, objective.hitbox.height);
         }
     }
 
@@ -36,10 +36,19 @@ export default class Render {
             const pos = entity.position;
             // console.log(`Rendering projectile with velocity (${entity.velocity.vx}, ${entity.velocity.vy}) and damage ${entity.damage}`);
             if (pos) {
-                p5.stroke(0);
-                p5.strokeWeight(2);
-                p5.fill(255, 255, 0);
-                p5.rect(pos.x - 5, pos.y - 5, 10, 10);
+                if (entity.category === 'Area') {
+                    const width = entity.hitbox?.width || 0;
+                    const height = entity.hitbox?.height || 0;
+                    p5.stroke(80, 160, 255);
+                    p5.strokeWeight(2);
+                    p5.fill(80, 160, 255, 90);
+                    p5.rect(pos.x - width / 2, pos.y - height / 2, width, height);
+                } else {
+                    p5.stroke(0);
+                    p5.strokeWeight(2);
+                    p5.fill(255, 255, 0);
+                    p5.rect(pos.x - 5, pos.y - 5, 10, 10);
+                }
             }
         }
     }

@@ -58,6 +58,51 @@ export default class UI {
 		return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 	}
 
+	drawSkillCooldowns(p) {
+		const skillA = this.gameManager.hero?.skills?.A;
+		const skillQ = this.gameManager.hero?.skills?.Q;
+		const cooldownA = Math.max(0, Math.ceil(skillA?.currentCooldown || 0));
+		const cooldownQ = Math.max(0, Math.ceil(skillQ?.currentCooldown || 0));
+		
+		p.push();
+		const iconSize = 56;
+		const iconGap = 18;
+		const iconX = p.width - iconSize - 24;
+		const iconY = p.height - iconSize - 24;
+		const qIconX = iconX - iconSize - iconGap;
+
+		const drawSkillIcon = (label, cooldown, x, y) => {
+			p.noStroke();
+			p.fill(0, 0, 0, 140);
+			p.rect(x - 8, y - 8, iconSize + 16, iconSize + 28, 8);
+
+			p.stroke(255);
+			p.strokeWeight(2);
+			p.fill(45, 45, 45);
+			p.rect(x, y, iconSize, iconSize, 8);
+
+			p.noStroke();
+			p.fill(255);
+			p.textAlign(p.CENTER, p.CENTER);
+			p.textSize(22);
+			p.text(label, x + iconSize / 2, y + iconSize / 2 - 6);
+
+			p.textSize(12);
+			if (cooldown > 0) {
+				p.fill(255, 210, 70);
+				p.text(`${cooldown}`, x + iconSize / 2, y + iconSize + 10);
+			} else {
+				p.fill(120, 255, 120);
+				p.text('READY', x + iconSize / 2, y + iconSize + 10);
+			}
+		};
+
+		drawSkillIcon('Q', cooldownQ, qIconX, iconY);
+		drawSkillIcon('A', cooldownA, iconX, iconY);
+		p.pop();
+	}
+
+
 	draw() {
 		const p = this.p5;
 		this.drawHeroWaypoints();
@@ -83,5 +128,7 @@ export default class UI {
 		p.text(fpsText, 32, 78);
 		p.text(tpsText, 32, 98);
 		p.pop();
+
+		this.drawSkillCooldowns(p);	
 	}
 }

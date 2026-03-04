@@ -5,7 +5,11 @@
 
     "size": {"width": 1280, "height": 720},
 
-    "objective": {"x": 320, "y": 540},
+    "objective": {
+        "position": {"x": 320, "y": 540},
+        "hitbox": {"width": 100, "height": 100},
+        "hp": 1000
+    },
     "hero": {"x": 420, "y": 540},
     
     "paths": {

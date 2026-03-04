@@ -1,7 +1,7 @@
 import Unit from './Unit.js';
 
 export default class Objective extends Unit {
-    constructor(position, HP) {
-        super("objective", position, 0, { width: 50, height: 50 }, HP, 0);
+    constructor(json) {
+        super("objective", json.position, 0, json.hitbox, json.hp, 0);
     }
 }

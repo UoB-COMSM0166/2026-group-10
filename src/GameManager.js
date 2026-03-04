@@ -27,7 +27,7 @@ export default class GameManager {
         this.heroJson = hero;
         this.enemyData = enemyData;
         this.map = new GameMap(map);
-        this.objective = new Objective(this.map.objective, 100);
+        this.objective = new Objective(this.map.objective);
         this.hero = new Hero(hero, this.map.hero, this.map.width, this.map.height);
         this.controller = new Controller(this, this.hero);
 
@@ -77,7 +77,20 @@ export default class GameManager {
     tick() {
         this.clock.updateTick();
 
+        this.updateSkillCooldowns();
         this.updateMovement();
+    }
+
+    updateSkillCooldowns() {
+        if (!this.hero || !this.hero.skills) {
+            return;
+        }
+
+        for (const skill of Object.values(this.hero.skills)) {
+            if (skill && typeof skill.tickCooldown === 'function') {
+                skill.tickCooldown();
+            }
+        }
     }
 
     updateMovement() {
