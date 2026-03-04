@@ -2,24 +2,31 @@ class MenuScene {
     constructor(backgroundImage) {
         this.backgroundImage = backgroundImage;
         this.startButton = new Button(515, 400, 200, 75, "Start Game", () => {
-            activeScene = new SelectDifficultyScene(this.backgroundImage);
+            activeScene = new SelectDifficultyScene(selectDifficultyBg);
         });
         this.introButton = new Button(515, 490, 200, 50, 'Intro', () => {
-            console.log("Intro button clicked!");
+            activeScene = new IntroScene(generalBackground);
         });
         this.soundButton = new Button(520, 555, 50, 50, 'S', () => {
             this.isSoundOn = !this.isSoundOn;
-            audioMessage = "Sound is switched on!";
-            if(!this.isSoundOn) {
+            //updating global sound variable (global variable is called isSound)
+            isSound = this.isSoundOn;
+            if(this.isSoundOn == false) {
                 audioMessage = "Sound is switched off!";
+            } else {
+                audioMessage = "Sound is switched on!";
             }
             msgTimer = MESSAGE_DURATION;
         });
         this.musicButton = new Button(650, 555, 50, 50, 'M', () => {
          this.isMusicOn = !this.isMusicOn;
-            audioMessage = "Music is switched on!";
-            if(!this.isMusicOn) {
+         isMusic = this.isMusicOn;
+            if(this.isMusicOn == false) {
+                menuMusic.pause();
                 audioMessage = "Music is switched off!";
+            } else {
+                menuMusic.play();
+                audioMessage = "Music is switched on!";
             }
             msgTimer = MESSAGE_DURATION;
         });
@@ -28,13 +35,8 @@ class MenuScene {
     }
 
     display() {
+        textFont(font);
         image(this.backgroundImage, 0, 0, width, height);
-
-        //displaying the title
-        fill('orange');
-        textAlign(CENTER, CENTER);
-        textSize(76);
-        text("Gates of Cinder!", width / 2, 300);
 
         //displaying the buttons
         this.startButton.display();
