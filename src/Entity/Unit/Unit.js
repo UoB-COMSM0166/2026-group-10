@@ -1,8 +1,8 @@
 import Entity from '../Entity.js';
 
 export default class Unit extends Entity {
-    constructor(id, position, velocity, speed, hitbox, hp, mp) {
-        super(id, position, velocity, speed, hitbox);
+    constructor(id, position, speed, hitbox, hp, mp) {
+        super(id, position, speed, hitbox);
 
         this.maxHP = hp;
         this.maxMP = mp;

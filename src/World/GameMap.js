@@ -1,4 +1,4 @@
-export default class Map {
+export default class GameMap {
     constructor(json) {
         console.log('Loading map:', json);
         this.width = json.size.width;

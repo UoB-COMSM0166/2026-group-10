@@ -25,15 +25,28 @@ export default class UI {
 			}
 
 			const isCurrentTarget = i === 0;
-			const half = isCurrentTarget ? 9 : 6;
-			p.strokeWeight(isCurrentTarget ? 3 : 2);
-			p.textSize(isCurrentTarget ? 14 : 12);
 
-			p.line(point.x - half, point.y - half, point.x + half, point.y + half);
-			p.line(point.x + half, point.y - half, point.x - half, point.y + half);
-			p.noStroke();
-			p.text(String(i + 1), point.x + 8, point.y + 8);
-			p.stroke(0, 200, 0);
+			if (isCurrentTarget) {
+				const half = 9;
+				p.strokeWeight(7);
+				p.textSize(16);
+				p.stroke(0, 220, 0);
+				p.line(point.x - half, point.y - half, point.x + half, point.y + half);
+				p.line(point.x + half, point.y - half, point.x - half, point.y + half);
+				p.fill(0, 220, 0);
+				p.strokeWeight(1);
+				p.text(String(i + 1), point.x + 9, point.y + 9);
+			} else {
+				const half = 6;
+				p.strokeWeight(5);
+				p.textSize(14);
+				p.stroke(0, 180, 0);
+				p.line(point.x - half, point.y - half, point.x + half, point.y + half);
+				p.line(point.x + half, point.y - half, point.x - half, point.y + half);
+				p.fill(0, 180, 0);
+				p.strokeWeight(1);
+				p.text(String(i + 1), point.x + 9, point.y + 9);
+			}
 		}
 		p.pop();
 	}

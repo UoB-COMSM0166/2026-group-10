@@ -10,7 +10,7 @@ export default class Render {
     }
 
     static renderingEnemy(p5, enemies) {
-        for (const entity of enemies) {
+        for (const entity of Object.values(enemies)) {
             const pos = entity.position;
             if (pos) {
                 p5.stroke(0);
@@ -28,6 +28,19 @@ export default class Render {
             p5.strokeWeight(2);
             p5.fill(0, 255, 0);
             p5.circle(pos.x, pos.y, 40);
+        }
+    }
+
+    static renderingProjectile(p5, entities) {
+        for (const entity of Object.values(entities)) {
+            const pos = entity.position;
+            // console.log(`Rendering projectile with velocity (${entity.velocity.vx}, ${entity.velocity.vy}) and damage ${entity.damage}`);
+            if (pos) {
+                p5.stroke(0);
+                p5.strokeWeight(2);
+                p5.fill(255, 255, 0);
+                p5.rect(pos.x - 5, pos.y - 5, 10, 10);
+            }
         }
     }
 

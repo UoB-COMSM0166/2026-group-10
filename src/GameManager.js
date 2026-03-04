@@ -1,11 +1,11 @@
 import GameClock from './World/GameClock.js';
 import UI from './World/UI.js';
-import Map from './World/Map.js';
+import GameMap from './World/GameMap.js';
 import Render from './World/Render.js';
+import Controller from './World/Controller.js';
 
 import Objective from './Entity/Unit/Objective.js';
 import Hero from './Entity/Unit/Hero.js';
-// import Enemy from './Systems/Entity/Enemy.js';
 
 const TICK_RATE = 60;
 const FIXED_STEP_MS = 1000 / TICK_RATE;
@@ -26,11 +26,13 @@ export default class GameManager {
         this.mapJson = map;
         this.heroJson = hero;
         this.enemyData = enemyData;
-        this.map = new Map(map);
+        this.map = new GameMap(map);
         this.objective = new Objective(this.map.objective, 100);
-        this.hero = new Hero(hero, this.map.hero)
+        this.hero = new Hero(hero, this.map.hero, this.map.width, this.map.height);
+        this.controller = new Controller(this, this.hero);
 
-        this.enemies = [];
+        this.enemies = {};
+        this.entities = {};
         
         this.waveState = {
             currentWaveIndex: 0,
@@ -41,6 +43,16 @@ export default class GameManager {
 
     generateID() {
         return this.nextID++;
+    }
+
+    addEntity(entity) {
+        this.entities[entity.id] = entity;
+    }
+
+    destoryEntity(entity) {
+        if (entity.position.x < 0 || entity.position.x > this.map.width || entity.position.y < 0 || entity.position.y > this.map.height) {
+            delete this.entities[entity.id];
+        }
     }
 
     start() {
@@ -72,11 +84,24 @@ export default class GameManager {
         const heroSpeed = this.hero.speed || 0;
         if (heroSpeed > 0) {
             this.hero.moveAlongWaypoint();
+            // console.log(`Hero position: (${this.hero.position.x}, ${this.hero.position.y}), velocity: (${this.hero.velocity.vx}, ${this.hero.velocity.vy})`);
         }
-        for (const enemy of this.enemies) {
+        for (const enemy of Object.values(this.enemies)) {
             const enemySpeed = enemy.speed || 0;
             if (enemySpeed > 0) {
                 enemy.moveAlongWaypoint();
+            }
+        }
+        for (const entity of Object.values(this.entities)) {
+            const entitySpeed = entity.speed || 0;
+            if (typeof entity.update === 'function') {
+                entity.update(this.map.width, this.map.height);
+            } else if (entitySpeed > 0) {
+                entity.calculateMovement();
+            }
+
+            if (entity.destroyed) {
+                delete this.entities[entity.id];
             }
         }
     }
@@ -138,46 +163,18 @@ export default class GameManager {
         };
     }
 
-    handleRightClick(x, y, append = false) {
-        // Check if click is within canvas bounds
-        if (x < 0 || x > this.map.width || y < 0 || y > this.map.height) {
-            // Click is outside the canvas, ignore it
-            return false;
-        }
-        
-        const targetSpot = { x, y };
-        if (!append) {
-            this.hero.clearWaypoints();
-        }
-
-        // console.log(`Hero moving to: ${x}, ${y}, append=${append}`);
-        this.hero.appendWaypoint(targetSpot);
-        return true;
-    }
-
-    handleButton(key) {
-        if (key === 's' || key === 'S') {
-            console.log('Hero stopped');
-            this.hero.clearWaypoints();
-            this.hero.stop();
-        }
-    }
-
     loop() {
         this.update();
         // console.log("current tick:", this.now());
 
         Render.renderingPath(this.p5, this.map);
         Render.renderingObjective(this.p5, this.objective);
-        // Render entities
-        if (this.entities && this.entities.length > 0) {
+        // Render enemeies
+        if (this.enemies && Object.keys(this.enemies).length > 0) {
             Render.renderingEnemy(this.p5, this.enemies);
         }
-
-        this.hero.calculateMovement();
-
+        Render.renderingProjectile(this.p5, this.entities);
         Render.renderingHero(this.p5, this.hero);
-        // console.log(`Hero position: (${this.hero.position.x.toFixed(2)}, ${this.hero.position.y.toFixed(2)})`);
 
         // Render UI on top
         if (this.ui) {

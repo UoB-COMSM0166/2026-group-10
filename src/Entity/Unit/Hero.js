@@ -1,8 +1,11 @@
 import Unit from './Unit.js';
+import Skill from '../Skill/Skill.js';
 
 export default class Hero extends Unit {
-    constructor(json, position) {
-        super("hero", position, { vx: 0, vy: 0 }, 0, {width: 0, height: 0});
+    constructor(json, position, mapWidth, mapHeight) {
+        super("hero", position, 0, {width: 0, height: 0});
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
 
         this.level = 1;
         this.name = json.name;
@@ -36,7 +39,39 @@ export default class Hero extends Unit {
         this.currentHP = this.maxHP;
         this.currentMP = this.maxMP;
 
-        
+        // MARK: Example skill, which should be stored in Hero JSON file
+        const skill = {
+            name: "Ice Pick",
+            category: "Projectile",
+            description: "Generate a ice pick that moving towards a enemy.",
+            damage: 20,
+            speed: 20,
+            hitbox: {width: 10, height: 10},
+            cooldown: 120,
+            manaCost: 0
+        }
+
+        // Skill system
+        this.skills = {
+            A: new Skill(skill),
+        };
+    }
+
+    calculateMovement() {
+        const pos = this.position;
+        const vel = this.velocity;
+        if (pos && vel) {
+            pos.x += vel.vx;
+            pos.y += vel.vy;
+        }
+
+        // Reset Location if out of bounds
+        if (pos.x < 0 || pos.x > this.mapWidth || pos.y < 0 || pos.y > this.mapHeight) {
+            pos.x = Math.max(0, Math.min(pos.x, this.mapWidth));
+            pos.y = Math.max(0, Math.min(pos.y, this.mapHeight));
+            vel.vx = 0;
+            vel.vy = 0;
+        }
     }
 
     // Level Update Attribute

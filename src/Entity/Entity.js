@@ -1,8 +1,8 @@
 export default class Entity {
-    constructor(id, position, velocity, speed, hitbox) {
+    constructor(id, position, speed, hitbox) {
         this.id = id;
         this.position = position || { x: 0, y: 0 };
-        this.velocity = velocity || { vx: 0, vy: 0 };
+        this.velocity = { vx: 0, vy: 0 };
         this.speed = speed || 0;
 
         this.hitbox = hitbox || { width: 0, height: 0 };  // Default Rectangle
@@ -10,19 +10,18 @@ export default class Entity {
         this.waypoint = [];
     }
 
-    // get speed() {
-    //     return this.speed;
-    // }
-
-    // set speed(value) {
-    //     this.speed = value;
-    // }
+    calculateVelocity(target) {
+        const dx = target.x - this.position.x;
+        const dy = target.y - this.position.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const scale = this.speed / dist;
+        this.velocity = { vx: dx * scale, vy: dy * scale };
+    }
 
     navigate(targetSpot) {
         const dx = targetSpot.x - this.position.x;
         const dy = targetSpot.y - this.position.y;
-        const distSq = dx * dx + dy * dy;
-        const dist = Math.sqrt(distSq);
+        const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist <= this.speed) {
             // Snap to target to avoid overshooting and velocity sign flipping.
@@ -65,6 +64,8 @@ export default class Entity {
         if (pos && pos.x === targetSpot.x && pos.y === targetSpot.y) {
             this.waypoint.shift();
         }
+
+        this.calculateMovement();
     }
 
     stop() {

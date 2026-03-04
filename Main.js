@@ -30,13 +30,13 @@ new p5(p => {
         // Handle right click
         if (p.mouseButton === p.RIGHT) {
             const append = Boolean(event?.shiftKey);
-            gameManager.handleRightClick(p.mouseX, p.mouseY, append);
+            gameManager.controller.handleRightClick(p.mouseX, p.mouseY, append);
             return false; // Prevent default context menu
         }
     }
 
     p.keyPressed = () => {
         // Example: Press 'S' to stop the hero
-        gameManager.handleButton(p.key);
+        gameManager.controller.handleButton(p.key, p.mouseX, p.mouseY);
     }
 })
