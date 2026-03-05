@@ -2,11 +2,13 @@
     "Blizzard": {
         "A": [
             {
-                "name": "Ice Pick",
-                "category": "TargetUnit",
+                "name": "Fireball",
+                "category": "Projectile",
                 "description": "Generate a ice pick that moving towards a enemy.",
                 "damage": 20,
-                "cooldown": 2,
+                "speed": 20,
+                "hitbox": 5,
+                "cooldown": 120,
                 "manaCost": 0
             }
         ],
@@ -14,23 +16,31 @@
             {
                 "name": "Blizzard",
                 "category": "Area",
-                "description": "Casts a blizzard that damages and slows enemies in the area.",
-                "damage": 100,
-                "effectType": "Slow",
-                "effectValue": 15,
-                "duration": 5,
-                "cooldown": 10,
-                "manaCost": 50
+                "description": "Summon a blizzard that damages enemies in the area.",
+                "damagePeriod": 10,
+                "damage": 1,
+                "cooldown": 300,
+                "manaCost": 50,
+                "hitbox": 70,
+                "duration": 150
             }
         ],
         "W": [
             {
-            
+                "name": "Wind Walk",
+                "category": "SelfBuff",
+                "description": "Increase your movement speed for a short duration.",
+                "effectStatus": {
+                    "speed": 5
+                },
+                "duration": 100,
+                "cooldown": 250,
+                "manaCost": 30
             }
         ],
         "E": [
             {
-            
+
             }
         ],
         "R": [
@@ -40,7 +50,15 @@
         ],
         "D": [
             {
-            
+                "name": "Frost Armor",
+                "category": "Passive",
+                "description": "Get extra armor.",
+                "effectStatus": {
+                    "armor": 3
+                },
+                "duration": -1,
+                "cooldown": 0,
+                "manaCost":0
             }
         ],
         "F": [

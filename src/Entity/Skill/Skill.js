@@ -17,6 +17,7 @@ export default class Skill {
 
         // 效果面板
         // "Slow", "Stun", "DamageOverTick", etc.
+        this.effectStatus = json.effectStatus || null;
         this.effectType = json.effectType || null;
         this.effectValue = json.effectValue || null;
         this.duration = json.duration || null;

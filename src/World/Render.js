@@ -37,12 +37,12 @@ export default class Render {
             // console.log(`Rendering projectile with velocity (${entity.velocity.vx}, ${entity.velocity.vy}) and damage ${entity.damage}`);
             if (pos) {
                 if (entity.category === 'Area') {
-                    const width = entity.hitbox?.width || 0;
-                    const height = entity.hitbox?.height || 0;
+                    console.log(`Rendering AreaEffect with radius ${entity.hitbox || 0}`);
+                    const radius = entity.hitbox || 0;
                     p5.stroke(80, 160, 255);
                     p5.strokeWeight(2);
                     p5.fill(80, 160, 255, 90);
-                    p5.rect(pos.x - width / 2, pos.y - height / 2, width, height);
+                    p5.circle(pos.x, pos.y, radius * 2);
                 } else {
                     p5.stroke(0);
                     p5.strokeWeight(2);

@@ -1,4 +1,5 @@
 import GameClock from './World/GameClock.js';
+import EventEmitter from './World/EventEmitter.js';
 import UI from './World/UI.js';
 import GameMap from './World/GameMap.js';
 import Render from './World/Render.js';
@@ -13,22 +14,24 @@ const MAX_FRAME_MS = 250;
 const MAX_TICKS_PER_FRAME = 5;
 
 export default class GameManager {
-    constructor(p5, map, hero, enemyData) {
+    constructor(p5, map, hero, skillData, enemyData) {
         this.p5 = p5;
         this.nextID = 0;
         this.clock = new GameClock();
+        this.events = new EventEmitter();
         this.ui = new UI(this.p5, this);
         this.lastFrameMs = this.p5.millis();
         this.tickSampleCount = 0;
         this.tpsSampleMs = 0;
         this.tps = 0;
 
-        this.mapJson = map;
-        this.heroJson = hero;
-        this.enemyData = enemyData;
+        // this.mapJson = map;
+        // this.heroJson = hero;
+        // this.enemyData = enemyData;
         this.map = new GameMap(map);
         this.objective = new Objective(this.map.objective);
-        this.hero = new Hero(hero, this.map.hero, this.map.width, this.map.height);
+        this.hero = new Hero(hero, skillData, this.map.hero, this.map.width, this.map.height, this.events);
+        this.hero.bindGameManager(this);
         this.controller = new Controller(this, this.hero);
 
         this.enemies = {};
@@ -41,15 +44,20 @@ export default class GameManager {
         };
     }
 
+    on(...args) { return this.events.on(...args); }
+    once(...args) { return this.events.once(...args); }
+    off(...args) { return this.events.off(...args); }
+
     generateID() {
         return this.nextID++;
     }
 
     addEntity(entity) {
         this.entities[entity.id] = entity;
+        this.events.emit('entity:added', { entity });
     }
 
-    destoryEntity(entity) {
+    destroyEntity(entity) {
         if (entity.position.x < 0 || entity.position.x > this.map.width || entity.position.y < 0 || entity.position.y > this.map.height) {
             delete this.entities[entity.id];
         }
@@ -62,23 +70,31 @@ export default class GameManager {
         this.tickSampleCount = 0;
         this.tpsSampleMs = 0;
         this.tps = 0;
-
         this.waveState = {
             currentWaveIndex: 0,
             waveStartTick: 0,
             pathSpawners: { A: { lastSpawnTick: 0 }, B: { lastSpawnTick: 0 } }
         };
+        this.events.emit('game:start', { tick: this.now() });
     }
 
     stop() {
         this.running = false;
+        this.events.emit('game:stop', { tick: this.now() });
     }
 
     tick() {
         this.clock.updateTick();
 
+        if (this.hero && typeof this.hero.tickBuffs === 'function') {
+            this.hero.tickBuffs(1);
+        }
+        if (this.hero && typeof this.hero.applyRegenTick === 'function') {
+            this.hero.applyRegenTick();
+        }
         this.updateSkillCooldowns();
         this.updateMovement();
+        // this.events.emit('game:tick', { tick: this.now() });
     }
 
     updateSkillCooldowns() {
@@ -182,12 +198,13 @@ export default class GameManager {
 
         Render.renderingPath(this.p5, this.map);
         Render.renderingObjective(this.p5, this.objective);
-        // Render enemeies
+        // Render enemies
         if (this.enemies && Object.keys(this.enemies).length > 0) {
             Render.renderingEnemy(this.p5, this.enemies);
         }
-        Render.renderingProjectile(this.p5, this.entities);
         Render.renderingHero(this.p5, this.hero);
+        Render.renderingProjectile(this.p5, this.entities);
+
 
         // Render UI on top
         if (this.ui) {

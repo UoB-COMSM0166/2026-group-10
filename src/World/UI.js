@@ -2,6 +2,27 @@ export default class UI {
 	constructor(p5, gameManager) {
 		this.p5 = p5;
 		this.gameManager = gameManager;
+		this.shouldDrawSkillCooldowns = false;
+		this.heroStats = null;
+		this.toasts = [];
+		this.toastDurationMs = 1800;
+
+		this.gameManager.events.on('hero:skill:casted', () => {
+			this.shouldDrawSkillCooldowns = true;
+		});
+		this.gameManager.events.on('hero:stats:updated', ({ stats }) => {
+			this.heroStats = stats;
+		});
+		this.gameManager.events.on('hero:levelup', ({ newLevel }) => {
+			this.pushToast(`LEVEL UP! Lv.${newLevel}`);
+		});
+	}
+
+	pushToast(message) {
+		this.toasts.push({
+			message,
+			expiresAt: this.p5.millis() + this.toastDurationMs
+		});
 	}
 
 	drawHeroWaypoints() {
@@ -59,19 +80,20 @@ export default class UI {
 	}
 
 	drawSkillCooldowns(p) {
-		const skillA = this.gameManager.hero?.skills?.A;
-		const skillQ = this.gameManager.hero?.skills?.Q;
-		const cooldownA = Math.max(0, Math.ceil(skillA?.currentCooldown || 0));
-		const cooldownQ = Math.max(0, Math.ceil(skillQ?.currentCooldown || 0));
+		const entries = Object.entries(this.gameManager.hero?.skills || {});
+		if (entries.length === 0) {
+			return;
+		}
 		
 		p.push();
 		const iconSize = 56;
 		const iconGap = 18;
-		const iconX = p.width - iconSize - 24;
+		const rightPadding = 24;
 		const iconY = p.height - iconSize - 24;
-		const qIconX = iconX - iconSize - iconGap;
 
-		const drawSkillIcon = (label, cooldown, x, y) => {
+		const drawSkillIcon = (label, skill, x, y) => {
+			const cooldown = Math.max(0, Math.ceil(skill?.currentCooldown || 0));
+
 			p.noStroke();
 			p.fill(0, 0, 0, 140);
 			p.rect(x - 8, y - 8, iconSize + 16, iconSize + 28, 8);
@@ -97,8 +119,92 @@ export default class UI {
 			}
 		};
 
-		drawSkillIcon('Q', cooldownQ, qIconX, iconY);
-		drawSkillIcon('A', cooldownA, iconX, iconY);
+		entries.forEach(([key, skill], index) => {
+			const x = p.width - rightPadding - iconSize - index * (iconSize + iconGap);
+			drawSkillIcon(key, skill, x, iconY);
+		});
+		p.pop();
+	}
+
+	drawHeroBuffCircles(p) {
+		const buffs = (this.gameManager.hero?.buffs || []).filter((buff) => !!buff);
+		if (buffs.length === 0) {
+			return;
+		}
+
+		const radius = 24;
+		const gap = 14;
+		const diameter = radius * 2;
+		const totalWidth = buffs.length * diameter + (buffs.length - 1) * gap;
+		const startX = (p.width - totalWidth) / 2 + radius;
+		const centerY = p.height - 88;
+
+		p.push();
+		p.textAlign(p.CENTER, p.CENTER);
+
+		buffs.forEach((buff, index) => {
+			const x = startX + index * (diameter + gap);
+			const remaining = buff.currentDuration === -1
+				? '∞'
+				: `${Math.max(0, Math.ceil(buff.currentDuration || 0))}`;
+
+			p.stroke(255, 255, 255, 180);
+			p.strokeWeight(2);
+			p.fill(30, 30, 30, 170);
+			p.circle(x, centerY, diameter);
+
+			p.noStroke();
+			p.fill(255);
+			p.textSize(14);
+			p.text(remaining, x, centerY + 1);
+		});
+
+		p.pop();
+	}
+
+	// TODO: Text to Graphics
+	drawHeroStatsPanel(p) {
+		if (!this.heroStats) {
+			return;
+		}
+
+		const s = this.heroStats;
+		p.push();
+		p.noStroke();
+		p.fill(0, 0, 0, 140);
+		p.rect(20, p.height - 150, 280, 130, 8);
+
+		p.fill(255);
+		p.textAlign(p.LEFT, p.TOP);
+		p.textSize(14);
+		p.text(`${s.name}  Lv.${s.level}`, 30, p.height - 142);
+		p.text(`HP ${s.hp}/${s.maxHP}`, 30, p.height - 120);
+		p.text(`MP ${s.mp}/${s.maxMP}`, 30, p.height - 102);
+		p.text(`SPD ${s.speed.toFixed(1)}  ARM ${s.armor.toFixed(1)}`, 30, p.height - 66);
+		p.text(`STR ${s.strength}  AGI ${s.agility}  INT ${s.intelligence}`, 30, p.height - 84);
+		p.text(`SpellAmp ${s.spellAmp}`, 30, p.height - 48);
+		p.pop();
+	}
+
+	drawToasts(p) {
+		const now = p.millis();
+		this.toasts = this.toasts.filter((toast) => toast.expiresAt > now);
+		if (this.toasts.length === 0) {
+			return;
+		}
+
+		const toast = this.toasts[0];
+		const remaining = toast.expiresAt - now;
+		const alpha = remaining < 350 ? Math.max(0, Math.floor((remaining / 350) * 255)) : 255;
+
+		p.push();
+		p.textAlign(p.CENTER, p.CENTER);
+		p.textSize(24);
+		p.noStroke();
+		p.fill(0, 0, 0, Math.min(180, alpha));
+		p.rect(p.width / 2 - 170, 24, 340, 56, 10);
+		p.fill(255, 230, 80, alpha);
+		p.text(toast.message, p.width / 2, 52);
 		p.pop();
 	}
 
@@ -129,6 +235,11 @@ export default class UI {
 		p.text(tpsText, 32, 98);
 		p.pop();
 
-		this.drawSkillCooldowns(p);	
+		if (this.shouldDrawSkillCooldowns) {
+			this.drawSkillCooldowns(p);
+		}
+		this.drawHeroBuffCircles(p);
+		this.drawHeroStatsPanel(p);
+		this.drawToasts(p);
 	}
 }

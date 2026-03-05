@@ -5,7 +5,7 @@ export default class Entity {
         this.velocity = { vx: 0, vy: 0 };
         this.speed = speed || 0;
 
-        this.hitbox = hitbox || { width: 0, height: 0 };  // Default Rectangle
+        this.hitbox = hitbox || 0;  // Default Circle with radius 0
         this.target = null;  // The movement target
         this.waypoint = [];
     }
@@ -35,6 +35,10 @@ export default class Entity {
         const scale = this.speed / dist;
         this.velocity.vx = dx * scale;
         this.velocity.vy = dy * scale;
+    }
+
+    follow() {
+        if (this.target) this.navigate(this.target.position);
     }
 
     setTarget(target) {
