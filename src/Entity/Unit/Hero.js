@@ -105,12 +105,12 @@ export default class Hero extends Unit {
         }
 
         if (!skill.canCast()) {
-            this.events?.emit('hero:skill:failed', { key, reason: 'on_cooldown', skill, x, y });
+            this.events?.emit('hero:skill:failed', { key, reason: 'On Cooldown', skill, x, y });
             return;
         }
 
         if (this.currentMP < skill.manaCost) {
-            this.events?.emit('hero:skill:failed', { key, reason: 'not_enough_mana', skill, x, y });
+            this.events?.emit('hero:skill:failed', { key, reason: 'Insufficient Mana', skill, x, y });
             return;
         }
 

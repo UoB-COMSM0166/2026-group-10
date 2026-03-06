@@ -5,7 +5,7 @@ export default class UI {
 		this.shouldDrawSkillCooldowns = false;
 		this.heroStats = null;
 		this.toasts = [];
-		this.toastDurationMs = 1800;
+		this.toastDurationFrames = 108; // ~1.8s at 60 FPS
 
 		this.gameManager.events.on('hero:skill:casted', () => {
 			this.shouldDrawSkillCooldowns = true;
@@ -16,12 +16,18 @@ export default class UI {
 		this.gameManager.events.on('hero:levelup', ({ newLevel }) => {
 			this.pushToast(`LEVEL UP! Lv.${newLevel}`);
 		});
+		this.gameManager.events.on('hero:skill:failed', ( message ) => {
+			this.pushToast(message.reason, 60);
+		});
 	}
 
-	pushToast(message) {
+	pushToast(message, durationFrames) {
+		const frames = Number.isFinite(durationFrames) && durationFrames >= 0
+			? Math.floor(durationFrames)
+			: this.toastDurationFrames;
 		this.toasts.push({
 			message,
-			expiresAt: this.p5.millis() + this.toastDurationMs
+			expiresAtFrame: this.p5.frameCount + frames
 		});
 	}
 
@@ -187,15 +193,18 @@ export default class UI {
 	}
 
 	drawToasts(p) {
-		const now = p.millis();
-		this.toasts = this.toasts.filter((toast) => toast.expiresAt > now);
+		const nowFrame = p.frameCount;
+		this.toasts = this.toasts.filter((toast) => toast.expiresAtFrame > nowFrame);
 		if (this.toasts.length === 0) {
 			return;
 		}
 
 		const toast = this.toasts[0];
-		const remaining = toast.expiresAt - now;
-		const alpha = remaining < 350 ? Math.max(0, Math.floor((remaining / 350) * 255)) : 255;
+		const remainingFrames = toast.expiresAtFrame - nowFrame;
+		const fadeOutFrames = Math.max(1, Math.floor(this.toastDurationFrames * 0.2));
+		const alpha = remainingFrames < fadeOutFrames
+			? Math.max(0, Math.floor((remainingFrames / fadeOutFrames) * 255))
+			: 255;
 
 		p.push();
 		p.textAlign(p.CENTER, p.CENTER);
