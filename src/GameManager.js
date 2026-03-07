@@ -8,6 +8,10 @@ import Controller from './World/Controller.js';
 import Objective from './Entity/Unit/Objective.js';
 import Hero from './Entity/Unit/Hero.js';
 
+import { Tower } from './Towerdefense/Tower.js'; 
+import { Enemy as TDEnemy } from './Towerdefense/Enemy.js';
+import { Bullet } from './Towerdefense/Bullet.js';
+
 const TICK_RATE = 60;
 const FIXED_STEP_MS = 1000 / TICK_RATE;
 const MAX_FRAME_MS = 250;
@@ -24,6 +28,22 @@ export default class GameManager {
         this.tickSampleCount = 0;
         this.tpsSampleMs = 0;
         this.tps = 0;
+
+        // TEMP：Tower Defense core attributes
+        this.towers = [];
+        this.bullets = [];
+        this.tdEnemies = [];
+
+        this.gridSize = 40;
+
+        this.money = 500;
+        this.towerCost = 200;
+
+        this.occupiedCells = new Set();
+        this.selectedTower = null;
+
+        this.spawnTimer = 0;
+        this.spawnInterval = 120;
 
         // this.mapJson = map;
         // this.heroJson = hero;
@@ -62,6 +82,40 @@ export default class GameManager {
             delete this.entities[entity.id];
         }
     }
+    //TEMP: Tower Defense core method
+    placeTower(x, y) {
+        if (this.money < this.towerCost) return;
+
+        let gridX = Math.floor(x / this.gridSize);
+        let gridY = Math.floor(y / this.gridSize);
+
+        let key = `${gridX},${gridY}`;
+
+        if (this.occupiedCells.has(key)) return;
+
+        let towerX = gridX * this.gridSize + this.gridSize / 2;
+        let towerY = gridY * this.gridSize + this.gridSize / 2;
+
+        const tower = new Tower(this.p5, towerX, towerY, this.bullets);
+
+        this.towers.push(tower);
+        this.occupiedCells.add(key);
+
+        this.money -= this.towerCost;
+        if (this.map.isPathCell(gridX, gridY)) return;
+    }
+
+    mousePressed() {
+        const x = this.p5.mouseX;
+        const y = this.p5.mouseY;
+        this.placeTower(x, y);
+    }
+
+    spawnEnemy() {
+        if (!this.path) return;
+        const enemy = new TDEnemy(this.p5, this.path);
+        this.tdEnemies.push(enemy);
+    }
 
     start() {
         this.running = true;
@@ -76,6 +130,8 @@ export default class GameManager {
             pathSpawners: { A: { lastSpawnTick: 0 }, B: { lastSpawnTick: 0 } }
         };
         this.events.emit('game:start', { tick: this.now() });
+
+        this.path = this.map.paths['A'].waypoints;
     }
 
     stop() {
@@ -165,6 +221,16 @@ export default class GameManager {
             this.tickSampleCount = 0;
             this.tpsSampleMs = 0;
         }
+
+        // Tower defense enemy spawn
+        this.spawnTimer++;
+
+        if (this.spawnTimer > this.spawnInterval) {
+
+            this.spawnEnemy();
+            this.spawnTimer = 0;
+
+        }
     }
 
     now(channel = 'gameplay') {
@@ -196,6 +262,26 @@ export default class GameManager {
         this.update();
         // console.log("current tick:", this.now());
 
+        // Update TD enemies
+        // tower defense update
+        for (let enemy of this.tdEnemies) {
+            enemy.update();
+        }
+
+        for (let tower of this.towers) {
+            tower.update(this.tdEnemies);
+        }
+
+        for (let bullet of this.bullets) {
+            bullet.update();
+        }
+
+        if (this.tdEnemies && this.tdEnemies.length > 0) {
+            for (let enemy of this.tdEnemies) {
+                enemy.update();
+            }
+        }
+
         Render.renderingPath(this.p5, this.map);
         Render.renderingObjective(this.p5, this.objective);
         // Render enemies
@@ -205,6 +291,10 @@ export default class GameManager {
         Render.renderingHero(this.p5, this.hero);
         Render.renderingProjectile(this.p5, this.entities);
 
+        // draw TD
+        for (let tower of this.towers) tower.show();
+        for (let enemy of this.tdEnemies) enemy.show();
+        for (let bullet of this.bullets) bullet.show();
 
         // Render UI on top
         if (this.ui) {
