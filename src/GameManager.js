@@ -8,11 +8,15 @@ import Controller from './World/Controller.js';
 import Objective from './Entity/Unit/Objective.js';
 import Hero from './Entity/Unit/Hero.js';
 import Enemy from './Entity/Unit/Enemy.js';
+import Buff from './Entity/Projectile/Buff.js';
 
 const TICK_RATE = 60;
 const FIXED_STEP_MS = 1000 / TICK_RATE;
 const MAX_FRAME_MS = 250;
 const MAX_TICKS_PER_FRAME = 5;
+const HERO_DEATH_OBJECTIVE_DAMAGE = 200;
+const HERO_RESPAWN_TICKS = 120;
+const HERO_RESPAWN_BUFF_NAME = 'Respawn';
 
 export default class GameManager {
     constructor(p5, map, hero, skillData, enemyData) {
@@ -40,6 +44,10 @@ export default class GameManager {
         this.enemies = new Map();
         this.entities = {};
         this.wave = 5;
+        this.heroRespawnState = {
+            active: false,
+            remainingTicks: 0
+        };
     }
 
     on(...args) { return this.events.on(...args); }
@@ -51,12 +59,16 @@ export default class GameManager {
             this.objective.takeDamage(enemy.damage);
             this.destroyEntity(enemy);
         });
+        this.events.on('hero:died', () => {
+            this.handleHeroDeath();
+        });
         this.events.on('enemy:died', ({ enemy }) => {
             this.destroyEntity(enemy);
         });
         this.events.on('wave:completed', () => {
             this.pause();
         });
+
     }
 
     generateID() {
@@ -101,7 +113,8 @@ export default class GameManager {
             this.enemyData.mp,
             this.events,
             this.map.paths.get('A').waypoint,
-            this.enemyData.damage
+            this.enemyData.damage,
+            this.enemyData.heroDamage
         )
         this.enemies.set(enemy.id, enemy);
         this.wave -= 1;
@@ -143,12 +156,13 @@ export default class GameManager {
     tick() {
         this.clock.updateTick();
 
-        if (this.hero && typeof this.hero.tickBuffs === 'function') {
+        if (this.hero && !this.hero.isDead && typeof this.hero.tickBuffs === 'function') {
             this.hero.tickBuffs(1);
         }
-        if (this.hero && typeof this.hero.applyRegenTick === 'function') {
+        if (this.hero && !this.hero.isDead && typeof this.hero.applyRegenTick === 'function') {
             this.hero.applyRegenTick();
         }
+        this.handleHeroRespawnTick();
         for (const enemy of this.enemies.values()) {
             if (enemy && typeof enemy.tickBuffs === 'function') {
                 enemy.tickBuffs(1);
@@ -156,7 +170,37 @@ export default class GameManager {
         }
         this.updateSkillCooldowns();
         this.updateMovement();
+        this.applyEnemyHeroContactDamage();
         // this.events.emit('game:tick', { tick: this.now() });
+    }
+
+    applyEnemyHeroContactDamage() {
+        if (!this.hero || this.hero.isDead || this.hero.currentHP <= 0 || !(this.enemies instanceof Map)) {
+            return;
+        }
+
+        let heroDamaged = false;
+
+        for (const enemy of this.enemies.values()) {
+            if (!enemy || enemy.finished || enemy.currentHP <= 0) {
+                continue;
+            }
+
+            // Hero json currently has no explicit hitbox, use 20 as a safe fallback.
+            if (typeof enemy.collidesWith === 'function' && enemy.collidesWith(this.hero, 20, 20)) {
+                enemy.emitCollisionWith?.(this.hero, { collisionType: 'enemy_hero_contact' });
+
+                const damagePerFrame = Number(enemy.heroDamage || 0);
+                if (damagePerFrame > 0 && typeof this.hero.takeDamage === 'function') {
+                    this.hero.takeDamage(damagePerFrame);
+                    heroDamaged = true;
+                }
+            }
+        }
+
+        if (heroDamaged && typeof this.hero.emitStatsUpdated === 'function') {
+            this.hero.emitStatsUpdated('enemy_contact_damage');
+        }
     }
 
     updateSkillCooldowns() {
@@ -173,7 +217,7 @@ export default class GameManager {
 
     updateMovement() {
         const heroSpeed = this.hero.speed || 0;
-        if (heroSpeed > 0) {
+        if (!this.hero.isDead && heroSpeed > 0) {
             this.hero.moveAlongWaypoint();
         }
 
@@ -247,6 +291,67 @@ export default class GameManager {
             this.ui.pushToast("Win! All waves completed.");
             this.pause();
         }
+    }
+
+    handleHeroDeath() {
+        if (!this.hero || this.heroRespawnState.active) {
+            return;
+        }
+
+        this.objective.takeDamage(HERO_DEATH_OBJECTIVE_DAMAGE);
+        this.startHeroRespawnCountdown();
+        this.ui.pushToast(`Hero died!`);
+    }
+
+    startHeroRespawnCountdown() {
+        this.heroRespawnState.active = true;
+        this.heroRespawnState.remainingTicks = HERO_RESPAWN_TICKS;
+        this.upsertHeroRespawnBuff(HERO_RESPAWN_TICKS);
+    }
+
+    handleHeroRespawnTick() {
+        if (!this.heroRespawnState.active || !this.hero) {
+            return;
+        }
+
+        this.heroRespawnState.remainingTicks = Math.max(0, this.heroRespawnState.remainingTicks - 1);
+        this.upsertHeroRespawnBuff(this.heroRespawnState.remainingTicks);
+
+        if (this.heroRespawnState.remainingTicks > 0) {
+            return;
+        }
+
+        this.heroRespawnState.active = false;
+        this.removeHeroRespawnBuff();
+        this.hero.respawn(this.map.hero);
+        this.ui.pushToast('Hero respawned!', 120);
+    }
+
+    upsertHeroRespawnBuff(remainingTicks) {
+        if (!this.hero) {
+            return;
+        }
+
+        if (!Array.isArray(this.hero.buffs)) {
+            this.hero.buffs = [];
+        }
+
+        let buff = this.hero.buffs.find((it) => it && it.source === 'hero_respawn');
+        if (!buff) {
+            buff = new Buff(HERO_RESPAWN_BUFF_NAME, 'Respawn countdown', HERO_RESPAWN_TICKS, {});
+            buff.source = 'hero_respawn';
+            this.hero.buffs.push(buff);
+        }
+
+        buff.duration = HERO_RESPAWN_TICKS;
+        buff.currentDuration = remainingTicks;
+    }
+
+    removeHeroRespawnBuff() {
+        if (!this.hero || !Array.isArray(this.hero.buffs)) {
+            return;
+        }
+        this.hero.buffs = this.hero.buffs.filter((buff) => buff?.source !== 'hero_respawn');
     }
 
     now(channel = 'gameplay') {

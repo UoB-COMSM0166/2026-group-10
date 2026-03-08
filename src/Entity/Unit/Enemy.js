@@ -2,7 +2,7 @@ import Unit from "./Unit.js";
 import Buff from "../Projectile/Buff.js";
 
 export default class Enemy extends Unit {
-    constructor(id, position, speed, hitbox, hp, mp, events, waypoint, damage) {
+    constructor(id, position, speed, hitbox, hp, mp, events, waypoint, damage, heroDamage) {
         super(id, position, speed, hitbox, hp, mp);
         // console.log(this.currentHP);
         this.finished = false;
@@ -12,6 +12,7 @@ export default class Enemy extends Unit {
             this.appendWaypoint(point);
         }
         this.damage = damage || 0;
+        this.heroDamage = heroDamage || 0;
         this.unsubscribeCollision = null;
         this.registerEventHandlers();
     }

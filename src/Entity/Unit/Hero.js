@@ -58,6 +58,7 @@ export default class Hero extends Unit {
         this.skills = this.buildSkills(skillData, json);
         this.passiveSkillSlots = ['D', 'F'];
         this.passiveBuffTag = 'passive_skill';
+        this.isDead = false;
         this.registerEventHandlers();
 
         this.updateAttribute();
@@ -96,6 +97,10 @@ export default class Hero extends Unit {
 
     castSkill(key, x, y) {
         if (!this.gameManager) {
+            return;
+        }
+        if (this.isDead) {
+            this.events?.emit('hero:skill:failed', { key, reason: 'hero_dead', x, y });
             return;
         }
 
@@ -190,6 +195,9 @@ export default class Hero extends Unit {
     }
 
     calculateMovement() {
+            if (this.isDead) {
+                return;
+            }
             const pos = this.position;
             const vel = this.velocity;
             if (pos && vel) {
@@ -511,5 +519,45 @@ export default class Hero extends Unit {
 
         this.statsDirty = true;
         this.recalculateStatsFromBuffs('skill_changed');
+    }
+
+    die() {
+        if (this.isDead) {
+            return;
+        }
+        this.isDead = true;
+        this.currentHP = 0;
+        this.stop();
+        this.clearWaypoints();
+        this.emitStatsUpdated('death');
+        this.events?.emit('hero:died', {});
+    }
+
+    takeDamage(amount) {
+        if (this.isDead) {
+            return;
+        }
+
+        super.takeDamage(amount);
+        this.emitStatsUpdated('damage_taken');
+
+        if (this.currentHP <= 0) {
+            this.die();
+        }
+    }
+
+    respawn(position) {
+        const spawn = position && typeof position === 'object'
+            ? { x: position.x, y: position.y }
+            : { x: this.position.x, y: this.position.y };
+
+        this.position.x = spawn.x;
+        this.position.y = spawn.y;
+        this.stop();
+        this.clearWaypoints();
+        this.isDead = false;
+        this.currentHP = this.maxHP;
+        this.currentMP = this.maxMP;
+        this.emitStatsUpdated('respawn');
     }
 }
