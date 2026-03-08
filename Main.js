@@ -6,11 +6,13 @@ new p5(p => {
     let mapData = null;
     let heroData = null;
     let skillData = null;
+    let enemyData = null;
 
     p.preload = () => {
         mapData = p.loadJSON('data/Map/Forest.json');
         heroData = p.loadJSON('data/Hero/Archmana.json');
         skillData = p.loadJSON('data/Skill/Archmana.json');
+        enemyData = p.loadJSON('data/Enemy/Zombie.json');
     };
 
     p.setup = () => {
@@ -18,7 +20,7 @@ new p5(p => {
         p.createCanvas(1280, 720).elt.addEventListener('contextmenu', e => e.preventDefault());
         p.frameRate(60);
 
-        gameManager = new GameManager(p, mapData, heroData, skillData);
+        gameManager = new GameManager(p, mapData, heroData, skillData, enemyData);
         gameManager.start();
     }
 

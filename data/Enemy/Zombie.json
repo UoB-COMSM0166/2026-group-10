@@ -1,7 +1,8 @@
 {
     "name": "Zombie",
-    "HP": 100,
-    "MP": 0,
-    "speed": 1,
-    "damage": 2
+    "hp": 50,
+    "mp": 0,
+    "speed": 2,
+    "damage": 1000,
+    "hitbox": 5
 }

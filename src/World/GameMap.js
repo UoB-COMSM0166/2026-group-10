@@ -6,15 +6,27 @@ export default class GameMap {
         this.objective = json.objective; 
         this.hero = json.hero;
 
-        this.paths = json.paths || [];
-        this.waves = json.waves || [];
-        
-        // Create path lookup by path_id
-        this.path = {};
-        if (this.paths && Array.isArray(this.paths)) {
-            this.paths.forEach(p => {
-                this.path[p.path_id] = p;
-            });
+        this.paths = new Map();
+        for (let [key, value] of Object.entries(json.paths || {})) {
+            this.paths.set(key, new Lane(key, value.spawn, value.waypoint));
         }
+
+        this.waves = json.waves || [];
+    }
+}
+
+class Lane {
+    constructor(id, spawn, waypoint) {
+        this.id = id;
+        this._spawn = spawn || { x: 0, y: 0 };
+        this._waypoint = waypoint || [];
+    }
+
+    get spawn() {
+        return this._spawn;
+    }
+
+    get waypoint() {
+        return this._waypoint;
     }
 }

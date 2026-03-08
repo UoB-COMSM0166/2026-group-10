@@ -44,12 +44,21 @@ export default class Controller {
         if (key === 's' || key === 'S') {
             console.log('Hero stopped');
             this.hero.clearWaypoints();
-            this.hero.stop();
+            this.hero.pause();
             this.events.emit('hero:stop', { key });
         }
         else if (key === 'u' || key === 'U') {
             this.hero.levelUp();
             this.events.emit('hero:upgrade:manual', { key });
+        }
+        else if (key === 'p' || key === 'P') {
+            if(this.gameManager.running) {
+                this.gameManager.pause();
+                // this.events.emit('game:paused', { key });
+            } else {
+                this.gameManager.resume();
+                // this.events.emit('game:resumed', { key });
+            }
         }
         else {
             const slot = String(key || '').toUpperCase();

@@ -1,8 +1,9 @@
 import Unit from './Unit.js';
-import Skill from '../Skill/Skill.js';
-import Projectile from '../Skill/Projectile.js';
-import AreaEffect from '../Skill/AreaEffect.js';
-import Buff from '../Skill/Buff.js';
+import Skill from '../Projectile/Skill.js';
+import Projectile from '../Projectile/Projectile.js';
+import Missile from '../Projectile/Missile.js';
+import AreaEffect from '../Projectile/AreaEffect.js';
+import Buff from '../Projectile/Buff.js';
 const EXPERIENCE_TABLE = [
     100,  // Level 2
     300,  // Level 3
@@ -114,20 +115,45 @@ export default class Hero extends Unit {
             return;
         }
 
-        if (skill.category === "Projectile" || skill.category === "TargetUnit") {
+        if (skill.category === "Projectile") {
             const projectile = new Projectile(
                 `projectile_${this.gameManager.now()}`,
                 { x: this.position.x, y: this.position.y },
                 skill.speed,
                 skill.hitbox,
                 { x, y },
-                skill.damage
+                skill.damage,
+                this.gameManager
             );
             projectile.calculateVelocity({ x, y });
             this.gameManager.addEntity(projectile);
             this.currentMP -= skill.manaCost;
             skill.startCooldown();
             this.events?.emit('hero:skill:casted', { key, skill, x, y, entity: projectile });
+            return;
+        }
+
+        if (skill.category === "TargetUnit") {
+            const targetUnit = this.findClosestEnemyAt(x, y);
+            if (!targetUnit) {
+                this.events?.emit('hero:skill:failed', { key, reason: 'target_not_found', skill, x, y });
+                return;
+            }
+
+            const missile = new Missile(
+                `missile_${this.gameManager.now()}`,
+                { x: this.position.x, y: this.position.y },
+                skill.speed,
+                skill.hitbox,
+                targetUnit,
+                skill.damage,
+                this.gameManager
+            );
+
+            this.gameManager.addEntity(missile);
+            this.currentMP -= skill.manaCost;
+            skill.startCooldown();
+            this.events?.emit('hero:skill:casted', { key, skill, x, y, entity: missile, targetUnit });
             return;
         }
 
@@ -139,7 +165,9 @@ export default class Hero extends Unit {
                 skill.duration,
                 skill.damage + this.spellAmp * 0.7,
                 skill.damagePeriod,
-                this.gameManager
+                this.gameManager,
+                skill.effectStatus,
+                skill.effectDuration
             );
             this.gameManager.addEntity(areaEffect);
             this.currentMP -= skill.manaCost;
@@ -150,7 +178,7 @@ export default class Hero extends Unit {
 
         if (skill.category === "SelfBuff") {
             const amplifiedStatus = this.getAmplifiedSelfBuffStatus(skill.effectStatus || {});
-            const buff = new Buff(skill.name, skill.description, skill.duration, amplifiedStatus);
+            const buff = new Buff(skill.name, skill.description, skill.effectDuration, amplifiedStatus);
             this.applyBuff(buff);
             this.currentMP -= skill.manaCost;
             skill.startCooldown();
@@ -399,6 +427,32 @@ export default class Hero extends Unit {
 
     applyBuff(buff) {
         return super.addBuff(buff);
+    }
+
+    findClosestEnemyAt(x, y) {
+        const enemies = this.gameManager?.enemies || {};
+        let closestEnemy = null;
+        let closestDistanceSq = Number.POSITIVE_INFINITY;
+
+        for (const enemy of Object.values(enemies)) {
+            if (!enemy || !enemy.position) {
+                continue;
+            }
+            if (typeof enemy.currentHP === 'number' && enemy.currentHP <= 0) {
+                continue;
+            }
+
+            const dx = enemy.position.x - x;
+            const dy = enemy.position.y - y;
+            const distanceSq = dx * dx + dy * dy;
+
+            if (distanceSq < closestDistanceSq) {
+                closestDistanceSq = distanceSq;
+                closestEnemy = enemy;
+            }
+        }
+
+        return closestEnemy;
     }
 
     getSkillSetName(skillData, heroJson) {

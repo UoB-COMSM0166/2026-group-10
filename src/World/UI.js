@@ -19,6 +19,14 @@ export default class UI {
 		this.gameManager.events.on('hero:skill:failed', ( message ) => {
 			this.pushToast(message.reason, 60);
 		});
+		this.gameManager.events.on('wave.completed', () => {
+			console.log("Wave Completed event received in UI");
+			this.pushToast('You Win!', 60);
+		})
+		this.gameManager.events.on('game:over', ( wave ) => {
+			console.log("Game Over event received in UI:", { wave });
+			this.pushToast(`You Lose! ${wave.wave} left.`, 60);
+		})
 	}
 
 	pushToast(message, durationFrames) {

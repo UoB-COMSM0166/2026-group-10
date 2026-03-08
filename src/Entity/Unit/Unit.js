@@ -11,6 +11,7 @@ export default class Unit extends Entity {
         this.maxMP = mp;
         this.currentHP = hp;
         this.currentMP = mp;
+        this.armor = 0;
         this.buffs = [];
         this.statsDirty = false;
         this._buffBaseStats = {};
@@ -18,15 +19,13 @@ export default class Unit extends Entity {
     }
 
     takeDamage(amount) {
-        this.currentHP = Math.max(0, this.currentHP - amount);
+        const effectiveDamage = Math.max(1, amount - this.armor);
+        this.currentHP = Math.max(0, this.currentHP - effectiveDamage);
+        // this.currentHP = Math.max(0, this.currentHP - (amount - this.armor));
     }
 
     heal(amount) {
         this.currentHP = Math.min(this.maxHP, this.currentHP + amount);
-    }
-
-    die() {
-        // Handle unit death (e.g., remove from game, play animation, etc.)
     }
 
     addBuff(buff) {

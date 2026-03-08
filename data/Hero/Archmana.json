@@ -15,7 +15,7 @@
     "baseStat": {
         "hp": 100,
         "mp": 100,
-        "attackCD": 120,
+        "attackCD": 10,
         "speed": 5
     }
 }

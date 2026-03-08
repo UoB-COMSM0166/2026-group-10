@@ -20,6 +20,7 @@ export default class Skill {
         this.effectStatus = json.effectStatus || null;
         this.effectType = json.effectType || null;
         this.effectValue = json.effectValue || null;
+        this.effectDuration = json.effectDuration || 0;
         this.duration = json.duration || null;
     }
 

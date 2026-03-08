@@ -19,6 +19,10 @@
                 "description": "Summon a blizzard that damages enemies in the area.",
                 "damagePeriod": 10,
                 "damage": 1,
+                "effectStatus": {
+                    "speed": -1
+                },
+                "effectDuration": 10,
                 "cooldown": 300,
                 "manaCost": 50,
                 "hitbox": 70,
@@ -33,7 +37,7 @@
                 "effectStatus": {
                     "speed": 5
                 },
-                "duration": 100,
+                "effectDuration": 100,
                 "cooldown": 250,
                 "manaCost": 30
             }
