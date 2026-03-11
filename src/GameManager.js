@@ -4,6 +4,7 @@ import UI from './World/UI.js';
 import GameMap from './World/GameMap.js';
 import Render from './World/Render.js';
 import Controller from './World/Controller.js';
+import AssetLoader from './World/AssetLoader.js';
 
 import Objective from './Entity/Unit/Objective.js';
 import Hero from './Entity/Unit/Hero.js';
@@ -19,12 +20,12 @@ const HERO_RESPAWN_TICKS = 120;
 const HERO_RESPAWN_BUFF_NAME = 'Respawn';
 
 export default class GameManager {
-    constructor(p5, map, hero, skillData, enemyData) {
+    constructor(p5, map, hero, skillData, enemyData, assetLoader) {
         this.p5 = p5;
         this.nextID = 0;
         this.clock = new GameClock();
         this.events = new EventEmitter();
-        this.ui = new UI(this.p5, this);
+        this.ui = new UI(this.p5, this, assetLoader);
         this.lastFrameMs = this.p5.millis();
         this.tickSampleCount = 0;
         this.tpsSampleMs = 0;
@@ -139,6 +140,7 @@ export default class GameManager {
 
     pause() {
         this.ui.pushToast("Game paused.", 60);
+        //this.ui.pushImageToast("gamePaused", 60);
         this.running = false;
         this.events.emit('game:stop', { tick: this.now() });
     }
@@ -282,13 +284,14 @@ export default class GameManager {
 
         if (this.objective && this.objective.currentHP <= 0) {
             // this.events.emit('game:over', { wave: this.wave+this.enemies.size });
-            this.ui.pushToast("Lose! Objective destroyed.");
+            // this.ui.pushToast("Lose! Objective destroyed.");
+            this.ui.pushImageToast("objectiveLost", 120);
             this.pause();
         }
 
-        if (this.wave<=0 && this.enemies.size === 0) {
-            // this.events.emit('wave:completed', { wave: this.wave });
-            this.ui.pushToast("Win! All waves completed.");
+        if (this.wave <= 0 && this.enemies.size === 0) {
+            // Push the win image 
+            this.ui.pushImageToast("winPopUp", 120); 
             this.pause();
         }
     }
@@ -300,7 +303,8 @@ export default class GameManager {
 
         this.objective.takeDamage(HERO_DEATH_OBJECTIVE_DAMAGE);
         this.startHeroRespawnCountdown();
-        this.ui.pushToast(`Hero died!`);
+        // this.ui.pushToast(`Hero died!`);
+        this.ui.pushImageToast("heroDied", 120);
     }
 
     startHeroRespawnCountdown() {
@@ -324,7 +328,8 @@ export default class GameManager {
         this.heroRespawnState.active = false;
         this.removeHeroRespawnBuff();
         this.hero.respawn(this.map.hero);
-        this.ui.pushToast('Hero respawned!', 120);
+        // this.ui.pushToast('Hero respawned!', 120);
+        this.ui.pushImageToast("heroReswawn", 120);
     }
 
     upsertHeroRespawnBuff(remainingTicks) {
