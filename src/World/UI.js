@@ -93,6 +93,77 @@ export default class UI {
 		return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 	}
 
+	isPointInRect(px, py, x, y, width, height) {
+		return px >= x && px <= x + width && py >= y && py <= y + height;
+	}
+
+	getSkillDetailLines(skill) {
+		if (!skill) {
+			return [];
+		}
+
+		const lines = [];
+		if (skill.category) lines.push(`Type: ${skill.category}`);
+		if (skill.damage !== null && skill.damage !== undefined) lines.push(`Damage: ${Number(skill.damage).toFixed(1)}`);
+		if (skill.manaCost !== null && skill.manaCost !== undefined) lines.push(`Mana: ${skill.manaCost}`);
+		if (skill.cooldown !== null && skill.cooldown !== undefined) lines.push(`Cooldown: ${skill.cooldown}`);
+		if (skill.speed !== null && skill.speed !== undefined) lines.push(`Speed: ${skill.speed}`);
+		if (skill.hitbox !== null && skill.hitbox !== undefined) lines.push(`Hitbox: ${typeof skill.hitbox === 'object' ? JSON.stringify(skill.hitbox) : skill.hitbox}`);
+		if (skill.duration !== null && skill.duration !== undefined) lines.push(`Duration: ${skill.duration}`);
+		if (skill.damagePeriod !== null && skill.damagePeriod !== undefined && skill.category === 'Area') lines.push(`Tick: ${skill.damagePeriod}`);
+		if (skill.effectDuration) lines.push(`Effect Duration: ${skill.effectDuration}`);
+		if (skill.effectStatus && typeof skill.effectStatus === 'object') {
+			const effectText = Object.entries(skill.effectStatus)
+				.map(([key, value]) => `${key} ${value > 0 ? '+' : ''}${value}`)
+				.join(', ');
+			if (effectText) {
+				lines.push(`Effect: ${effectText}`);
+			}
+		}
+
+		return lines;
+	}
+
+	drawHoveredSkillPanel(p, skill) {
+		if (!skill) {
+			return;
+		}
+
+		const panelWidth = 340;
+		const padding = 14;
+		const right = p.width - 20;
+		const x = right - panelWidth;
+		const y = 20;
+		const title = skill.name || 'Unknown Skill';
+		const description = skill.description || 'No description';
+		const lines = this.getSkillDetailLines(skill);
+		const bodyLineHeight = 18;
+		const titleHeight = 26;
+		const descriptionHeight = 48;
+		const panelHeight = padding * 2 + titleHeight + descriptionHeight + lines.length * bodyLineHeight;
+
+		p.push();
+		p.noStroke();
+		p.fill(12, 12, 16, 220);
+		p.rect(x, y, panelWidth, panelHeight, 10);
+
+		p.fill(255);
+		p.textAlign(p.LEFT, p.TOP);
+		p.textSize(20);
+		p.text(title, x + padding, y + padding);
+
+		p.fill(210);
+		p.textSize(13);
+		p.text(description, x + padding, y + padding + 28, panelWidth - padding * 2, descriptionHeight);
+
+		p.fill(170, 220, 255);
+		p.textSize(12);
+		lines.forEach((line, index) => {
+			p.text(line, x + padding, y + padding + 28 + descriptionHeight + index * bodyLineHeight);
+		});
+		p.pop();
+	}
+
 	drawSkillCooldowns(p) {
 		const entries = Object.entries(this.gameManager.hero?.skills || {});
 		if (entries.length === 0) {
@@ -104,15 +175,19 @@ export default class UI {
 		const iconGap = 18;
 		const rightPadding = 24;
 		const iconY = p.height - iconSize - 24;
+		const mouseX = p.mouseX;
+		const mouseY = p.mouseY;
+		let hoveredSkill = null;
 
 		const drawSkillIcon = (label, skill, x, y) => {
 			const cooldown = Math.max(0, Math.ceil(skill?.currentCooldown || 0));
+			const isHovered = this.isPointInRect(mouseX, mouseY, x, y, iconSize, iconSize);
 
 			p.noStroke();
 			p.fill(0, 0, 0, 140);
 			p.rect(x - 8, y - 8, iconSize + 16, iconSize + 28, 8);
 
-			p.stroke(255);
+			p.stroke(isHovered ? p.color(255, 230, 120) : 255);
 			p.strokeWeight(2);
 			p.fill(45, 45, 45);
 			p.rect(x, y, iconSize, iconSize, 8);
@@ -131,6 +206,10 @@ export default class UI {
 				p.fill(120, 255, 120);
 				p.text('READY', x + iconSize / 2, y + iconSize + 10);
 			}
+
+			if (isHovered) {
+				hoveredSkill = skill;
+			}
 		};
 
 		entries.forEach(([key, skill], index) => {
@@ -138,6 +217,8 @@ export default class UI {
 			drawSkillIcon(key, skill, x, iconY);
 		});
 		p.pop();
+
+		this.drawHoveredSkillPanel(p, hoveredSkill);
 	}
 
 	drawHeroBuffCircles(p) {
@@ -252,9 +333,9 @@ export default class UI {
 		p.text(tpsText, 32, 98);
 		p.pop();
 
-		if (this.shouldDrawSkillCooldowns) {
-			this.drawSkillCooldowns(p);
-		}
+		// if (this.shouldDrawSkillCooldowns) {
+		this.drawSkillCooldowns(p);
+		// }
 		this.drawHeroBuffCircles(p);
 		this.drawHeroStatsPanel(p);
 		this.drawToasts(p);

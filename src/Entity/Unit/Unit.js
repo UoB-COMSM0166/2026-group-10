@@ -100,6 +100,10 @@ export default class Unit extends Entity {
                     delta += value;
                 }
             }
+            // Protect certain stats from going negative or zero if needed
+            if (key === 'speed') {
+                delta = Math.max(delta, -base + 0.1); // Ensure speed doesn't drop to zero or negative
+            }
             this[key] = base + delta;
         }
     }
@@ -145,5 +149,9 @@ export default class Unit extends Entity {
         }
 
         this.recalculateStatsFromBuffs('buff_tick');
+    }
+
+    isAlive() {
+        return this.currentHP > 0;
     }
 }

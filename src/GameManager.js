@@ -1,4 +1,4 @@
-import GameClock from './World/GameClock.js';
+import GameClock from './World/Clock.js';
 import EventEmitter from './World/EventEmitter.js';
 import UI from './World/UI.js';
 import GameMap from './World/GameMap.js';
@@ -43,7 +43,7 @@ export default class GameManager {
 
         this.enemies = new Map();
         this.entities = {};
-        this.wave = 5;
+        this.wave = 20;
         this.heroRespawnState = {
             active: false,
             remainingTicks: 0

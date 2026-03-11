@@ -138,8 +138,8 @@ export default class Hero extends Unit {
             return;
         }
 
-        if (skill.category === "TargetUnit") {
-            const targetUnit = this.findClosestEnemyAt(x, y);
+        else if (skill.category === "TargetUnit") {
+            const targetUnit = this.findEnemyAt(x, y);
             if (!targetUnit) {
                 this.events?.emit('hero:skill:failed', { key, reason: 'target_not_found', skill, x, y });
                 return;
@@ -162,7 +162,7 @@ export default class Hero extends Unit {
             return;
         }
 
-        if (skill.category === "Area") {
+        else if (skill.category === "Area") {
             const areaEffect = new AreaEffect(
                 `area_${this.gameManager.now()}`,
                 { x, y },
@@ -181,9 +181,9 @@ export default class Hero extends Unit {
             return;
         }
 
-        if (skill.category === "SelfBuff") {
+        else if (skill.category === "SelfBuff") {
             const amplifiedStatus = this.getAmplifiedSelfBuffStatus(skill.effectStatus || {});
-            const buff = new Buff(skill.name, skill.description, skill.effectDuration, amplifiedStatus);
+            const buff = new Buff(skill.name, skill.description, skill.effectDuration, amplifiedStatus, true);
             this.applyBuff(buff);
             this.currentMP -= skill.manaCost;
             skill.startCooldown();
@@ -281,7 +281,7 @@ export default class Hero extends Unit {
         this.spellAmp = finalStats.spellAmp;
 
         if (this.skills.A) {
-            this.skills.A.cooldown = Math.max(6, this.baseStat.attackCD - this.attribute.agility);
+            this.skills.A.cooldown = Math.max(6, this.skills.A.cooldown);
             this.skills.A.damage = this.attribute[this.mainAttribute] * 1.5;
         }
 
@@ -298,7 +298,7 @@ export default class Hero extends Unit {
 
     createPassiveBuff(slot, skill) {
         const status = (skill && typeof skill.effectStatus === 'object' && skill.effectStatus) ? skill.effectStatus : {};
-        const buff = new Buff(skill.name, skill.description, -1, { ...status });
+        const buff = new Buff(skill.name, skill.description, -1, { ...status }, true);
         buff.source = this.passiveBuffTag;
         buff.passiveSlot = slot;
         buff.passiveSkillName = skill.name;
@@ -437,12 +437,32 @@ export default class Hero extends Unit {
         return super.addBuff(buff);
     }
 
-    findClosestEnemyAt(x, y) {
+    findEnemyAt(x, y) {
         const enemies = this.gameManager?.enemies || {};
-        let closestEnemy = null;
-        let closestDistanceSq = Number.POSITIVE_INFINITY;
-
-        for (const enemy of Object.values(enemies)) {
+        // let closestEnemy = null;
+        // let closestDistanceSq = Number.POSITIVE_INFINITY;
+        //
+        // for (const enemy of Object.values(enemies)) {
+        //     if (!enemy || !enemy.position) {
+        //         continue;
+        //     }
+        //     if (typeof enemy.currentHP === 'number' && enemy.currentHP <= 0) {
+        //         continue;
+        //     }
+        //
+        //     const dx = enemy.position.x - x;
+        //     const dy = enemy.position.y - y;
+        //     const distanceSq = dx * dx + dy * dy;
+        //
+        //     if (distanceSq < closestDistanceSq) {
+        //         closestDistanceSq = distanceSq;
+        //         closestEnemy = enemy;
+        //     }
+        // }
+        //
+        // return closestEnemy;
+        let targetEnemy = null;
+        for (const enemy of enemies.values()) {
             if (!enemy || !enemy.position) {
                 continue;
             }
@@ -450,17 +470,13 @@ export default class Hero extends Unit {
                 continue;
             }
 
-            const dx = enemy.position.x - x;
-            const dy = enemy.position.y - y;
-            const distanceSq = dx * dx + dy * dy;
-
-            if (distanceSq < closestDistanceSq) {
-                closestDistanceSq = distanceSq;
-                closestEnemy = enemy;
+            const distance = Math.sqrt((enemy.position.x - x) ** 2 + (enemy.position.y - y) ** 2);
+            if (distance <= enemy.hitbox) {
+                targetEnemy = enemy;
             }
         }
 
-        return closestEnemy;
+        return targetEnemy;
     }
 
     getSkillSetName(skillData, heroJson) {

@@ -1,75 +1,88 @@
 {
     "Blizzard": {
-        "A": [
+        "A":
             {
-                "name": "Fireball",
+                "name": "Ice Pick",
                 "category": "Projectile",
                 "description": "Generate a ice pick that moving towards a enemy.",
                 "damage": 20,
-                "speed": 20,
+                "speed": 10,
                 "hitbox": 5,
-                "cooldown": 120,
+                "cooldown": 30,
                 "manaCost": 0
-            }
-        ],
-        "Q": [
+            },
+        "Q":
             {
-                "name": "Blizzard",
+                "name": "Storm Blast",
                 "category": "Area",
-                "description": "Summon a blizzard that damages enemies in the area.",
+                "description": "Summon a storm that slowing down and damages enemies in the area.",
                 "damagePeriod": 10,
                 "damage": 1,
                 "effectStatus": {
-                    "speed": -1
+                    "speed": -0.5
                 },
                 "effectDuration": 10,
                 "cooldown": 300,
-                "manaCost": 50,
+                "manaCost": 20,
                 "hitbox": 70,
                 "duration": 150
-            }
-        ],
-        "W": [
+            },
+        "W": {
+            "name": "Wind Walk",
+            "category": "SelfBuff",
+            "description": "Increase your movement speed for a short duration.",
+            "effectStatus": {
+                "speed": 4
+            },
+            "effectDuration": 100,
+            "cooldown": 250,
+            "manaCost": 30
+        },
+        "E": {
+            "name": "Arcane Intelligence",
+            "category": "Passive",
+            "description": "Get extra Mana Regeneration.",
+            "effectStatus": {
+                "mpRegen": 3
+            },
+            "effectDuration": -1,
+            "cooldown": 0,
+            "manaCost": 0
+        },
+        "R":
             {
-                "name": "Wind Walk",
-                "category": "SelfBuff",
-                "description": "Increase your movement speed for a short duration.",
+                "name": "Blizzard",
+                "description": "Summon a Blizzard that Damages and Freezes enemies in a large area.",
+                "category": "Area",
+                "damagePeriod": 10,
+                "damage": 1,
                 "effectStatus": {
-                    "speed": 5
+                    "speed": -2
                 },
-                "effectDuration": 100,
-                "cooldown": 250,
-                "manaCost": 30
-            }
-        ],
-        "E": [
-            {
-
-            }
-        ],
-        "R": [
-            {
-            
-            }
-        ],
-        "D": [
+                "effectDuration": 10,
+                "cooldown": 300,
+                "manaCost": 20,
+                "hitbox": 1000,
+                "duration": 150
+            },
+        "D":
             {
                 "name": "Frost Armor",
                 "category": "Passive",
-                "description": "Get extra armor.",
+                "description": "Get extra Armor.",
                 "effectStatus": {
                     "armor": 3
                 },
-                "duration": -1,
+                "duration": 1,
                 "cooldown": 0,
                 "manaCost":0
             }
-        ],
-        "F": [
+        ,
+        "F":
             {
             
             }
-        ]
+
     },
 
     "Flame": {

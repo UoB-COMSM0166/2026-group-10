@@ -1,11 +1,11 @@
 # Addon
 
 ## Tick
-This game is set to run in tick. In each tick the `GameManager` will calculate the status and movement of each entities. We set the tick rate is 60Hz, which means the tick will update 60 times per second. And the graph is also set to update 60 frames per second. 
+This game is set to run in tick. In each tick the `Game` will calculate the status and movement of each entities. We set the tick rate is 60Hz, which means the tick will update 60 times per second. And the graph is also set to update 60 frames per second. 
 
 So in json files, each value related to time, such as cooldown and duration, is counted in tick. In `./data/Map/Forest.json` file, value `waves[i].start_tick` and `waves[i].spawns[j].spawn_cd` are counted in tick.
 
-`GameManager` have an attribute `this.clock`, which is a `GameClock` objective. `GameClock.now()` returns the the current tick.
+`Game` have an attribute `this.clock`, which is a `GameClock` objective. `GameClock.now()` returns the the current tick.
 
 ## JSON
 All customizable elements should be stored to json files, such as hero, skill and map.

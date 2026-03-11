@@ -11,7 +11,7 @@
         setComponent(type, data)
     }
 
-    class GameManager {
+    class Game {
         Entity[] entities
         EventTrigger eventTrigger
         Controller controller

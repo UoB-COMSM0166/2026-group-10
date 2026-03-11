@@ -9,32 +9,24 @@ export default class Render {
             p5.fill(0, 0, 255);
             p5.circle(pos.x, pos.y, hitbox);
             // p5.rect(pos.x - objective.hitbox.width / 2, pos.y - objective.hitbox.height / 2, objective.hitbox.width, objective.hitbox.height);
-            p5.fill(255, 255, 255);
-            p5.text(hp, pos.x - hitbox / 2, pos.y);
+            p5.fill(100, 100, 100);
+            p5.textSize(20);
+            p5.text(hp, pos.x + hitbox/2, pos.y + hitbox/2);
         }
     }
 
     static renderingEnemy(p5, enemies) {
-        // console.log(enemies);
-        // for (const [key, value] in enemies.entries()) {
-        //     console.log(value.id);
-        //     const pos = value.position;
-        //     if (pos) {
-        //         p5.stroke(0);
-        //         p5.strokeWeight(2);
-        //         p5.fill(255, 0, 0);
-        //         p5.circle(pos.x, pos.y, 40);
-        //     }
-        // }
         for (const enemy of enemies.values()) {
             const pos = enemy.position;
             const hp = Math.round(enemy.currentHP);
+            const hitbox = enemy.hitbox;
             if (enemy) {
                 p5.stroke(0);
                 p5.strokeWeight(2);
                 p5.fill(255, 0, 0);
-                p5.circle(pos.x, pos.y, 20);
-                p5.text(hp, pos.x - 10, pos.y - 15);
+                p5.circle(pos.x, pos.y, hitbox);
+                p5.textSize(20);
+                p5.text(hp, pos.x + hitbox/2, pos.y + hitbox/2);
             }
         }
     }
@@ -44,7 +36,11 @@ export default class Render {
         if (pos) {
             p5.stroke(0);
             p5.strokeWeight(2);
-            p5.fill(0, 255, 0);
+            if (hero.isAlive()) {
+                p5.fill(0, 255, 0);
+            } else {
+                p5.fill(200, 200, 200);
+            }
             p5.circle(pos.x, pos.y, 40);
         }
     }

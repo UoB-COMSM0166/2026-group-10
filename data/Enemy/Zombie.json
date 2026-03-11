@@ -5,5 +5,5 @@
     "speed": 1,
     "heroDamage": 2,
     "damage": 100,
-    "hitbox": 5
+    "hitbox": 20
 }

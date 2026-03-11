@@ -1,4 +1,4 @@
-export default class GameClock {
+export default class Clock {
     constructor(tickRate = 60) {
         this.tickRate = tickRate;
         this.tick = 0;

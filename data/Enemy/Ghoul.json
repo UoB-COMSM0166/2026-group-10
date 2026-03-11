@@ -1,7 +1,9 @@
 {
     "name": "Ghoul",
-    "HP": 60,
-    "MP": 0,
+    "hp": 20,
+    "mp": 0,
     "speed": 1,
-    "damage": 2
+    "heroDamage": 2,
+    "damage": 100,
+    "hitbox": 20
 }
