@@ -58,13 +58,17 @@ new p5(p => {
 
         if (p.mouseButton === p.RIGHT) {
             const append = Boolean(event?.shiftKey);
-            gameManager.controller.handleRightClick(p.mouseX, p.mouseY, append);
+            if (gameManager && gameManager.controller) {
+                gameManager.controller.handleRightClick(p.mouseX, p.mouseY, append);
+            }
             return false; // Prevent default context menu
         }
     };
 
     p.keyPressed = () => {
         // Example: Press 'S' to stop the hero
-        gameManager.controller.handleButton(p.key, p.mouseX, p.mouseY);
+        if (gameManager && gameManager.controller) {
+            gameManager.controller.handleButton(p.key, p.mouseX, p.mouseY);
+        }
     };
 });

@@ -23,6 +23,7 @@ export default class GameManager {
     constructor(p5, map, hero, skillData, enemyData, assetLoader) {
         this.p5 = p5;
         this.nextID = 0;
+        this.assetLoader = assetLoader;
         this.clock = new GameClock();
         this.events = new EventEmitter();
         this.ui = new UI(this.p5, this, assetLoader);
@@ -391,8 +392,8 @@ export default class GameManager {
             Render.renderingEnemy(this.p5, this.enemies);
         }
         Render.renderingObjective(this.p5, this.objective);
-        Render.renderingHero(this.p5, this.hero);
-        Render.renderingProjectile(this.p5, this.entities);
+        Render.renderingHero(this.p5, this.hero, this.assetLoader);
+        Render.renderingProjectile(this.p5, this.entities, this.assetLoader);
 
         // Render UI on top
         if (this.ui) {

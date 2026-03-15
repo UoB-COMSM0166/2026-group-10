@@ -130,6 +130,7 @@ export default class Hero extends Unit {
                 skill.damage,
                 this.gameManager
             );
+            projectile.skillName = skill.name;
             projectile.calculateVelocity({ x, y });
             this.gameManager.addEntity(projectile);
             this.currentMP -= skill.manaCost;
@@ -154,6 +155,7 @@ export default class Hero extends Unit {
                 skill.damage,
                 this.gameManager
             );
+            missile.skillName = skill.name;
 
             this.gameManager.addEntity(missile);
             this.currentMP -= skill.manaCost;
@@ -174,6 +176,7 @@ export default class Hero extends Unit {
                 skill.effectStatus,
                 skill.effectDuration
             );
+            areaEffect.skillName = skill.name;
             this.gameManager.addEntity(areaEffect);
             this.currentMP -= skill.manaCost;
             skill.startCooldown();

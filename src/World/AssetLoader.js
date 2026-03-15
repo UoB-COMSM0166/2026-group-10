@@ -15,6 +15,22 @@ export default class AssetLoader {
 		this.assets.coolDown = p.loadImage('assets/CoolDown.png');
 		this.assets.actionFrame = p.loadImage('assets/ActionFrame.png');
 		this.assets.settingIcon = p.loadImage('assets/settings_icon.png');
+		this.assets.heroIdle = {
+			image: p.loadImage('assets/human_idle.png'),
+			frames: 8
+		};
+		this.assets.heroRun = {
+			image: p.loadImage('assets/human_run.png'),
+			frames: 8
+		};
+		this.assets.heroAttack = {
+			image: p.loadImage('assets/human_attack.png'),
+			frames: 10
+		};
+		this.assets.fireballSprite = {
+			image: p.loadImage('assets/fireball.png'),
+			frames: 9
+		};
 	}
 
 	getAsset(name) {

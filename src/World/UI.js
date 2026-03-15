@@ -334,7 +334,7 @@ export default class UI {
         const hpPercent = s.hp / s.maxHP;
         const mpPercent = s.mp / s.maxMP;
         
-        // --- FLASHING PULSE MATH ---
+        // FLASHING PULSE
         const pulseAlpha = 150 + p.sin(p.frameCount * 0.15) * 105;
         const isHpLow = hpPercent < 0.25;
         const isMpLow = mpPercent < 0.25;
@@ -350,12 +350,10 @@ export default class UI {
     
         p.push();
     
-        // Draw HUD frame (uncomment when you have your empty frame ready)
+        // Draw HUD frame
         // p.image(hud, x, y, hudWidth, hudHeight);
     
-        // =========================
         // HEALTH BAR
-        // =========================
         const hpX = x + 30; 
     
         // 1. Background (Dark Gray)
@@ -375,9 +373,8 @@ export default class UI {
             p.rect(hpX, barY, barWidth, barHeight, 6);
         }
     
-        // =========================
+    
         // MANA BAR
-        // =========================
         const mpX = x + hudWidth - barWidth - 30;
     
         // 1. Background
@@ -397,9 +394,7 @@ export default class UI {
             p.rect(mpX, barY, barWidth, barHeight, 6);
         }
     
-        // =========================
         // TEXT
-        // =========================
         p.noStroke(); 
         p.fill(255);
         p.textAlign(p.CENTER, p.CENTER);
