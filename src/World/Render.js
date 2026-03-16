@@ -121,9 +121,12 @@ export default class Render {
                 }
 
                 if (entity.sprite) {
-                    // Flip horizontally if moving left
-                    const flipX = entity.velocity && entity.velocity.vx < -0.1;
-                    entity.sprite.draw(p5, pos.x, pos.y, true, flipX);
+                    let rotation = 0;
+                    // Rotate Projectiles and Missiles to face their movement direction using their velocity angle
+                    if (entity.category !== 'Area' && entity.velocity && (entity.velocity.vx !== 0 || entity.velocity.vy !== 0)) {
+                        rotation = Math.atan2(entity.velocity.vy, entity.velocity.vx);
+                    }
+                    entity.sprite.draw(p5, pos.x, pos.y, true, false, rotation);
                 } else if (entity.category === 'Area') {
                     console.log(`Rendering AreaEffect with radius ${entity.hitbox || 0}`);
                     const radius = entity.hitbox || 0;

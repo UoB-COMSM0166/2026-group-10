@@ -29,7 +29,7 @@ export default class AssetLoader {
 		};
 		this.assets.fireballSprite = {
 			image: p.loadImage('assets/fireball.png'),
-			frames: 9
+			frames: 8
 		};
 	}
 

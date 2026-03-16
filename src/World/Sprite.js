@@ -12,7 +12,7 @@ export default class Sprite {
         }
     }
 
-    draw(p5, x, y, animate = true, flipX = false) {
+    draw(p5, x, y, animate = true, flipX = false, rotation = 0) {
         if (!this.image) return;
 
         let currentFrame = 0;
@@ -28,6 +28,9 @@ export default class Sprite {
         p5.translate(x, y);
         if (flipX) {
             p5.scale(-1, 1);
+        }
+        if (rotation !== 0) {
+            p5.rotate(rotation);
         }
         p5.imageMode(p5.CENTER);
         p5.image(this.image, 0, 0, this.drawWidth, this.drawHeight, sx, sy, this.spriteWidth, this.spriteHeight);
