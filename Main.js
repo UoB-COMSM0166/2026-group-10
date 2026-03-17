@@ -21,24 +21,26 @@ new p5(p => {
         gameManager = new GameManager(p, mapData, heroData, skillData);
         gameManager.start();
     }
-
+    
     p.draw = () => {
         p.background(220);
-
         gameManager.loop();
     }
 
     p.mousePressed = (event) => {
-        // Handle right click
         if (p.mouseButton === p.RIGHT) {
-            const append = Boolean(event?.shiftKey);
-            gameManager.controller.handleRightClick(p.mouseX, p.mouseY, append);
-            return false; // Prevent default context menu
-        }
+                const append = Boolean(event?.shiftKey);
+                gameManager.controller.handleRightClick(p.mouseX, p.mouseY, append);
+                return false; 
+            }
+        
+        if (p.mouseButton === p.LEFT) {
+                gameManager.mousePressed(); 
+            }
     }
 
     p.keyPressed = () => {
-        // Example: Press 'S' to stop the hero
         gameManager.controller.handleButton(p.key, p.mouseX, p.mouseY);
+        gameManager.handleKeyPressed(p.key);
     }
 })

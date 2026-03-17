@@ -84,25 +84,64 @@ export default class GameManager {
     }
     //TEMP: Tower Defense core method
     placeTower(x, y) {
-        if (this.money < this.towerCost) return;
-
         let gridX = Math.floor(x / this.gridSize);
         let gridY = Math.floor(y / this.gridSize);
-
         let key = `${gridX},${gridY}`;
 
-        if (this.occupiedCells.has(key)) return;
+        //Attempting to place tower
+        console.log("Grid Clicked:", gridX, gridY);
+
+        if (this.occupiedCells.has(key)) {
+            console.log("Cell is occupied, selecting tower instead.");
+            this.showUIMessage("Cell is occupied, selecting tower instead.");
+            this.selectTowerAt(x, y);
+            return;
+        }
+
+        if (this.map.isPathCell(gridX, gridY)) {
+            console.warn("Location is a path! Cannot place tower here.");
+            this.showUIMessage("Location is a path! Cannot place tower here.");
+            return;
+        }
+
+        if (this.money < this.towerCost) {
+            console.log("Lack of money!");
+            return;
+        }
 
         let towerX = gridX * this.gridSize + this.gridSize / 2;
         let towerY = gridY * this.gridSize + this.gridSize / 2;
 
         const tower = new Tower(this.p5, towerX, towerY, this.bullets);
-
         this.towers.push(tower);
         this.occupiedCells.add(key);
-
         this.money -= this.towerCost;
-        if (this.map.isPathCell(gridX, gridY)) return;
+        
+    }
+
+    selectTowerAt(x, y) {
+        if (this.selectedTower) this.selectedTower.isSelected = false;
+        this.selectedTower = null;
+
+        for (let t of this.towers) {
+            if (t.containsPoint(x, y)) {
+                this.selectedTower = t;
+                t.isSelected = true;
+                break;
+            }
+        }
+    }
+
+    handleKeyPressed(key) {
+        if (key.toLowerCase() === 'u' && this.selectedTower) {
+            let cost = this.selectedTower.getUpgradeCost();
+            if (this.money >= cost) {
+                this.money -= cost;
+                this.selectedTower.upgrade();
+            } else {
+                console.log("Not enough money to upgrade!");
+            }
+        }
     }
 
     mousePressed() {
@@ -264,41 +303,36 @@ export default class GameManager {
 
         // Update TD enemies
         // tower defense update
-        for (let enemy of this.tdEnemies) {
+        for (let i = this.tdEnemies.length - 1; i >= 0; i--) {
+            let enemy = this.tdEnemies[i];
             enemy.update();
+            if (enemy.hp <= 0) {
+                this.money += 50; 
+                this.tdEnemies.splice(i, 1);
+            } else if (enemy.finished) {
+                this.tdEnemies.splice(i, 1);
+            }
         }
 
         for (let tower of this.towers) {
-            tower.update(this.tdEnemies);
+            tower.scan(this.tdEnemies); 
         }
 
-        for (let bullet of this.bullets) {
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+            let bullet = this.bullets[i];
             bullet.update();
-        }
-
-        if (this.tdEnemies && this.tdEnemies.length > 0) {
-            for (let enemy of this.tdEnemies) {
-                enemy.update();
+            if (bullet.hit) {
+                this.bullets.splice(i, 1);
             }
         }
 
         Render.renderingPath(this.p5, this.map);
-        Render.renderingObjective(this.p5, this.objective);
-        // Render enemies
-        if (this.enemies && Object.keys(this.enemies).length > 0) {
-            Render.renderingEnemy(this.p5, this.enemies);
-        }
         Render.renderingHero(this.p5, this.hero);
-        Render.renderingProjectile(this.p5, this.entities);
-
-        // draw TD
+        
         for (let tower of this.towers) tower.show();
         for (let enemy of this.tdEnemies) enemy.show();
         for (let bullet of this.bullets) bullet.show();
 
-        // Render UI on top
-        if (this.ui) {
-            this.ui.draw();
-        }
+        if (this.ui) this.ui.draw();
     }
 }

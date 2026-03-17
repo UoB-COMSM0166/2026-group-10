@@ -235,6 +235,22 @@ export default class UI {
 		p.text(tpsText, 32, 98);
 		p.pop();
 
+		if (this.gameManager.messageTimer > 0) {
+			const p = this.p5;
+			p.push();
+			p.textAlign(p.CENTER, p.CENTER);
+			p.textSize(24);
+			p.textStyle(p.BOLD);
+			
+			// Fade out effect for the message
+			let alpha = p.map(this.gameManager.messageTimer, 0, 30, 0, 255);
+			p.fill(255, 50, 50, alpha); // Red color with fading effect
+			p.text(this.gameManager.uiMessage, p.width / 2, p.height / 2 - 50);
+			p.pop();
+
+			this.gameManager.messageTimer--;
+    	}
+
 		if (this.shouldDrawSkillCooldowns) {
 			this.drawSkillCooldowns(p);
 		}
