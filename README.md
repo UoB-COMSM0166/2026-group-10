@@ -59,6 +59,8 @@ After analysing the strengths of each, the team identified a unique opportunity 
 
 With this direction established, we divided the research effort. Each team member investigated specific game rules, dynamics, and development challenges to ensure our hybrid concept remained feasible within our technical constraints and timeline. 
 
+<img width="1200" height="896" alt="chart" src="https://github.com/user-attachments/assets/89ad8717-d669-4e34-94fb-6b47acaf9330" />
+
 <details>
   <summary><strong>Game ideas and analysis</strong></summary>
 
