@@ -1,46 +1,45 @@
-// import { p5 } from "./js/p5.js";
 import GameManager from './src/GameManager.js';
 
-new p5(p => {
-    let gameManager;
-    let mapData = null;
-    let heroData = null;
-    let skillData = null;
-    let enemyData = null;
+async function loadAssets(p5) {
+  const mapData = await p5.loadJSON('./data/Map/Forest.json');
+  const heroData = await p5.loadJSON('./data/Hero/Archmage.json');
 
-    p.preload = () => {
-        mapData = p.loadJSON('data/Map/Forest.json');
-        heroData = p.loadJSON('data/Hero/Archmana.json');
-        skillData = p.loadJSON('data/Skill/Archmana.json');
-        enemyData = p.loadJSON('data/Enemy/Zombie.json');
+  return { mapData, heroData };
+}
+
+new p5(p5 => {
+    let gameManager = null;
+    const canvasSize = { width: 1280, height: 720 };
+
+    p5.setup = async () => {
+        console.log("Setting up the world...");
+
+        p5.createCanvas(canvasSize.width, canvasSize.height)
+            .elt.addEventListener('contextmenu', e => e.preventDefault());
+
+        p5.frameRate(60);
+
+        const assets = await loadAssets(p5);
+
+        gameManager = new GameManager(
+            p5,
+            assets.mapData,
+            assets.heroData,
+            canvasSize
+        );
+
+        gameManager.start();
     };
 
-    p.setup = () => {
-        console.log("Setting up the world...");
-        p.createCanvas(1280, 720).elt.addEventListener('contextmenu', e => e.preventDefault());
-        p.frameRate(60);
-
-        gameManager = new GameManager(p, mapData, heroData, skillData, enemyData);
-        gameManager.start();
-    }
-
-    p.draw = () => {
-        p.background(220);
+    p5.draw = () => {
+        if (!gameManager) {
+            p5.background(220);
+            return;
+        }
 
         gameManager.loop();
+        p5.background(220);
+        p5.image(gameManager.layers.game, 0, 0);
+        p5.image(gameManager.layers.ui, 0, 0);
     }
-
-    p.mousePressed = (event) => {
-        // Handle right click
-        if (p.mouseButton === p.RIGHT) {
-            const append = Boolean(event?.shiftKey);
-            gameManager.controller.handleRightClick(p.mouseX, p.mouseY, append);
-            return false; // Prevent default context menu
-        }
-    }
-
-    p.keyPressed = () => {
-        // Example: Press 'S' to stop the hero
-        gameManager.controller.handleButton(p.key, p.mouseX, p.mouseY);
-    }
-})
+});

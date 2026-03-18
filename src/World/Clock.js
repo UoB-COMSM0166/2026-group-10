@@ -1,47 +1,62 @@
 export default class Clock {
-    constructor(tickRate = 60) {
+    constructor(p5, tickRate, maxFrameMs, maxTicksPerFrame) {
+        this.p5 = p5;
         this.tickRate = tickRate;
         this.tick = 0;
-
-        // 将游戏时间分为不同的频道，方便控制不同系统的时间流速
-        // Divide game time into different channels for flexible control of time flow in different systems
-        this.channels = {
-            gameplay: { tick: 0, scale: 1 },
-            spawn: { tick: 0, scale: 1 },
-            ui: { tick: 0, scale: 1 }
-        };
+        this.lastFrameMs = this.p5.millis();
+        this.tickSampleCount = 0;
+        this.tpsSampleMs = 0;
+        this.tps = 0;
+        this.accumulatorMs = 0;
+        this.maxFrameMs = maxFrameMs;
+        this.fixedStepMs = 1000 / tickRate;
+        this.maxTicksPerFrame = maxTicksPerFrame;
     }
 
-    // 增加一个tick（游戏逻辑tick）
-    // Increment a tick (game logic tick)
-    updateTick() {
-        this.tick += 1;
-        for (const ch of Object.values(this.channels)) {
-            ch.tick += ch.scale;
+    start() {
+        this.lastFrameMs = this.p5.millis();
+        this.accumulatorMs = 0;
+        this.tickSampleCount = 0;
+        this.tpsSampleMs = 0;
+        this.tps = 0;
+    }
+
+    update() {
+        const nowMs = this.p5.millis();
+        const frameMs = Math.min(Math.max(0, nowMs - this.lastFrameMs), this.maxFrameMs);
+        this.lastFrameMs = nowMs;
+        this.accumulatorMs += frameMs;
+
+        let ticks = 0;
+        while (this.accumulatorMs >= this.fixedStepMs && ticks < this.maxTicksPerFrame) {
+            this.accumulatorMs -= this.fixedStepMs;
+            ticks += 1;
         }
+
+        if (ticks === this.maxTicksPerFrame && this.accumulatorMs >= this.fixedStepMs) {
+            this.accumulatorMs = 0;
+        }
+
+        this.tick += ticks;
+        this.tickSampleCount += ticks;
+        this.tpsSampleMs += frameMs;
+
+        if (this.tpsSampleMs >= 1000) {
+            this.tps = (this.tickSampleCount * 1000) / this.tpsSampleMs;
+            this.tickSampleCount = 0;
+            this.tpsSampleMs = 0;
+        }
+
+        return ticks;
     }
 
-    // 获取指定频道的游戏tick数，默认为gameplay频道
-    // Get the game tick count for the specified channel, default is 'gameplay'
-    now(channel = "gameplay") {
-        return this.channels[channel].tick;
-    }
-
-    // 获取当前游戏时间（秒），用于显示
-    // Get the current game time in seconds, for display purposes
-    getDisplaySeconds(channel = "gameplay") {
-        return this.channels[channel].tick / this.tickRate;
-    }
-
-    // 设置指定频道的时间流速，scale为倍速
-    // Set the time flow speed for the specified channel, scale is the multiplier
-    setScale(channel, scale) {
-        this.channels[channel].scale = scale;
-    }
-
-    // 获取全局tick数
-    // Get the total global tick count
-    getTotalTick() {
+    now() {
         return this.tick;
+    }
+
+    timeFormat(tick = this.tick) {
+        const second = Math.floor(tick / this.tickRate) % 60;
+        const minute = Math.floor(tick / this.tickRate / 60);
+        return `${minute.toFixed(0).padStart(2, '0')}:${second.toFixed(0).padStart(2, '0')}`;
     }
 }

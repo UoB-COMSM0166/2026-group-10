@@ -1,7 +1,12 @@
 {
-    "name": "Archmana",
+    "name": "Lyra'Gotha",
     "mainAttribute": "intelligence",
-    "description": "...",
+    "description": "Ranged hero with high magic damage and crowd control abilities.",
+    "sprite": "#0000AA",
+    "hitbox": 15,
+    "hp": 200,
+    "mp": 220,
+    "speed": 1,
     "baseAttribute": {
         "strength": 5,
         "agility": 8,
@@ -11,11 +16,5 @@
         "strength": 1,
         "agility": 2,
         "intelligence": 4
-    },
-    "baseStat": {
-        "hp": 100,
-        "mp": 100,
-        "attackCD": 10,
-        "speed": 1
     }
 }
