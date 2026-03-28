@@ -107,7 +107,9 @@ Gates of cinder paper prototype
 
 
 
-<center>**Figure 2. Froggy Paper Prototype GIF**</center>
+FROGGER PROTOTYPE
+<img width="464" height="832" alt="image" src="https://github.com/user-attachments/assets/d199e638-55ca-40fd-8960-09d675dfa521" />
+
 
 **Testing Feedback** 
 
