@@ -26,8 +26,9 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ## Development Team
 ----
 ### Team Photo 
+![WhatsApp Image 2026-03-28 at 18 40 07](https://github.com/user-attachments/assets/c30621c0-e8ce-41dc-9768-56f7e3a1f887)
 
-![Group Photo](weeklyupdates/groupphoto/group_photo.jpg)
+
 
 ### Group Members 
 -----
@@ -97,8 +98,12 @@ By considering the plethora of stakeholders around our game, we gained a better 
 
 
 **Prototyping** 
+Gates of cinder paper prototype
 
-<center>**Figure 1. Lord of the Cinder Paper Prototype GIF** </center>
+![ezgif-751bf9ca88ecbaeb](https://github.com/user-attachments/assets/ed4efc50-e6fe-4047-a526-dc39f46ced69)
+
+
+
 
 
 
