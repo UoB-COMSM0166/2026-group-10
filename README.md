@@ -26,8 +26,9 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ## Development Team
 ----
 ### Team Photo 
+![WhatsApp Image 2026-03-28 at 18 40 07](https://github.com/user-attachments/assets/c30621c0-e8ce-41dc-9768-56f7e3a1f887)
 
-![Group Photo](weeklyupdates/groupphoto/group_photo.jpg)
+
 
 ### Group Members 
 -----
