@@ -97,8 +97,11 @@ By considering the plethora of stakeholders around our game, we gained a better 
 
 
 **Prototyping** 
+Gates of cinder paper prototype
+![ezgif-711bfa56aa74ae87](https://github.com/user-attachments/assets/1da7739b-7d7c-4b82-b62f-3e6ca04c2e5f)
 
-<center>**Figure 1. Lord of the Cinder Paper Prototype GIF** </center>
+
+
 
 
 
