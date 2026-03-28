@@ -98,7 +98,8 @@ By considering the plethora of stakeholders around our game, we gained a better 
 
 **Prototyping** 
 Gates of cinder paper prototype
-![ezgif-711bfa56aa74ae87](https://github.com/user-attachments/assets/1da7739b-7d7c-4b82-b62f-3e6ca04c2e5f)
+
+![ezgif-751bf9ca88ecbaeb](https://github.com/user-attachments/assets/ed4efc50-e6fe-4047-a526-dc39f46ced69)
 
 
 
