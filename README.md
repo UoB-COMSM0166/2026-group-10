@@ -13,7 +13,7 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - [P5.js tutorials](https://p5js.org/tutorials/) 
 - [Coding Train P5.js](https://thecodingtrain.com/tracks/code-programming-with-p5-js) course - go here for enthusiastic video tutorials from Dan Shiffman (recommended!)
 
-<h2 align="center">INTRODUCTION</h2>
+<h2 align="center">GATES OF CINDER</h2>
 ---
 STRAPLINE. Add an exciting one sentence description of your game here.
 
