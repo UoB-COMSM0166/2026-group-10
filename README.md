@@ -57,7 +57,7 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 
 ![league-of-legends](https://github.com/user-attachments/assets/389a4aca-77a4-489e-9810-20059466c3b8)
 
-
+---
 
 ### Requirements 
 
