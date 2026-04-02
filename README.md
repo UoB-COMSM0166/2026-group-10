@@ -49,7 +49,8 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 ---
 
-##GAME MECHANICS:
+<h2 align="center">GAME MECHANICS</h2>
+---
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
 
 
