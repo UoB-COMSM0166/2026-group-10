@@ -45,7 +45,7 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 ## 📚 Project Report
 
-###Introduction
+<h2 align="center">INTRODUCTION</h2>
 
 ---
 
