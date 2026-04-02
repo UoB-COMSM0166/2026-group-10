@@ -35,7 +35,7 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 | Name                 | Email                 | Github Username       |
 | -------------------- | --------------------- | --------------------- |
-| Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |
+| Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |       
 | Cenarius Lu          | ig25518@bristol.ac.uk | Shadow-Song           |
 | Rajmugundhan nagappan| je25549@bristol.ac.uk | Rajmugundhan2002-tech |
 | Ayush Raizada        | ff25412@bristol.ac.uk | Raizada8              |
@@ -53,9 +53,7 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
 
 
-![ezgif-485aec6f856ccd30](https://github.com/user-attachments/assets/5b9197d5-1ce6-49f8-8dbe-a2fbcde73bdb) 
-
-![league-of-legends](https://github.com/user-attachments/assets/389a4aca-77a4-489e-9810-20059466c3b8)
+![ezgif-485aec6f856ccd30](https://github.com/user-attachments/assets/5b9197d5-1ce6-49f8-8dbe-a2fbcde73bdb) |![league-of-legends](https://github.com/user-attachments/assets/389a4aca-77a4-489e-9810-20059466c3b8)
 
 ---
 
