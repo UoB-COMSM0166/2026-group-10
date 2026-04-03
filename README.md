@@ -63,7 +63,7 @@ Gates of cinder  combines the elements of RPG and tower defense to create a fun 
 
 ---
 
-<h2 align="center">GAME MECHANICS</h2>
+<h2 align="center">GAME MECHANICS-INSPRATION</h2>
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
 
 <table width="100%">
