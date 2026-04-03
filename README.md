@@ -131,18 +131,34 @@ By considering the plethora of stakeholders around our game, we gained a better 
 **Prototyping** 
 Gates of cinder paper prototype
 
-![ezgif-751bf9ca88ecbaeb](https://github.com/user-attachments/assets/ed4efc50-e6fe-4047-a526-dc39f46ced69)
 
+<table width="100%">
+  <!-- ROW 1 -->
+  <tr>
+    <td width="50%">
+      <img src="frogger.gif" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+    <td width="50%">
+      <h3>Prototype — description</h3>
+      <p>
+       description
+      </p>
+    </td>
+  </tr>
 
-
-
-
-
-
-FROGGER PROTOTYPE
-<img width="464" height="832" alt="image" src="frogger.gif" />
-
-
+  <!-- ROW 2 -->
+  <tr>
+    <td width="50%">
+      <img src="kingdom.gif" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+    <td width="50%">
+      <h3>Prototype — Success state</h3>
+      <p>
+        description
+      </p>
+    </td>
+  </tr>
+</table>
 **Testing Feedback** 
 
 - 15% ~750 words
