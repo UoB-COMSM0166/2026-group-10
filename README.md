@@ -27,6 +27,19 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ----
 ### Team Photo 
 ![WhatsApp Image 2026-03-28 at 18 40 07](https://github.com/user-attachments/assets/c30621c0-e8ce-41dc-9768-56f7e3a1f887)
+## Table of Contents
+
+| #  | Section          | Description                                      |
+|----|------------------|--------------------------------------------------|
+| 00 | [Labs](#labs) | Weekly lab tasks & documentation                |
+| 01 | [Introduction](#introduction) | Game overview & what makes it novel       |
+| 02 | [Requirements](#requirements) | Ideation, use cases & user stories        |
+| 03 | [Design](#design) | System architecture, state machine & class diagrams |
+| 04 | [Implementation](#implementation) | Key technical challenges           |
+| 05 | [Evaluation](#evaluation) | Qualitative & quantitative testing     |
+| 06 | [Process](#process) | Team workflow & reflection               |
+| 07 | [Conclusion](#conclusion) | Lessons learnt & future work         |
+| 08 | [Contribution](#contribution) | Individual contributions         |
 
 
 
