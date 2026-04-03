@@ -73,7 +73,7 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
   </tr>
   <tr>
     <td align="center">
-      <img src="kingdom rush.gif" width="90%">
+      <img src="kingdom rush.gif.gif" width="90%">
     </td>
     <td align="center">
       <img src="league-of-legends.gif" width="90%">
