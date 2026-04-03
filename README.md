@@ -68,15 +68,15 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 
 <table>
   <tr>
-    <th>Temple Run — Reflex-driven obstacle avoidance</th>
-    <th>Subway Surfers — Urban parkour runner</th>
+    <th align="center">Kingdom Rush — Strategy tower defence</th>
+    <th align="center">League of Legends — RPG combat</th>
   </tr>
   <tr>
-    <td>
-      <img src="Kingdom rush gif.html" width="100%">
+    <td align="center">
+      <img src="chart.png" width="90%">
     </td>
-    <td>
-      <img src="league of legends.gif" width="100%">
+    <td align="center">
+      <img src="league-of-legends.gif" width="90%">
     </td>
   </tr>
 </table>
