@@ -66,17 +66,17 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ---
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
 
-<table>
+<table width="100%">
   <tr>
-    <th align="center">Kingdom Rush — Strategy tower defence</th>
-    <th align="center">League of Legends — RPG combat</th>
+    <th align="center" width="50%">Kingdom Rush — Strategy tower defence</th>
+    <th align="center" width="50%">League of Legends — RPG combat</th>
   </tr>
   <tr>
     <td align="center">
-      <img src="kingdom rush.gif.gif" width="90%">
+      <img src="kingdom rush.gif.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td align="center">
-      <img src="league-of-legends.gif" width="90%">
+      <img src="league-of-legends.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
   </tr>
 </table>
