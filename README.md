@@ -13,8 +13,8 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - [P5.js tutorials](https://p5js.org/tutorials/) 
 - [Coding Train P5.js](https://thecodingtrain.com/tracks/code-programming-with-p5-js) course - go here for enthusiastic video tutorials from Dan Shiffman (recommended!)
 
-## Your Game (change to title of your game)
-
+<h2 align="center">GATES OF CINDER</h2>
+---
 STRAPLINE. Add an exciting one sentence description of your game here.
 
 IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
@@ -27,8 +27,6 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ----
 ### Team Photo 
 ![WhatsApp Image 2026-03-28 at 18 40 07](https://github.com/user-attachments/assets/c30621c0-e8ce-41dc-9768-56f7e3a1f887)
-<h2 align="center">Table of Contents</h2>
-<hr>
 ## Table of Contents
 
 | #  | Section          | Description                                      |
@@ -44,12 +42,13 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 | 08 | [Contribution](#contribution) | Individual contributions         |
 
 
+
 ### Group Members 
 -----
 
 | Name                 | Email                 | Github Username       |
 | -------------------- | --------------------- | --------------------- |
-| Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |
+| Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |       
 | Cenarius Lu          | ig25518@bristol.ac.uk | Shadow-Song           |
 | Rajmugundhan nagappan| je25549@bristol.ac.uk | Rajmugundhan2002-tech |
 | Ayush Raizada        | ff25412@bristol.ac.uk | Raizada8              |
@@ -59,10 +58,29 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 ## 📚 Project Report
 
-### Introduction
+<h2 align="center">INTRODUCTION</h2>
 
-- 5% ~250 words 
-- Describe your game, what is based on, what makes it novel? (what's the "twist"?) 
+---
+
+<h2 align="center">GAME MECHANICS</h2>
+The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
+
+<table width="100%">
+  <tr>
+    <th align="center" width="50%">Kingdom Rush — Strategy tower defence</th>
+    <th align="center" width="50%">League of Legends — RPG combat</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="kingdom rush.gif.gif" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+    <td align="center">
+      <img src="league-of-legends.gif" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+  </tr>
+</table>
+
+---
 
 ### Requirements 
 
@@ -74,7 +92,11 @@ After analysing the strengths of each, the team identified a unique opportunity 
 
 With this direction established, we divided the research effort. Each team member investigated specific game rules, dynamics, and development challenges to ensure our hybrid concept remained feasible within our technical constraints and timeline. 
 
+<h2 align="center">STAKE HOLDERS</h2>
+
+
 ##STAKE HOLDERS
+
 
 <img width="1200" height="896" alt="chart" src="https://github.com/user-attachments/assets/89ad8717-d669-4e34-94fb-6b47acaf9330" />
 
@@ -114,16 +136,34 @@ By considering the plethora of stakeholders around our game, we gained a better 
 **Prototyping** 
 Gates of cinder paper prototype
 
-![ezgif-751bf9ca88ecbaeb](https://github.com/user-attachments/assets/ed4efc50-e6fe-4047-a526-dc39f46ced69)
 
+<table width="100%">
+  <!-- ROW 1 -->
+  <tr>
+    <td width="50%">
+      <img src="frogger.gif" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+    <td width="50%">
+      <h3>Prototype — description</h3>
+      <p>
+       description
+      </p>
+    </td>
+  </tr>
 
-
-
-
-
-
-<center>**Figure 2. Froggy Paper Prototype GIF**</center>
-
+  <!-- ROW 2 -->
+  <tr>
+    <td width="50%">
+      <img src="gates of cinder.jpeg" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+    <td width="50%">
+      <h3>Prototype — Success state</h3>
+      <p>
+        description
+      </p>
+    </td>
+  </tr>
+</table>
 **Testing Feedback** 
 
 - 15% ~750 words
