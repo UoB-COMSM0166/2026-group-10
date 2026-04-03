@@ -3,6 +3,7 @@ export default class EventEmitter {
         this.listeners = new Map();
     }
 
+    // 开启事件监听，返回一个取消监听的函数
     on(eventName, handler) {
         if (!this.listeners.has(eventName)) {
             this.listeners.set(eventName, new Set());
@@ -14,6 +15,7 @@ export default class EventEmitter {
         };
     }
 
+    // 监听一次事件，事件触发后自动取消监听
     once(eventName, handler) {
         const off = this.on(eventName, (...args) => {
             off();
@@ -22,6 +24,7 @@ export default class EventEmitter {
         return off;
     }
 
+    // 取消事件监听
     off(eventName, handler) {
         const set = this.listeners.get(eventName);
         if (!set) return;
@@ -31,6 +34,7 @@ export default class EventEmitter {
         }
     }
 
+    // 触发事件，调用所有监听该事件的处理函数
     emit(eventName, payload) {
         const set = this.listeners.get(eventName);
         if (!set) return;

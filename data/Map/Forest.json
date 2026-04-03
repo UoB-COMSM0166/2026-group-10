@@ -1,65 +1,103 @@
 {
     "name": "Forest",
-    "description": "The undead army wants to corrupt our Sunwell to resurrect their liches. You must hold out until the Sunwell is completely transferred!",
-    "chapter": 1,
 
     "size": {"width": 1280, "height": 720},
 
     "objective": {
         "position": {"x": 320, "y": 540},
-        "hitbox": 100,
-        "hp": 1000
+        "hitbox": 30,
+        "hp": 1000,
+        "sprite": "#FFFFFF"
     },
+
     "hero": {"x": 420, "y": 540},
-    
-    "paths": {
-        "A": {
-            "spawn": {"x": 800, "y": 90},
-            "waypoint": [
-                {"x": 800, "y": 90},
-                {"x": 640, "y": 180},
-                {"x": 640, "y": 360},
-                {"x": 320, "y": 540}
-            ]
-        },
-        "B": {
-            "spawn": {"x": 1120, "y": 450},
-            "waypoint": [
-                {"x": 1120, "y": 450},
-                {"x": 640, "y": 360},
-                {"x": 320, "y": 540}
-            ]
-        }
-    },
 
     "waves": [
         {
-            "start_tick": 180,
-            "spawns": [
+            "before": 120,
+            "lanes": [
                 {
-                    "path": "A",
-                    "name": "Zombie", 
-                    "HP": 80,
-                    "MP": 0,
+                    "id": "A",
+                    "name": "Zombie",
+                    "hp": 50,
+                    "mp": 0,
                     "speed": 0.8,
-                    "damage": 5,
-                    "spawn_cd": 180,
-                    "amount": 5
+                    "heroDamage": 0,
+                    "damage": 1,
+                    "hitbox": 10,
+                    "sprite": "#AAAA00",
+                    "cd": 180,
+                    "amount": 9,
+                    "experience": 10,
+                    "waypoint": [
+                        {"x": 800, "y": 90},
+                        {"x": 640, "y": 180},
+                        {"x": 640, "y": 360},
+                        {"x": 320, "y": 540}
+                    ]
+                },
+                {
+                    "id": "B",
+                    "name": "Ghoul",
+                    "hp": 30,
+                    "mp": 0,
+                    "speed": 1.2,
+                    "heroDamage": 0,
+                    "damage": 1,
+                    "hitbox": 8,
+                    "sprite": "#AA0000",
+                    "cd": 240,
+                    "amount": 5,
+                    "experience": 15,
+                    "waypoint": [
+                        {"x": 1120, "y": 450},
+                        {"x": 640, "y": 360},
+                        {"x": 320, "y": 540}
+                    ]
                 }
             ]
         },
         {
-            "start_tick": 36000,
-            "spawns": [
+            "before": 120,
+            "lanes": [
                 {
-                    "path": "B",
+                    "id": "A",
                     "name": "Ghoul",
-                    "HP": 100,
-                    "MP": 0,
+                    "hp": 30,
+                    "mp": 0,
                     "speed": 1.2,
-                    "damage": 8,
-                    "spawn_cd": 240,
-                    "amount": 11
+                    "heroDamage": 0,
+                    "damage": 1,
+                    "hitbox": 8,
+                    "sprite": "#AA0000",
+                    "cd": 240,
+                    "amount": 1,
+                    "experience": 20,
+                    "waypoint": [
+                        {"x": 800, "y": 90},
+                        {"x": 640, "y": 180},
+                        {"x": 640, "y": 360},
+                        {"x": 320, "y": 540}
+                    ]
+                },
+                {
+                    "id": "B",
+                    "name": "Necromancer",
+                    "hp": 45,
+                    "mp": 0,
+                    "speed": 0.9,
+                    "heroDamage": 1,
+                    "damage": 1,
+                    "hitbox": 10,
+                    "sprite": "#AA00FF",
+                    "cd": 300,
+                    "amount": 1,
+                    "experience": 25,
+                    "waypoint": [
+                        {"x": 1120, "y": 450},
+                        {"x": 640, "y": 360},
+                        {"x": 320, "y": 540}
+                    ]
                 }
             ]
         }

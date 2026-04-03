@@ -1,157 +1,92 @@
 import Entity from '../Entity.js';
 
 export default class Unit extends Entity {
-    constructor(id, position, speed, hitbox, hp, mp) {
-        super(id, position, speed, hitbox);
+    constructor(id, position, speed, hitbox, hp, mp, sprite) {
+        super(id, position, speed, hitbox, sprite);
+        this.maxHP = Number(hp);
+        this.maxMP = Number(mp);
+        this.currentHP = Number(hp);
+        this.currentMP = Number(mp);
 
-        this.baseMaxHP = hp;
-        this.baseMaxMP = mp;
-
-        this.maxHP = hp;
-        this.maxMP = mp;
-        this.currentHP = hp;
-        this.currentMP = mp;
         this.armor = 0;
-        this.buffs = [];
-        this.statsDirty = false;
-        this._buffBaseStats = {};
-        this._trackedBuffKeys = new Set();
-    }
+        this.baseHpRegen = 0;
+        this.baseMpRegen = 0;
+        this.hpRegen = 0;
+        this.mpRegen = 0;
 
+        this.buffs = [];
+    }
+    
+    // HP & MP受到影响
     takeDamage(amount) {
         const effectiveDamage = Math.max(1, amount - this.armor);
         this.currentHP = Math.max(0, this.currentHP - effectiveDamage);
-        // this.currentHP = Math.max(0, this.currentHP - (amount - this.armor));
     }
 
     heal(amount) {
         this.currentHP = Math.min(this.maxHP, this.currentHP + amount);
     }
 
-    addBuff(buff) {
-        if (!buff) {
-            return null;
-        }
-
-        const existing = this.buffs.find((it) => it && buff && it.name === buff.name);
-        if (existing) {
-            existing.description = buff.description;
-            existing.status = buff.status;
-            existing.duration = buff.duration;
-            existing.currentDuration = buff.duration === -1 ? -1 : buff.duration;
-            this.statsDirty = true;
-            this.emitUnitEvent('unit:buff:applied', { unit: this, buff: existing, refreshed: true });
-            this.recalculateStatsFromBuffs('buff_applied');
-            return existing;
-        }
-
-        this.buffs.push(buff);
-        this.statsDirty = true;
-        this.emitUnitEvent('unit:buff:applied', { unit: this, buff, refreshed: false });
-        this.recalculateStatsFromBuffs('buff_applied');
-        return buff;
+    consumeMP(amount) {
+        this.currentMP = Math.max(0, this.currentMP - amount);
+    }
+    
+    restoreMP(amount) {
+        this.currentMP = Math.min(this.maxMP, this.currentMP + amount);
     }
 
-    emitUnitEvent(eventName, payload) {
-        if (this.events && typeof this.events.emit === 'function') {
-            this.events.emit(eventName, payload);
-        }
+    immediateDeath() {
+        this.currentHP = 0;
     }
 
-    applyBuffEffects() {
-        const effectKeys = new Set();
-
-        for (const buff of this.buffs) {
-            if (!buff || !buff.status) {
-                continue;
-            }
-            for (const [key, value] of Object.entries(buff.status)) {
-                if (typeof value !== 'number') {
-                    continue;
-                }
-                effectKeys.add(key);
-                if (!this._trackedBuffKeys.has(key)) {
-                    this._trackedBuffKeys.add(key);
-                    this._buffBaseStats[key] = typeof this[key] === 'number' ? this[key] : 0;
-                }
-            }
-        }
-
-        for (const key of [...this._trackedBuffKeys]) {
-            if (effectKeys.has(key)) {
-                continue;
-            }
-            if (typeof this._buffBaseStats[key] === 'number') {
-                this[key] = this._buffBaseStats[key];
-            }
-            this._trackedBuffKeys.delete(key);
-            delete this._buffBaseStats[key];
-        }
-
-        for (const key of effectKeys) {
-            const base = typeof this._buffBaseStats[key] === 'number' ? this._buffBaseStats[key] : 0;
-            let delta = 0;
-            for (const buff of this.buffs) {
-                if (!buff || !buff.status) {
-                    continue;
-                }
-                const value = buff.status[key];
-                if (typeof value === 'number') {
-                    delta += value;
-                }
-            }
-            // Protect certain stats from going negative or zero if needed
-            if (key === 'speed') {
-                delta = Math.max(delta, -base + 0.1); // Ensure speed doesn't drop to zero or negative
-            }
-            this[key] = base + delta;
-        }
+    alive() {
+        return this.currentHP > 0;
     }
 
-    recalculateStatsFromBuffs(source = 'buff_changed') {
-        if (!this.statsDirty) {
+    addBuff(newBuff) {
+        const buffToApply = typeof newBuff?.clone === 'function' ? newBuff.clone() : newBuff;
+        if (!buffToApply) {
             return;
         }
 
-        if (typeof this.updateFinalStat === 'function') {
-            this.updateFinalStat();
-        } else {
-            this.applyBuffEffects();
+        for (const buff of this.buffs) {
+            if (buff.name === buffToApply.name) {
+                buff.description = buffToApply.description;
+                buff.icon = buffToApply.icon;
+                buff.duration = buffToApply.duration;
+                buff.remaining = buffToApply.duration;
+                buff.effect = buffToApply.effect;
+                buff.positive = buffToApply.positive;
+                return;
+            }
         }
 
-        if (typeof this.emitStatsUpdated === 'function') {
-            this.emitStatsUpdated(source);
-        }
-        this.statsDirty = false;
+        this.buffs.push(buffToApply);
     }
 
-    tickBuffs(dt) {
-        const expiredBuffs = [];
+    applyBuffEffect() {
+        for (const buff of this.buffs) {
+            buff.onEffect(this);
+        }
+    }
 
+    updateRegeneration() {
+        if (this.hpRegen > 0) {
+            this.heal(this.hpRegen / 60);
+        }
+        if (this.mpRegen > 0) {
+            this.restoreMP(this.mpRegen / 60);
+        }
+    }
+
+    updateBuffs() {
+        this.speed = this.baseSpeed;
+        this.hpRegen = this.baseHpRegen;
+        this.mpRegen = this.baseMpRegen;
+        this.applyBuffEffect();
         this.buffs = this.buffs.filter((buff) => {
-            if (!buff || buff.currentDuration === undefined || buff.currentDuration === -1) {
-                return true;
-            }
-
-            buff.currentDuration -= dt;
-            if (buff.currentDuration <= 0) {
-                expiredBuffs.push(buff);
-                return false;
-            }
-            return true;
+            buff.remaining -= 1;
+            return buff.remaining > 0;
         });
-
-        if (expiredBuffs.length > 0) {
-            this.statsDirty = true;
-            for (const buff of expiredBuffs) {
-                this.emitUnitEvent('unit:buff:expired', { unit: this, buff });
-            }
-        }
-
-        this.recalculateStatsFromBuffs('buff_tick');
-    }
-
-    isAlive() {
-        return this.currentHP > 0;
     }
 }
