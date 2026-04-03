@@ -59,6 +59,7 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ## 📚 Project Report
 
 <h2 align="center">INTRODUCTION</h2>
+Gates of cinder  combines the elements of RPG and tower defense to create a fun yet needs brain power to play.It has three levels and enemies become harder in each level and is upto to the player to choose correct hero and towers to defend the objective.
 
 ---
 
