@@ -303,8 +303,6 @@ Gates of cinder paper prototype
       <h3>the start menu can be viewed,choosing difficulty levels and hero mechanics.After that the towers are choosen to protect the objective.</h3>
       <p>
       
-      </p>
-    </td>
   </tr>
 </table>
 **Testing Feedback** 
