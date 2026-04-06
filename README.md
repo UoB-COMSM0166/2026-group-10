@@ -113,6 +113,7 @@ Enemies follow predefined paths toward the Ancient Tree.
 Enemy collision with the tree reduces its health.
 Player attacks register hits consistently and reduce enemy health.
 Game ends when the Ancient Tree health reaches zero.
+
 EPIC 2 – Enemy Waves & Boss System
 
 Description: The game progresses through waves of enemies, culminating in powerful boss encounters.
@@ -127,6 +128,7 @@ Waves spawn enemies at fixed intervals and locations.
 Boss spawns after all minions in a wave are defeated.
 Boss has multiple attack behaviors.
 Boss targeting logic changes depending on player class.
+
 EPIC 3 – Hero Class System
 
 Description: Players choose and control unique hero classes with different mechanics.
@@ -138,6 +140,7 @@ Acceptance Criteria:
 Player selects class before gameplay begins.
 Each class has unique stats, abilities, and mechanics.
 Class systems are independent and modular.
+
 EPIC 4 – Warrior Mechanics
 
 Description: The Warrior uses melee combat and rage-based abilities.
@@ -152,6 +155,7 @@ Weapons (longsword, rapier, battle axe) affect abilities.
 Rage increases on attack and decreases over time.
 Rage resets on death or respawn.
 Equipment upgrades increase stats.
+
 EPIC 5 – Mage Mechanics
 
 Description: The Mage uses a flexible skill system powered by mana.
@@ -165,6 +169,7 @@ Skill combinations are selectable and usable in gameplay.
 Mana regenerates over time and resets on respawn.
 Skills consume mana when cast.
 Gold is used for skill learning and upgrades only.
+
 EPIC 6 – Engineer & Turret System
 
 Description: The Engineer defends using turrets instead of a direct character.
@@ -180,6 +185,7 @@ Total turret count is capped.
 Wood is gained only from enemy kills.
 Turrets attack enemies automatically.
 Blueprint upgrades persist across gameplay.
+
 EPIC 7 – Progression & Resources
 
 Description: Players gain rewards and improve their abilities over time.
@@ -194,6 +200,7 @@ XP is awarded on enemy defeat and triggers level-ups.
 Level-ups grant skill points.
 Gold is awarded consistently from enemies.
 Resource usage differs per class.
+
 EPIC 8 – Ancient Tree System
 
 Description: The Ancient Tree acts as the core objective and life system.
@@ -207,6 +214,7 @@ Tree health decreases when enemies reach it.
 Gold can be spent to restore tree health.
 Player death triggers a respawn timer.
 Tree health is reduced upon player revival.
+
 EPIC 9 – Game States & Win/Lose Conditions
 
 Description: The game clearly defines victory and defeat conditions.
@@ -220,6 +228,7 @@ Game ends in victory when all enemies are defeated.
 Game ends in defeat when tree health reaches zero.
 Respawn system includes a timer and penalty.
 UI clearly communicates game state changes.
+
 EPIC 10 – Technical Architecture & Scalability
 
 Description: The system is modular and maintainable for future expansion.
