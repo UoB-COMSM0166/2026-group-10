@@ -297,7 +297,7 @@ Gates of cinder paper prototype
   <!-- ROW 2 -->
   <tr>
     <td width="50%">
-      <img src="gates of cinder.jpeg" width="100%" height="250px" style="object-fit: cover;">
+      <img src="gates of cinder proto.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td width="50%">
       <h3>Prototype — Success state</h3>
