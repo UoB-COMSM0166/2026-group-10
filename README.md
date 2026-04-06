@@ -99,6 +99,140 @@ With this direction established, we divided the research effort. Each team membe
 
 
 <img width="1200" height="896" alt="chart" src="https://github.com/user-attachments/assets/89ad8717-d669-4e34-94fb-6b47acaf9330" />
+<h2 align="center">EPICS AND USER STORIES</h2>
+EPIC 1 – Core Defense Gameplay
+
+Description: The player must defend the Ancient Tree from waves of undead enemies.
+
+User Stories:
+As a player, I want enemies to move toward the Ancient Tree, so that I must defend it.
+As a player, I want enemies to damage the Ancient Tree on contact, so that there is a clear loss condition.
+As a player, I want to attack enemies, so that I can stop them from reaching the tree.
+Acceptance Criteria:
+Enemies follow predefined paths toward the Ancient Tree.
+Enemy collision with the tree reduces its health.
+Player attacks register hits consistently and reduce enemy health.
+Game ends when the Ancient Tree health reaches zero.
+EPIC 2 – Enemy Waves & Boss System
+
+Description: The game progresses through waves of enemies, culminating in powerful boss encounters.
+
+User Stories:
+As a player, I want enemies to spawn in waves, so that gameplay escalates over time.
+As a player, I want a boss at the end of each round, so that I face a major challenge.
+As a player, I want bosses to have unique attack patterns, so that combat feels varied.
+As an Engineer player, I want bosses to target the Ancient Tree after destroying turrets, so that my gameplay has distinct risks.
+Acceptance Criteria:
+Waves spawn enemies at fixed intervals and locations.
+Boss spawns after all minions in a wave are defeated.
+Boss has multiple attack behaviors.
+Boss targeting logic changes depending on player class.
+EPIC 3 – Hero Class System
+
+Description: Players choose and control unique hero classes with different mechanics.
+
+User Stories:
+As a player, I want to choose between Warrior, Mage, and Engineer, so that I can play different styles.
+As a player, I want each class to have unique abilities, so that gameplay feels distinct.
+Acceptance Criteria:
+Player selects class before gameplay begins.
+Each class has unique stats, abilities, and mechanics.
+Class systems are independent and modular.
+EPIC 4 – Warrior Mechanics
+
+Description: The Warrior uses melee combat and rage-based abilities.
+
+User Stories:
+As a Warrior, I want different weapon types, so that my combat style changes.
+As a Warrior, I want to generate rage through attacks, so that I can use powerful skills.
+As a Warrior, I want rage to decay over time, so that I must stay aggressive.
+As a Warrior, I want to upgrade equipment using gold, so that I become stronger.
+Acceptance Criteria:
+Weapons (longsword, rapier, battle axe) affect abilities.
+Rage increases on attack and decreases over time.
+Rage resets on death or respawn.
+Equipment upgrades increase stats.
+EPIC 5 – Mage Mechanics
+
+Description: The Mage uses a flexible skill system powered by mana.
+
+User Stories:
+As a Mage, I want to combine Ice, Fire, and Lightning skills, so that I can customize my build.
+As a Mage, I want mana to regenerate over time, so that I can continuously cast spells.
+As a Mage, I want to spend gold on skills, so that I improve abilities instead of equipment.
+Acceptance Criteria:
+Skill combinations are selectable and usable in gameplay.
+Mana regenerates over time and resets on respawn.
+Skills consume mana when cast.
+Gold is used for skill learning and upgrades only.
+EPIC 6 – Engineer & Turret System
+
+Description: The Engineer defends using turrets instead of a direct character.
+
+User Stories:
+As an Engineer, I want to place turrets, so that they automatically attack enemies.
+As an Engineer, I want a limit on turret count, so that I must plan placement.
+As an Engineer, I want to upgrade turrets using wood, so that they become stronger.
+As an Engineer, I want permanent blueprint upgrades using gold, so that I progress over time.
+Acceptance Criteria:
+Turrets can be placed anywhere except restricted zones.
+Total turret count is capped.
+Wood is gained only from enemy kills.
+Turrets attack enemies automatically.
+Blueprint upgrades persist across gameplay.
+EPIC 7 – Progression & Resources
+
+Description: Players gain rewards and improve their abilities over time.
+
+User Stories:
+As a player, I want to gain experience from enemies, so that I can level up.
+As a player, I want to earn gold, so that I can upgrade my character.
+As a player, I want class-specific uses for gold, so that progression feels unique.
+As an Engineer, I want to gain wood, so that I can build and upgrade turrets.
+Acceptance Criteria:
+XP is awarded on enemy defeat and triggers level-ups.
+Level-ups grant skill points.
+Gold is awarded consistently from enemies.
+Resource usage differs per class.
+EPIC 8 – Ancient Tree System
+
+Description: The Ancient Tree acts as the core objective and life system.
+
+User Stories:
+As a player, I want the Ancient Tree to have health, so that I must protect it.
+As a player, I want to repair the tree using gold, so that I can recover from damage.
+As a player, I want the tree to revive me at a cost, so that death has consequences.
+Acceptance Criteria:
+Tree health decreases when enemies reach it.
+Gold can be spent to restore tree health.
+Player death triggers a respawn timer.
+Tree health is reduced upon player revival.
+EPIC 9 – Game States & Win/Lose Conditions
+
+Description: The game clearly defines victory and defeat conditions.
+
+User Stories:
+As a player, I want to win after defeating all waves, so that I feel rewarded.
+As a player, I want to lose when the tree is destroyed, so that failure is clear.
+As a player, I want to respawn after death, so that I can continue playing.
+Acceptance Criteria:
+Game ends in victory when all enemies are defeated.
+Game ends in defeat when tree health reaches zero.
+Respawn system includes a timer and penalty.
+UI clearly communicates game state changes.
+EPIC 10 – Technical Architecture & Scalability
+
+Description: The system is modular and maintainable for future expansion.
+
+User Stories:
+As a developer, I want modular systems, so that features are easy to maintain.
+As a developer, I want class systems separated, so that balancing is easier.
+As a developer, I want scalable enemy and wave systems, so that new content can be added easily.
+Acceptance Criteria:
+Systems separated (Combat, AI, Resources, UI, Classes).
+Clear update loop and system interactions.
+Data-driven configs for enemies, waves, and abilities.
+New classes or enemies can be added without rewriting core systems.
 
 <details>
   <summary><strong>Game ideas and analysis</strong></summary>
