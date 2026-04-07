@@ -6,6 +6,10 @@ export class Path {
     this.strokeColor = 150;
   }
 
+  getPoints() {
+    return this.points;
+  }
+
   show() {
     this.p.noFill();
     this.p.stroke(this.strokeColor);

@@ -1,10 +1,11 @@
 import { Bullet } from "./Bullet.js";
 
 export class Tower {
-  constructor(p, x, y, bulletsArray) {
+  constructor(p, x, y, bulletsArray, towerImage) {
     this.p = p;
     this.pos = this.p.createVector(x, y);
-    this.bulletsArray = bulletsArray; 
+    this.bulletsArray = bulletsArray;
+    this.towerImage = towerImage;
 
     // Core attributes
     this.range = 150;
@@ -38,35 +39,42 @@ export class Tower {
   }
 
   show() {
-    this.p.push(); // Use push/pop to protect graphics style
+    this.p.push(); 
     
-    // 1. If selected, draw range circle and highlight border
+    // draw range and selection highlight first so they appear below the tower image
     if (this.isSelected) {
-      // Draw translucent attack range
+      //draw range circle
       this.p.fill(0, 255, 0, 30);
       this.p.stroke(0, 255, 0, 150);
       this.p.strokeWeight(2);
       this.p.ellipse(this.pos.x, this.pos.y, this.range * 2);
       
-      // Draw selection halo
+      // draw selection highlight
       this.p.noFill();
-      this.p.stroke(255, 255, 0); // Yellow highlight
+      this.p.stroke(255, 255, 0); 
+      this.p.rectMode(this.p.CENTER);
       this.p.rect(this.pos.x, this.pos.y, this.size + 8, this.size + 8);
     }
 
-    // 2. Draw tower body
-    this.p.rectMode(this.p.CENTER);
-    this.p.noStroke();
-    // Color darkens with level
-    let blueValue = this.p.constrain(100 + this.level * 30, 0, 255);
-    this.p.fill(50, 50, blueValue);
-    this.p.rect(this.pos.x, this.pos.y, this.size, this.size);
+    // draw the tower (image or fallback)
+    if (this.towerImage) {
+      this.p.imageMode(this.p.CENTER);
+      this.p.image(this.towerImage, this.pos.x, this.pos.y, this.size, this.size);
+    } else {
+      this.p.rectMode(this.p.CENTER);
+      this.p.noStroke();
+      let blueValue = this.p.constrain(100 + this.level * 30, 0, 255);
+      this.p.fill(50, 50, blueValue);
+      this.p.rect(this.pos.x, this.pos.y, this.size, this.size);
+    }
 
-    // 3. Draw level text
+    // draw level text
     this.p.fill(255);
+    this.p.stroke(0); // Add a black stroke for better visibility
+    this.p.strokeWeight(2);
     this.p.textAlign(this.p.CENTER, this.p.CENTER);
     this.p.textSize(12);
-    this.p.text("Lv." + this.level, this.pos.x, this.pos.y);
+    this.p.text("Lv." + this.level, this.pos.x, this.pos.y + this.size / 2 + 10);
     
     this.p.pop();
   }
@@ -77,9 +85,8 @@ export class Tower {
     for (let e of enemies) {
       let d = this.p.dist(this.pos.x, this.pos.y, e.pos.x, e.pos.y);
       if (d < this.range && this.reload <= 0) {
-        // Pass current damage to bullet
         this.bulletsArray.push(new Bullet(this.p, this.pos.x, this.pos.y, e, this.damage));
-        this.reload = 30; // Can be changed to this.reloadTime to support fire rate upgrade
+        this.reload = this.reloadTime || 30; // Default reload time if not set
         break;
       }
     }

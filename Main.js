@@ -6,11 +6,17 @@ new p5(p => {
     let mapData = null;
     let heroData = null;
     let skillData = null;
+    let assets = {};
 
     p.preload = () => {
         mapData = p.loadJSON('data/Map/Forest.json');
         heroData = p.loadJSON('data/Hero/Archmana.json');
         skillData = p.loadJSON('data/Skill/Archmana.json');
+
+        assets.towerImg = p.loadImage('assets/tower_PNG/2.png');
+        // assets.bulletImg = p.loadImage('assets/bullet.png');
+        // assets.enemyImg = p.loadImage('assets/enemy.png');
+        // assets.bgImg = p.loadImage('assets/grass_bg.png');
     };
 
     p.setup = () => {
@@ -18,7 +24,7 @@ new p5(p => {
         p.createCanvas(1280, 720).elt.addEventListener('contextmenu', e => e.preventDefault());
         p.frameRate(60);
 
-        gameManager = new GameManager(p, mapData, heroData, skillData);
+        gameManager = new GameManager(p, mapData, heroData, skillData, assets);
         gameManager.start();
     }
     

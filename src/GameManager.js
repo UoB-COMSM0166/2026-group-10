@@ -18,7 +18,7 @@ const MAX_FRAME_MS = 250;
 const MAX_TICKS_PER_FRAME = 5;
 
 export default class GameManager {
-    constructor(p5, map, hero, skillData, enemyData) {
+    constructor(p5, map, hero, skillData, assets) {
         this.p5 = p5;
         this.nextID = 0;
         this.clock = new GameClock();
@@ -28,6 +28,7 @@ export default class GameManager {
         this.tickSampleCount = 0;
         this.tpsSampleMs = 0;
         this.tps = 0;
+        this.assets = assets;
 
         // TEMP：Tower Defense core attributes
         this.towers = [];
@@ -112,7 +113,7 @@ export default class GameManager {
         let towerX = gridX * this.gridSize + this.gridSize / 2;
         let towerY = gridY * this.gridSize + this.gridSize / 2;
 
-        const tower = new Tower(this.p5, towerX, towerY, this.bullets);
+        const tower = new Tower(this.p5, towerX, towerY, this.bullets, this.assets.towerImg);
         this.towers.push(tower);
         this.occupiedCells.add(key);
         this.money -= this.towerCost;

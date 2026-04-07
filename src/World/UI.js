@@ -7,6 +7,7 @@ export default class UI {
 		this.toasts = [];
 		this.toastDurationMs = 1800;
 
+		//Event Listeners
 		this.gameManager.events.on('hero:skill:casted', () => {
 			this.shouldDrawSkillCooldowns = true;
 		});
@@ -162,7 +163,6 @@ export default class UI {
 		p.pop();
 	}
 
-	// TODO: Text to Graphics
 	drawHeroStatsPanel(p) {
 		if (!this.heroStats) {
 			return;
@@ -186,6 +186,7 @@ export default class UI {
 		p.pop();
 	}
 
+	
 	drawToasts(p) {
 		const now = p.millis();
 		this.toasts = this.toasts.filter((toast) => toast.expiresAt > now);
@@ -242,9 +243,9 @@ export default class UI {
 			p.textSize(24);
 			p.textStyle(p.BOLD);
 			
-			// Fade out effect for the message
+			// 
 			let alpha = p.map(this.gameManager.messageTimer, 0, 30, 0, 255);
-			p.fill(255, 50, 50, alpha); // Red color with fading effect
+			p.fill(255, 50, 50, alpha); // 红色警告色
 			p.text(this.gameManager.uiMessage, p.width / 2, p.height / 2 - 50);
 			p.pop();
 
