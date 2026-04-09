@@ -174,7 +174,7 @@ Gates of cinder paper prototype
 
 - 15% ~750 words 
 - System architecture. Class diagrams, behavioural diagrams. 
-![Menu Navigation UML Class Diagrams](images/MenuClassDiagrams.svg)
+![Menu Navigation UML Class Diagrams](images/MenuClassDiagramResized.svg)
 ![SceneSwitching Sequence Diagram](images/SceneSwitchSequenceDiagram.svg)
 
 ### Implementation
