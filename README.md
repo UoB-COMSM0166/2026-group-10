@@ -175,9 +175,10 @@ Gates of cinder paper prototype
 - 15% ~750 words 
 - System architecture. Class diagrams, behavioural diagrams. 
 ![Menu Navigation UML Class Diagrams](images/MenuClassDiagramResized.svg)
+The above class diagrams demonstrate the game's menu system and class structure. `Sketch.js` acts as a controller class. It maintains a reference to the current `activeScene` and delegates behaviour to the Scene class. Since the different scene classes share the same behaviour and possess some of the same state, it was decided that it would be helpful to group all the scene classes under one conceptual, abstract Scene class. We did not explicitly implement an abstract class in the code, but by using the conceptual framework of an abstract Scene 'type' we provided a common interface which facilitates polymorphic behaviour in practice, thus enabling `Sketch.js` to treat all scenes in the same way.
 ![SceneSwitching Sequence Diagram](images/SceneSwitchSequenceDiagram.svg)
 
-The above sequence diagram illustrates the flow of the game's menu scenes and how user interactions with buttons in the menus cause scene-switching to occur. The process is initiated when the user clicks a `button` on one of the menu screens; this causes the `mousePressed()` function in `sketch.js` to run. This function delegates the click event to the `mousePressed()` method of the current `activeScene`.
+The above sequence diagram illustrates the flow of the game's menu scenes and how user button clicks cause scene-switching to occur. The process of scene-switching is initiated when the user clicks a `button` on one of the menu screens; this causes the `mousePressed()` function in `sketch.js` to run. This function delegates the click event to the `mousePressed()` method of the current `activeScene`.
 
 `activeScene` then iterates through all of its buttons, calling the `wasIClicked()` function for each one. If the `wasIClicked()` function verifies that this button was indeed the one the user clicked, it will invoke its `onClick()` callback function that was passed to the button during the button's creation. Since the `onClick()` method is stored within the button that invokes it, it is represented in the sequence diagram by an arrow from the button pointing back to itself (a self-call).
 
