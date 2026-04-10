@@ -174,10 +174,12 @@ Gates of cinder paper prototype
 
 - 15% ~750 words 
 - System architecture. Class diagrams, behavioural diagrams. 
+#### Menu Navigation Class Diagram
 ![Menu Navigation UML Class Diagrams](images/MenuClassDiagramResized.svg)
 The above class diagrams demonstrate the game's menu system and class structure.`Sketch.js` acts as a controller class. It maintains a reference to the current `activeScene` and delegates behaviour to the active scene. Since the different scene classes share common behaviour and state, they were conceptually grouped under an abstract Scene type. Although an abstract Scene class was not explicitly implemented in the code,  this conceptual model of an abstract Scene 'type' provided a common interface which facilitated polymorphic behaviour in practice, thus enabling `Sketch.js` to treat all scenes uniformly.
 
 Since buttons only exist within a scene, a composition relationship exists between the `Button` class and `Scene` class. The `Button` class encapsulates all logic relating to a menu UI element that a user can interact with, such as click detection and associated actions triggered by user clicks. This encapsulation facilitated modularity, contributing to a more understandable and maintainable codebase. 
+#### Scene-switching Sequence Diagram
 ![SceneSwitching Sequence Diagram](images/SceneSwitchSequenceDiagram.svg)
 
 The above sequence diagram illustrates the flow of the game's menu scenes and how user button clicks cause scene-switching to occur. The process of scene-switching is initiated when the user clicks a `button` on one of the menu screens; this causes the `mousePressed()` function in `sketch.js` to run. This function delegates the click event to the `mousePressed()` method of the current `activeScene`.
