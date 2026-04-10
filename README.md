@@ -122,7 +122,7 @@ With this direction established, we divided the research effort. Each team membe
 
 By Week 3, we had translated these ideas into a paper prototype during the workshop. Testing sessions were positive, particularly regarding the different player roles we designed. With the fundamental mechanics validated, we moved forward to develop sprites and assets for digital prototyping, which would allow us to test the gameplay loop more thoroughly.
 
-**Epics and User stories: **
+#### Epics and User stories: 
 Through the process of creating epics, user stories and acceptance requirements, we obtained a greater awareness of the range of stakeholders our game has. We also developed a deeper understanding of the context that our game exists in.
 
 By creating epics, we learned of the different sub-categories of users our game may have, such as users with visual impairments and users with other disabilities. An increased awareness of the importance of the different categories of developers involved in the game, such as ‘front-end developers’ and ‘back-end developers’ was also acquired.
@@ -133,6 +133,16 @@ The process of producing acceptance criteria helped to give precise, actionable 
 
 By considering the plethora of stakeholders around our game, we gained a better understanding of the diverse range of people who may have interests in our game and the importance of considering these people when making decisions regarding the development of our game.
 
+| **Epics**        | **User Stories**   | **Acceptance Criteria**              |
+|----------------|----------|--------------------|
+| Varied and exciting gameplay experience
+   |  As a casual gamer, I want the game to have a variety of tools available to me so that the game is interesting for me and holds my attention     | Given that I am playing on a map in the game, when I choose which tower to construct, then I should be able to choose from at least two different types of towers
+      |
+| Progressive Map Experience    | As a passionate gamer, I want to be able to progress from one map to the next map as if the game is a progressive story so that the game feels exciting and fulfilling  | Given that I am playing the game, when I have successfully completed the first map, then I should be able to play on a second map which is different to the first
+  |
+| Dynamic Strategic Combat System       | As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement
+  | Given that I am playing a map, when combating against the enemy I should fight against two different types of enemy with different maximum health attributes
+  |
 
 **Prototyping** 
 Gates of cinder paper prototype
