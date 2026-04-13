@@ -38,7 +38,7 @@ export class IcePick extends Skill {
             6,
             4,
             target,
-            this.upgraded ? 20 : 15,
+            this.getAttackDamage(this.upgraded ? 20 : 15, caster),
             (target) => {
                 if (!this.upgraded) return;
                 target.addBuff(buff);
@@ -68,6 +68,7 @@ export class StormBlast extends Skill {
 
     casted(target, caster, _, tick) {
         super.casted();
+        const totalDamage = this.getSpellDamage(5, caster);
 
         const buffEffect = (unit) => {
             unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * 0.7);
@@ -89,7 +90,7 @@ export class StormBlast extends Skill {
             this.hitbox,
             { x: target.x, y: target.y },
             (unit) => {
-                unit.takeDamage(5);
+                unit.takeDamage(totalDamage);
                 unit.addBuff(buff);
             },
             120,
@@ -151,7 +152,7 @@ export class FrostShield extends Skill {
             `${caster.name}_frost_shield_${tick}`,
             caster,
             this.hitbox,
-            this.damage,
+            this.getSpellDamage(this.damage, caster),
             null,
             this.duration,
             this.effectPeriod
@@ -266,7 +267,7 @@ export class Blizzard extends Skill {
                 { x: x, y: y },
                 (unit) => {
                     if (this.upgraded) {
-                        unit.takeDamage(unit.maxHP / 2);
+                        unit.takeDamage(this.getSpellDamage(unit.maxHP / 2, caster));
                     }
                     unit.addBuff(buff);
                 },
@@ -341,7 +342,11 @@ export class FireBall extends Skill {
     casted(target, caster, source, tick) {
         super.casted();
         const casterId = caster?.name ?? caster;
-        const totalDamage = (this.upgraded ? this.upgradedDamage : this.baseDamage) + (this.bonusDamage || 0);
+        const totalDamage = this.getAttackDamage(
+            this.upgraded ? this.upgradedDamage : this.baseDamage,
+            caster,
+            { includeBonusDamage: true }
+        );
 
         const buffEffect = (unit) => {
             unit.takeDamage(2);
@@ -403,6 +408,7 @@ export class FlameWave extends Skill {
     casted(target, caster, source, tick) {
         super.casted();
         const casterId = caster?.name ?? caster;
+        const totalDamage = this.getSpellDamage(this.damage, caster);
 
         const igniteBuff = new Buff(
             'Flame Wave Ignition',
@@ -432,7 +438,7 @@ export class FlameWave extends Skill {
                 }
 
                 area.hitUnits.add(unit.id);
-                unit.takeDamage(this.damage);
+                unit.takeDamage(totalDamage);
                 unit.addBuff(igniteBuff);
             },
             Math.ceil(this.range / this.speed),
@@ -492,7 +498,7 @@ export class Burning extends Skill {
             `${caster.name}_burning_${tick}`,
             caster,
             this.hitbox,
-            this.damage,
+            this.getSpellDamage(this.damage, caster),
             null,
             this.duration,
             this.effectPeriod
@@ -553,7 +559,7 @@ export class ViperGuardian extends Skill {
             this.attackInterval,
             this.missileSpeed,
             this.missileHitbox,
-            this.damage,
+            this.getSpellDamage(this.damage, caster),
             this.upgraded ? (unit) => unit.addBuff(igniteBuff) : null
         );
 
@@ -585,6 +591,7 @@ export class Meteorite extends Skill {
     casted(target, caster, _, tick) {
         super.casted();
         const casterId = caster?.name ?? caster;
+        const totalDamage = this.getSpellDamage(this.damage, caster);
 
         const landingPoint = this.upgraded ? target?.start : target;
         const rollDirection = this.upgraded ? target?.end : null;
@@ -628,7 +635,7 @@ export class Meteorite extends Skill {
                 }
 
                 if (meteorite.getDistance(unit.position) <= meteorite.hitbox + unit.hitbox) {
-                    unit.takeDamage(this.damage);
+                    unit.takeDamage(totalDamage);
                     unit.addBuff(stunBuff);
                 }
             }
@@ -641,7 +648,7 @@ export class Meteorite extends Skill {
                 }
 
                 if (meteorite.getDistance(unit.position) <= meteorite.hitbox + unit.hitbox) {
-                    unit.takeDamage(this.damage);
+                    unit.takeDamage(totalDamage);
                 }
             }
         };
@@ -829,6 +836,7 @@ export class Lightning extends Skill {
     casted(target, caster, _, tick) {
         super.casted();
         const casterId = caster?.name ?? caster;
+        const totalDamage = this.getAttackDamage(this.damage, caster);
 
         if (!target) {
             return;
@@ -854,7 +862,7 @@ export class Lightning extends Skill {
                     return;
                 }
 
-                unit.takeDamage(this.damage);
+                unit.takeDamage(totalDamage);
                 unit.addBuff(staticFieldBuff);
             },
             2,
@@ -893,6 +901,7 @@ export class ThunderCloud extends Skill {
     casted(target, caster, source, tick) {
         super.casted();
         const casterId = caster?.name ?? caster;
+        const totalDamage = this.getSpellDamage(this.damage, caster);
         if (!target || !source) {
             return;
         }
@@ -917,7 +926,7 @@ export class ThunderCloud extends Skill {
                     return;
                 }
 
-                unit.takeDamage(this.damage);
+                unit.takeDamage(totalDamage);
                 unit.addBuff(staticFieldBuff);
             },
             this.duration,
@@ -954,6 +963,7 @@ export class ChainLightning extends Skill {
         if (!target?.alive || !target.alive()) {
             return;
         }
+        const totalDamage = this.getSpellDamage(this.damage, caster);
 
         const enemies = this.events?.enemyRegistry instanceof Map ? this.events.enemyRegistry : new Map();
         const hitUnits = new Set();
@@ -970,7 +980,7 @@ export class ChainLightning extends Skill {
         let remainingChains = this.maxTargets;
 
         while (currentTarget && remainingChains > 0) {
-            currentTarget.takeDamage(this.damage);
+            currentTarget.takeDamage(totalDamage);
             currentTarget.addBuff(staticFieldBuff);
             hitUnits.add(currentTarget.id);
             remainingChains -= 1;
@@ -1029,6 +1039,7 @@ export class BallLightning extends Skill {
         if (!caster) {
             return;
         }
+        const totalDamage = this.getSpellDamage(this.damage, caster);
 
         const staticFieldBuff = new Buff(
             'Static Field',
@@ -1076,7 +1087,7 @@ export class BallLightning extends Skill {
             }
 
             aura.hitUnits.add(unit.id);
-            unit.takeDamage(this.damage);
+            unit.takeDamage(totalDamage);
             unit.addBuff(staticFieldBuff);
         };
 
@@ -1119,6 +1130,7 @@ export class StaticExplosion extends Skill {
         if (!caster) {
             return;
         }
+        const totalDamage = this.getSpellDamage(this.damage, caster);
 
         const enemies = this.events?.enemyRegistry instanceof Map ? this.events.enemyRegistry : new Map();
         const stunBuff = new Buff(
@@ -1143,7 +1155,7 @@ export class StaticExplosion extends Skill {
             }
 
             enemy.removeBuff('Static Field');
-            enemy.takeDamage(this.damage);
+            enemy.takeDamage(totalDamage);
             if (enemy.alive()) {
                 enemy.addBuff(stunBuff);
             }

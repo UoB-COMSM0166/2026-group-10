@@ -38,7 +38,7 @@ export default class World {
                 id: lane.id,
                 name: lane.name,
                 cd: lane.cd,
-                timer: lane.cd,
+                timer: 0,
                 counter: lane.amount,
                 waypoint: lane.waypoint.map((point) => ({ x: point.x, y: point.y }))
             }))

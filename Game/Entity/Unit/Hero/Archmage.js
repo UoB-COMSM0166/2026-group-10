@@ -9,8 +9,7 @@ export default class Archmage extends Hero {
     constructor(position, events, element, ui, clock) {
         super(
             'Archmage', 'Lyra\'Gotha', position, 1, 15, 180, 220,
-            'Magic damage with crowd control abilities.', 'intelligence',
-            { strength: 5, agility: 8, intelligence: 10 }, { strength: 1, agility: 2, intelligence: 4 },
+            'Magic damage with crowd control abilities.', 2, 3, 0.1,
             events, ui, clock
         );
 
@@ -76,6 +75,8 @@ export default class Archmage extends Hero {
             this.skill.set('Passive', electromagneticField);
         } 
 
+        this.applyPassiveSkills();
+
         // this.skill.set('W', null);
         // this.skill.set('E', null);
         // this.skill.set('R', null);
@@ -108,6 +109,9 @@ export default class Archmage extends Hero {
         const findSkill = this.skillTree.get(slot)?.find(s => s.name === name);
         if (findSkill) {
             this.skill.set(slot, findSkill);
+            if (slot === 'Passive') {
+                this.applyPassiveSkills();
+            }
         }
     }
 

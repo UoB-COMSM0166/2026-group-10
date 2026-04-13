@@ -49,7 +49,11 @@ function buildUnitState(unit) {
         mpRegen: Number(unit.mpRegen) || 0,
         speed: Number(unit.speed) || 0,
         baseSpeed: Number(unit.baseSpeed) || 0,
+        armor: Number(unit.armor) || 0,
+        attackAmp: Number(unit.attackAmp) || 0,
+        spellAmp: Number(unit.spellAmp) || 0,
         hitbox: Number(unit.hitbox) || 0,
+        inFountain: Boolean(unit.inFountain),
         alive: typeof unit.alive === 'function' ? unit.alive() : true,
         finished: Boolean(unit.finished),
         buffs: Array.isArray(unit.buffs) ? unit.buffs.map((buff) => ({
@@ -73,6 +77,7 @@ function buildHeroSkillState(hero) {
             slot,
             name: skill.name,
             category: skill.category,
+            description: skill.description ?? '',
             cooldown: Number(skill.cooldown) || 0,
             currentCooldown: Number(skill.currentCooldown) || 0,
             manaCost: Number(skill.manaCost) || 0,
@@ -137,6 +142,8 @@ function buildStateSnapshot() {
         },
         hero: {
             ...buildUnitState(game.hero),
+            remainingRespawnCD: Number(game.hero.remainingRespawnCD) || 0,
+            respawnCD: Number(game.hero.respawnCD) || 0,
             selectedSkill: heroTargetingState.skillKey,
             targeting: { ...heroTargetingState },
             casting: game.hero.isCasting(),

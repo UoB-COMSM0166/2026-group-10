@@ -8,7 +8,7 @@ const BASE_RESPAWN_CD = 600;  // Ticks
 export default class Hero extends Unit {
     constructor(
         id, name, position, speed, hitbox, hp, mp,
-        description, mainAttribute, baseAttribute, attributeGrowth,
+        description, armor, attackAmp, spellAmp,
         events, ui, clock
     ) {
         super(id, position, speed, hitbox, hp, mp);
@@ -17,17 +17,19 @@ export default class Hero extends Unit {
         this.ui = ui;
         this.clock = clock;
         this.description = String(description);
-        this.mainAttribute = String(mainAttribute);
-        this.baseAttribute = baseAttribute;
-        this.attributeGrowth = attributeGrowth;
+
+        this.baseArmor = Number(armor);
+        this.armor = this.baseArmor;
+        this.attackAmp = Number(attackAmp);
+        this.spellAmp = Number(spellAmp);
 
         this.respawnCD = BASE_RESPAWN_CD;
         this.active = false;
         this.remainingRespawnCD = 0;
         this.spawnPosition = { x: position.x, y: position.y };
+        this.inFountain = false;
 
-        this.level = 1;
-        this.experience = 0;
+        this.gold = 0;
         this.castState = null;
 
         // 技能和装备系统
@@ -45,25 +47,6 @@ export default class Hero extends Unit {
         this.inventory.set('weapon', null);
         this.inventory.set('armor', null);
         this.inventory.set('shoes', null);
-    }
-
-    gainExperience(amount) {
-        console.log(`${this.name} gainExperience: ${amount}`);
-        this.experience += amount;
-        if (this.experience >= EXPERIENCE_TABLE[this.level - 2]) {
-            this.levelUp();
-            this.experience = this.experience - EXPERIENCE_TABLE[this.level - 2];
-        }
-    }
-
-    levelUp() {
-        this.level++;
-    }
-
-    getAttributeValue(attributeName) {
-        const baseValue = Number(this.baseAttribute?.[attributeName]) || 0;
-        const growthValue = Number(this.attributeGrowth?.[attributeName]) || 0;
-        return baseValue + growthValue * Math.max(0, this.level - 1);
     }
 
     takeDamage(amount) {

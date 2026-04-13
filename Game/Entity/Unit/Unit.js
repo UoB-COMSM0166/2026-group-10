@@ -8,7 +8,8 @@ export default class Unit extends Entity {
         this.currentHP = Number(hp);
         this.currentMP = Number(mp);
 
-        this.armor = 0;
+        this.baseArmor = 0;
+        this.armor = this.baseArmor;
         this.baseHpRegen = 0;
         this.baseMpRegen = 0;
         this.hpRegen = 0;
@@ -19,7 +20,7 @@ export default class Unit extends Entity {
     
     // HP & MP受到影响
     takeDamage(amount) {
-        const effectiveDamage = Math.max(1, amount - this.armor);
+        const effectiveDamage = Math.max(0.01, amount - this.armor);
         this.currentHP = Math.max(0, this.currentHP - effectiveDamage);
     }
 
@@ -136,6 +137,7 @@ export default class Unit extends Entity {
 
     updateBuffs() {
         this.speed = this.baseSpeed;
+        this.armor = this.baseArmor;
         this.hpRegen = this.baseHpRegen;
         this.mpRegen = this.baseMpRegen;
         this.applyBuffEffect();

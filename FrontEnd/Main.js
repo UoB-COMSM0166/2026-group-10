@@ -1,4 +1,6 @@
+import Input from './Input.js';
 import UI from './Output/UI.js';
+import Render from './Output/Render.js';
 
 const p5Ctor = window.p5;
 if (!p5Ctor) {
@@ -16,18 +18,17 @@ let latestState = null;
 let latestEvents = [];
 let latestResult = null;
 let uiMessageQueue = [];
+const objectiveSprite = {
+    image: null,
+    loaded: false,
+    failed: false,
+    promise: null,
+};
 
 function postCommand(command, payload = null) {
     const requestId = `${command}:${Date.now()}:${Math.random().toString(36).slice(2, 8)}`;
     worker.postMessage({ command, payload, requestId });
     return requestId;
-}
-
-function getMouseWorldPosition(sketch) {
-    return {
-        x: sketch.mouseX,
-        y: sketch.mouseY,
-    };
 }
 
 function getDistance(from, to) {
@@ -38,6 +39,13 @@ function getDistance(from, to) {
     const dx = to.x - from.x;
     const dy = to.y - from.y;
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+function getMouseWorldPosition(sketch) {
+    return {
+        x: sketch.mouseX,
+        y: sketch.mouseY / Render.WORLD_Y_SCALE,
+    };
 }
 
 function drawWorld(sketch, state, vectorTargetStart = null) {
@@ -59,11 +67,9 @@ function drawWorld(sketch, state, vectorTargetStart = null) {
         return;
     }
 
+    worldRender.layer = sketch;
     drawObjective(sketch, state.objective);
-    drawHero(sketch, state.hero);
-    drawEnemies(sketch, state.enemies);
-    drawSkillEntities(sketch, state.skillEntities, '#9fd0ff');
-    drawSkillEntities(sketch, state.enemySkillEntities, '#ffb199');
+    worldRender.renderUnitsAndProjectiles(state);
     drawTargetingOverlay(sketch, state, vectorTargetStart);
     drawStatusText(sketch, state);
 }
@@ -73,56 +79,22 @@ function drawObjective(sketch, objective) {
         return;
     }
 
-    sketch.push();
-    sketch.noStroke();
-    sketch.fill('#f5f1df');
-    sketch.circle(objective.position.x, objective.position.y, objective.hitbox * 2.6);
-    sketch.pop();
-}
+    worldRender.withWorldTransform(() => {
+        worldRender.renderBaseRing(objective);
 
-function drawHero(sketch, hero) {
-    if (!hero?.position) {
-        return;
-    }
-
-    sketch.push();
-    sketch.noStroke();
-    sketch.fill(hero.alive ? '#8cd3ff' : '#5f6f82');
-    sketch.circle(hero.position.x, hero.position.y, hero.hitbox * 2.2);
-    sketch.pop();
-}
-
-function drawEnemies(sketch, enemies = []) {
-    sketch.push();
-    sketch.noStroke();
-
-    for (const enemy of enemies) {
-        if (!enemy?.position) {
-            continue;
+        if (objectiveSprite.loaded && objectiveSprite.image) {
+            worldRender.renderBillboardImage(
+                objectiveSprite.image,
+                objective,
+                4 / Render.ENTITY_SPRITE_BASE_SIZE
+            );
+            return;
         }
 
-        sketch.fill(getEnemyColor(enemy.name));
-        sketch.circle(enemy.position.x, enemy.position.y, enemy.hitbox * 2.1);
-    }
-
-    sketch.pop();
-}
-
-function drawSkillEntities(sketch, entities = [], color) {
-    sketch.push();
-    sketch.noFill();
-    sketch.stroke(color);
-    sketch.strokeWeight(2);
-
-    for (const entity of entities) {
-        if (!entity?.position) {
-            continue;
-        }
-
-        sketch.circle(entity.position.x, entity.position.y, entity.hitbox * 2);
-    }
-
-    sketch.pop();
+        sketch.noStroke();
+        sketch.fill('#f5f1df');
+        sketch.circle(objective.position.x, objective.position.y, objective.hitbox * 2.6);
+    });
 }
 
 function drawTargetingOverlay(sketch, state, vectorTargetStart = null) {
@@ -135,40 +107,39 @@ function drawTargetingOverlay(sketch, state, vectorTargetStart = null) {
     const mouse = getMouseWorldPosition(sketch);
     const range = Number(targeting.range) || 0;
 
-    sketch.push();
-    sketch.noFill();
-    sketch.stroke('#f5c750');
-    sketch.strokeWeight(2);
+    worldRender.withWorldTransform(() => {
+        sketch.noFill();
+        sketch.stroke('#f5c750');
+        sketch.strokeWeight(2);
 
-    if (range > 0 && hero?.position) {
-        sketch.circle(hero.position.x, hero.position.y, range * 2);
-    }
-
-    if (targeting.targetCategory === 'Point') {
-        sketch.circle(mouse.x, mouse.y, 28);
-        if (hero?.position) {
-            sketch.line(hero.position.x, hero.position.y, mouse.x, mouse.y);
+        if (range > 0 && hero?.position) {
+            sketch.circle(hero.position.x, hero.position.y, range * 2);
         }
-    } else if (targeting.targetCategory === 'Unit') {
-        sketch.circle(mouse.x, mouse.y, 34);
-    } else if (targeting.targetCategory === 'Vector') {
-        const start = vectorTargetStart ?? hero?.position ?? mouse;
-        if (start) {
-            const startInRange = !hero?.position || range <= 0 || getDistance(hero.position, start) <= range;
-            const accent = startInRange ? '#f5c750' : '#d14b57';
 
-            sketch.stroke(accent);
-            sketch.fill(sketch.color(accent));
-            sketch.circle(start.x, start.y, 16);
-            sketch.noFill();
-            sketch.strokeWeight(3);
-            sketch.line(start.x, start.y, mouse.x, mouse.y);
-            drawVectorArrow(sketch, start, mouse, accent);
-            sketch.circle(mouse.x, mouse.y, 24);
+        if (targeting.targetCategory === 'Point') {
+            sketch.circle(mouse.x, mouse.y, 28);
+            if (hero?.position) {
+                sketch.line(hero.position.x, hero.position.y, mouse.x, mouse.y);
+            }
+        } else if (targeting.targetCategory === 'Unit') {
+            sketch.circle(mouse.x, mouse.y, 34);
+        } else if (targeting.targetCategory === 'Vector') {
+            const start = vectorTargetStart ?? hero?.position ?? mouse;
+            if (start) {
+                const startInRange = !hero?.position || range <= 0 || getDistance(hero.position, start) <= range;
+                const accent = startInRange ? '#f5c750' : '#d14b57';
+
+                sketch.stroke(accent);
+                sketch.fill(sketch.color(accent));
+                sketch.circle(start.x, start.y, 16);
+                sketch.noFill();
+                sketch.strokeWeight(3);
+                sketch.line(start.x, start.y, mouse.x, mouse.y);
+                drawVectorArrow(sketch, start, mouse, accent);
+                sketch.circle(mouse.x, mouse.y, 24);
+            }
         }
-    }
-
-    sketch.pop();
+    });
 }
 
 function drawVectorArrow(sketch, start, end, color) {
@@ -220,19 +191,6 @@ function drawStatusText(sketch, state) {
     sketch.pop();
 }
 
-function getEnemyColor(name) {
-    if (name === 'Zombie') return '#89a96b';
-    if (name === 'Ghoul') return '#d57d4a';
-    if (name === 'Necromancer') return '#9b6ad6';
-    return '#d87b7b';
-}
-
-function getSkillKeyFromKeyboard(key) {
-    const normalized = String(key ?? '').toUpperCase();
-    const allowed = new Set(['A', 'Q', 'W', 'E', 'R']);
-    return allowed.has(normalized) ? normalized : null;
-}
-
 worker.onmessage = (event) => {
     const { type, payload, name, command } = event.data ?? {};
 
@@ -259,15 +217,36 @@ worker.onmessage = (event) => {
     uiMessageQueue.push(event.data);
 };
 
+const worldRender = new Render(null);
+const input = new Input({
+    getState: () => latestState,
+    getVectorTargetStart: () => input.vectorTargetStart,
+    setVectorTargetStart: (value) => {
+        input.vectorTargetStart = value;
+    },
+    postCommand,
+});
+input.vectorTargetStart = null;
+
 const sketch = (p) => {
     let uiLayer = null;
     let ui = null;
-    let vectorTargetStart = null;
 
     p.setup = () => {
         p.createCanvas(GAME_WIDTH, GAME_HEIGHT);
         uiLayer = p.createGraphics(p.width, p.height);
         ui = new UI(uiLayer);
+
+        objectiveSprite.promise = p.loadImage('FrontEnd/Assert/Image/Sprite_Tree.png')
+            .then((image) => {
+                objectiveSprite.image = image;
+                objectiveSprite.loaded = true;
+                return image;
+            })
+            .catch(() => {
+                objectiveSprite.failed = true;
+                return null;
+            });
 
         p.textFont('sans-serif');
         uiLayer.textFont('sans-serif');
@@ -277,125 +256,17 @@ const sketch = (p) => {
     };
 
     p.draw = () => {
-        drawWorld(p, latestState, vectorTargetStart);
+        drawWorld(p, latestState, input.vectorTargetStart);
 
         if (ui && latestState) {
             while (uiMessageQueue.length > 0) {
                 ui.handleWorkerMessage(uiMessageQueue.shift());
             }
-            ui.render(latestState);
+            ui.draw(latestState, { x: p.mouseX, y: p.mouseY });
             p.image(uiLayer, 0, 0);
         }
     };
-
-    p.mousePressed = () => {
-        if (p.mouseButton.right && !p.mouseButton.left) {
-            console.log('Right click - move command');
-            vectorTargetStart = null;
-            postCommand('hero:move', {
-                position: getMouseWorldPosition(p),
-            });
-            return;
-        }
-
-        if (!latestState?.hero?.targeting || latestState.hero.targeting.status !== 'targeting') {
-            return;
-        }
-
-        const targeting = latestState.hero.targeting;
-        const command = `hero:cast:${targeting.skillKey}`;
-
-        if (targeting.targetCategory === 'Vector') {
-            vectorTargetStart = getMouseWorldPosition(p);
-            return;
-        }
-
-        if (targeting.targetCategory === 'Point') {
-            postCommand(command, {
-                position: getMouseWorldPosition(p),
-            });
-            return;
-        }
-
-        if (targeting.targetCategory === 'Unit') {
-            const nearestEnemy = findNearestEnemy(latestState.enemies, getMouseWorldPosition(p));
-            postCommand(command, {
-                targetId: nearestEnemy?.id ?? null,
-            });
-            return;
-        }
-    };
-
-    p.mouseReleased = () => {
-        if (p.mouseButton !== p.LEFT) {
-            return;
-        }
-
-        if (!vectorTargetStart) {
-            return;
-        }
-
-        const targeting = latestState?.hero?.targeting;
-        if (!targeting || targeting.status !== 'targeting' || targeting.targetCategory !== 'Vector') {
-            vectorTargetStart = null;
-            return;
-        }
-
-        postCommand(`hero:cast:${targeting.skillKey}`, {
-            start: { ...vectorTargetStart },
-            end: getMouseWorldPosition(p),
-        });
-        vectorTargetStart = null;
-    };
-
-    p.keyPressed = () => {
-        const skillKey = getSkillKeyFromKeyboard(p.key);
-        if (skillKey) {
-            postCommand(`hero:press:${skillKey}`);
-            return;
-        }
-
-        if (String(p.key ?? '').toUpperCase() === 'S') {
-            vectorTargetStart = null;
-            postCommand('hero:stop');
-            return;
-        }
-
-        if (p.key === ' ') {
-            if (latestState?.flags?.paused) {
-                postCommand('game:resume');
-            } else {
-                postCommand('game:pause');
-            }
-        }
-    };
+    input.bind(p);
 };
-
-function findNearestEnemy(enemies = [], position) {
-    if (!position) {
-        return null;
-    }
-
-    let nearestEnemy = null;
-    let nearestDistance = Number.POSITIVE_INFINITY;
-
-    for (const enemy of enemies) {
-        if (!enemy?.position) {
-            continue;
-        }
-
-        const dx = enemy.position.x - position.x;
-        const dy = enemy.position.y - position.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance >= nearestDistance) {
-            continue;
-        }
-
-        nearestEnemy = enemy;
-        nearestDistance = distance;
-    }
-
-    return nearestEnemy;
-}
 
 new p5Ctor(sketch, document.getElementById('app'));

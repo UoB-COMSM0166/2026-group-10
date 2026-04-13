@@ -5,6 +5,7 @@ export default class Objective extends Unit {
         super("Corona Terrae", position, 0, hitbox, hp, 0);
         this.events = events;
         this.registerEventHandlers();
+        this.hpRegen = 0;
     }
 
     registerEventHandlers() {

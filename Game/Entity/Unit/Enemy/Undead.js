@@ -39,10 +39,10 @@ export class Zombie extends Enemy {
     }
 }
 
-export class Ghoul extends Enemy {
+export class Boomer extends Enemy {
     constructor(id, position, events, waypoint, tick) {
         super(
-            id, 'Ghoul', position, 1, 9, 40, 0,
+            id, 'Boomer', position, 1, 9, 40, 0,
             events, waypoint, 15, 10
         )
 
@@ -83,6 +83,12 @@ export class Necromancer extends Enemy {
             Number.POSITIVE_INFINITY,
             1
         );
+
+        this.onReachedObjective = () => {
+            if (this.aura) {
+                this.aura.finished = true;
+            }
+        };
 
         this.events.emit('enemy_skill_entity:created', { entity: this.aura });
     }

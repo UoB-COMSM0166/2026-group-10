@@ -13,10 +13,14 @@ export default class Enemy extends Unit {
         this.damage = Number(damage);
         this.gold = Number(gold);
         this.diecry = null;
+        this.onReachedObjective = null;
     }
 
     checkReachedObjective() {
         if (!this.finished && this.waypoint.length === 0) {
+            if (typeof this.onReachedObjective === 'function') {
+                this.onReachedObjective();
+            }
             this.finished = true;
             // this.clearEventHandlers();
             this.events.emit('enemy:reached_objective', { enemy: this });

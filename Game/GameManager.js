@@ -15,7 +15,7 @@ export default class GameManager {
         this.hero = new Archmage(
             heroSpawn,
             this.events,
-            'Fire',
+            'Ice',
             this.events,
             this.clock
         );
@@ -216,6 +216,7 @@ export default class GameManager {
     }
 
     updateHero() {
+        this.hero.inFountain = this.hero.getDistance(this.objective.position) <= 100;
         this.hero.updateRespawn();
         if (!this.hero.alive()) {
             return;

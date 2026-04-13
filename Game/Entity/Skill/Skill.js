@@ -8,13 +8,11 @@ export default class Skill {
         this.manaCost = Number(manaCost);
         this.range = range;
         this.upgraded = false;
+        this.upgradeGold = 0;
         this.events = events;
         this.targetCategory = targetCategory;
         this.passive = passive;
-        this.cooldownAcceleration = 0;
-        this.cooldownAccelerationCarry = 0;
         this.bonusDamage = 0;
-        this.lifestealRatio = 0;
         this.toggleable = false;
         this.active = false;
         this.onToggleOn = null;
@@ -40,6 +38,19 @@ export default class Skill {
 
     casted() {
         this.currentCooldown = this.cooldown;
+    }
+
+    getAttackDamage(baseDamage, caster, { includeBonusDamage = false } = {}) {
+        const damage = Number(baseDamage) || 0;
+        const attackAmp = Number(caster?.attackAmp) || 0;
+        const bonusDamage = includeBonusDamage ? (Number(this.bonusDamage) || 0) : 0;
+        return damage + attackAmp + bonusDamage;
+    }
+
+    getSpellDamage(baseDamage, caster) {
+        const damage = Number(baseDamage) || 0;
+        const spellAmp = Number(caster?.spellAmp) || 0;
+        return damage * (1 + spellAmp);
     }
 
     enableToggle(onToggleOn, onToggleActive, onToggleOff) {
