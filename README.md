@@ -102,8 +102,20 @@ project/
 ├── videos/
 │   
 └── weeklyupdates/
-    
 ```
+
+<h3 align="center">Feature Priority</h2>
+
+|Priority Rank - High to Low|System / Features|Time Taken|
+|-|-|-|
+|HIGHEST|Hero - Implement the stats screen funcitons of Hero system.|14%|
+|HIGHER|Enemy - Design the emeny behavior.|13%|
+|HIGH|Buff & Equip - Implement the Buff and Equipment functions, which effect the stats screen.|15%|
+|MID|Skill - Design the skill tree. And implement the active skills with buff, projectile or target entity.|15%|
+|LOW|Controll & Manager - Get the input from p5 libary and apply it to hero controll. Implement the game loop manager.|15%|
+|LOWER|Turrent & UI - Design the turrent. And create a UI system.|14%|
+|LOWEST|Boss - Design the Boss with active skills. Test the game.|14%|
+
 
 ## 1. Introduction
 
