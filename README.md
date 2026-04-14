@@ -9,18 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://uob-comsm0166.github.io/2026-group-10/">
-    <img src="https://img.shields.io/badge/🎮%20PLAY%20THE%20GAME-4CAF50?style=for-the-badge">
-  </a>
+  <a href="https://uob-comsm0166.github.io/2026-group-10/"><img src="https://img.shields.io/badge/🎮%20PLAY%20THE%20GAME-4CAF50?style=for-the-badge"></a>
   &nbsp;
-  <a href="https://your-link.com">
-    <img src="https://img.shields.io/badge/🎥%20WATCH%20VIDEO-E91E63?style=for-the-badge">
-  </a>
+  <a href="https://your-link.com"><img src="https://img.shields.io/badge/🎥%20WATCH%20VIDEO-E91E63?style=for-the-badge"></a>
   &nbsp;
-  <a href="https://github.com/orgs/UoB-COMSM0166/projects/153">
-    <img src="https://img.shields.io/badge/📌%20KANBAN%20BOARD-7C4DFF?style=for-the-badge">
-  </a>
-  &nbsp;
+  <a href="https://github.com/orgs/UoB-COMSM0166/projects/153"><img src="https://img.shields.io/badge/📌%20KANBAN%20BOARD-7C4DFF?style=for-the-badge"></a>
 </p>
 
 
