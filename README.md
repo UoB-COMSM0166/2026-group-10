@@ -52,7 +52,7 @@
 
 ## 1. Introduction
 
-Gates of cinder  combines the elements of RPG and tower defense to create a fun yet needs brain power to play.It has three levels and enemies become harder in each level and is upto to the player to choose correct hero and towers to defend the objective.
+Gates of cinder combines elements of RPG and tower defense to deliver an engaging and strategic gameplay experience. The game features three progressively challenging levels, where enemies become increasingly difficult to defeat. Players must carefully select the appropriate hero and strategically place towers to effectively defend their objective, requiring both planning and critical thinking.
 
 
 **1.1. Ideation Process** 
