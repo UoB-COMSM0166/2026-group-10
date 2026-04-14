@@ -1,4 +1,10 @@
-<h2 align="center">GATES OF CINDER</h2>
+<div style="display:flex; align-items:center; justify-content:center; gap:20px;">
+  <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="100" style="transform: scaleX(-1);">
+
+  <h2 style="position:relative; top:30px; margin:0;">GATES OF CINDER</h2>
+
+  <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="100">
+</div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/LANGUAGE-JAVASCRIPT-FFFF00?style=for-the-badge&logo=javascript&logoColor=white&labelColor=606060" />
