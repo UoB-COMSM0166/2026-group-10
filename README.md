@@ -1,7 +1,7 @@
 <div align="center">
   <img src="images/fireball-fireball-pixel-art.png" width="600">
 
-  <h1 style="margin-top: -40px;">GATES OF CINDER</h1>
+  <h1 style="margin-top: -60px;">GATES OF CINDER</h1>
 </div>
 
 <p align="center">
