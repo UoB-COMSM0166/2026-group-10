@@ -43,12 +43,30 @@
 | -------------------- | --------------------- | --------------------- |
 | Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |
 | Cenarius Lu          | ig25518@bristol.ac.uk | Shadow-Song           |
-| Rajmugundhan nagappan| je25549@bristol.ac.uk | Rajmugundhan2002-tech |
+| Rajmugundhan Nagappan| je25549@bristol.ac.uk | Rajmugundhan2002-tech |
 | Ayush Raizada        | ff25412@bristol.ac.uk | Raizada8              |
 | James Crossley       | qe25280@bristol.ac.uk | jamescr1              |
 | Jinhao Han           | bt25224@bristol.ac.uk | memoryzea             |
 
 </div>
+
+
+
+<div align="center">
+  
+  | Name                  | Role(s)                                           | Contribution                                                                                                                             | % |
+| --------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Jinhao Han            | Co-developer, Assets, Game Lore                   | Designed tower defence aspects, including enemy design, and contributed to system design.                                                | 1.0     |
+| Cenarius Lu           | Lead Developer, System Architecture, Game Lore    | Designed core mechanics and system architecture. Developed heroes, their abilities, and implemented health bar and RPG elements.         | 1.0     |
+| Dhanitha Rajapaksa    | Integration Development, Co-developer, Report     | Integrated front end and back end components, ensuring system cohesion. Contributed to development and assisted with the project report. | 1.0     |
+| James Crossley        | Frontend Development, Assets, Audio, Co-developer | Developed the frontend interface and handled audio design, and assisted with the project report.                                         | 1.0     |
+| Rajmugundhan Nagappan | Report, Assets, Game Lore                         | Contributed to report writing, asset creation, and game lore development.                                                                | 1.0   |
+| Ayush Raizada         | Report Writer, Project Manager                    | Coordinated the team, managed communication and workflow, and contributed to the project report.                                         | 1.0     |
+
+</div>
+
+
+
 
 <h2 align="center">File Structure</h2>
 
