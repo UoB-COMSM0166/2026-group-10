@@ -36,7 +36,7 @@
 
 <h2 align="center">Group Members</h2>
 
-![WhatsApp Image 2026-03-28 at 18 40 07](https://github.com/user-attachments/assets/c30621c0-e8ce-41dc-9768-56f7e3a1f887)
+![Group Photo](images/group_photo.jpg)
 <div align="center">
 
 | Name                 | Email                 | Github Username       |
@@ -50,15 +50,70 @@
 
 </div>
 
+<h2 align="center">File Structure</h2>
+
+```
+project/
+├── index.html ← Entry point — controls script load order
+├── Main.js ← Main entry point for the game logic
+├── README.md ← You are here — main project documentation
+├── struct.md 
+├── css/
+│   └── style.css 
+├── data/
+│   ├── Hero/ ← JSON data for heros 
+│   │  
+│   └── Map/ ← JSON data for maps  
+│      
+├── docs/ 
+├── images/ ← images and gif for README.md
+│ 
+├── js/
+│   
+├── src/
+│   ├── Game.js ← Main game class
+│   ├── GameManager.js ← Game manager class
+│   ├── UI.js ← User interface logic
+│   ├── Entity/
+│   │   ├── Entity.js ← Base entity class
+│   │   ├── Skill/ 
+│   │   │   ├── Archmage.js ← Archmage skill logic
+│   │   │   ├── Buff.js ← Buff logic
+│   │   │   ├── Skill.js ← Base skill class
+│   │   │   └── SkillEntity.js ← Skill entity logic
+│   │   └── Unit/
+│   │       ├── Hero.js ← Hero unit logic
+│   │       ├── Objective.js ← Objective unit logic
+│   │       ├── Unit.js ← Base unit class
+│   │       └── Enemy/
+│   │           ├── Enemy.js ← Base enemy class
+│   │           └── Undead.js ← Undead enemy logic
+│   ├── Towerdefense/
+│   │   ├── Bullet.js ← Bullet logic
+│   │   ├── Enemy.js ← Tower defense enemy logic
+│   │   ├── Path.js ← Path logic
+│   │   └── Tower.js ← Tower logic
+│   └── World/
+│       ├── Clock.js ← Game clock logic
+│       ├── Controller.js ← Game controller logic
+│       ├── EventEmitter.js ← Event emitter logic
+│       ├── Render.js ← Rendering logic
+│       └── World.js ← World logic
+├── videos/
+│   
+└── weeklyupdates/
+    
+```
+
 ## 1. Introduction
 
-The gates of cinder is combines the tower defense and RPG aspects to bring the game alive.The game takes place within a ancient forest where corona tree provides the life energy to all the beings in the forest.But an army of undead has risen to destroy the tree .So the player must defend the tree by choosing one of three heros to attack the waves of enemies and final boss.player must also choose and place towers in correct position and heroes abilities to  manage enemy waves.Each enemy follows fixed path towards corona tree.The twist is that both objective and heroes lives is tied together,if one of them is defeated the game ends.There are three heroes to choose from:Warrior,mage and engineer,each offering unique abilities.warrior excels in close combat while Mage has high range and spell abilities and engineer rely on their machines .The game is in retro art style .The game encourages players to adapt their strategies making each level challenging and rewarding
+The gates of cinder is combines the tower defense and RPG aspects to bring the game alive.The game takes place within a ancient forest where corona tree provides the life energy to all the beings in the forest.But an army of undead has risen to destroy the tree .So the player must defend the tree by choosing one of three heros to attack the waves of enemies and final boss.player must also choose and place towers in correct position and heroes abilities to manage enemy waves.Each enemy follows fixed path towards corona tree.The twist is that both objective and heroes lives is tied together,if one of them is defeated the game ends.There are three heroes to choose from:Warrior,mage and engineer,each offering unique abilities.warrior excels in close combat while Mage has high range and spell abilities and engineer rely on their machines .The game is in retro art style .The game encourages players to adapt their strategies making each level challenging and rewarding
+
 
 **1.1. Ideation Process** 
 
-<h2 align="center">GAME MECHANICS-INSPIRATION</h2>
-The game mechanics are inspired by the dynamic gameplay of popular titles such as Kingdom Rush and League of Legends, combining elements of tower defense with role-playing features. Players are required to strategically defend a central objective by placing different types of towers while also selecting and controlling heroes with unique abilities. Success in the game depends on the player’s ability to make thoughtful decisions, such as choosing the right combination of towers and heroes to effectively counter increasingly difficult waves of enemies.
-The game features a pixelated art style, which gives it a nostalgic and visually engaging appearance while maintaining clarity during gameplay. The story is set within a dense and mysterious forest, where players progress through multiple levels, each presenting new challenges and stronger enemies. As the game advances, players must adapt their strategies and upgrade their defenses to survive. The ultimate goal is to defeat a powerful final boss, requiring careful planning, efficient resource management, and skillful use of both towers and hero abilities.
+<h2 align="center">GAME MECHANICS-INSPRATION</h2>
+The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
 
 <table width="100%">
   <tr>
@@ -67,10 +122,10 @@ The game features a pixelated art style, which gives it a nostalgic and visually
   </tr>
   <tr>
     <td align="center">
-      <img src="kingdom rush.gif.gif" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/kingdom_rush.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td align="center">
-      <img src="league-of-legends.gif" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/league-of-legends.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
   </tr>
 </table>
@@ -92,150 +147,7 @@ With this direction established, we divided the research effort. Each team membe
 
 ### Stakeholders
 
-<img width="1200" height="896" alt="chart" src="https://github.com/user-attachments/assets/89ad8717-d669-4e34-94fb-6b47acaf9330" />
-<h2 align="center">EPICS AND USER STORIES</h2>
-EPIC 1 – Core Defense Gameplay
-
-Description: The player must defend the Ancient Tree from waves of undead enemies.
-
-User Stories:
-As a player, I want enemies to move toward the Ancient Tree, so that I must defend it.
-As a player, I want enemies to damage the Ancient Tree on contact, so that there is a clear loss condition.
-As a player, I want to attack enemies, so that I can stop them from reaching the tree.
-Acceptance Criteria:
-Enemies follow predefined paths toward the Ancient Tree.
-Enemy collision with the tree reduces its health.
-Player attacks register hits consistently and reduce enemy health.
-Game ends when the Ancient Tree health reaches zero.
-
-EPIC 2 – Enemy Waves & Boss System
-
-Description: The game progresses through waves of enemies, culminating in powerful boss encounters.
-
-User Stories:
-As a player, I want enemies to spawn in waves, so that gameplay escalates over time.
-As a player, I want a boss at the end of each round, so that I face a major challenge.
-As a player, I want bosses to have unique attack patterns, so that combat feels varied.
-As an Engineer player, I want bosses to target the Ancient Tree after destroying turrets, so that my gameplay has distinct risks.
-Acceptance Criteria:
-Waves spawn enemies at fixed intervals and locations.
-Boss spawns after all minions in a wave are defeated.
-Boss has multiple attack behaviors.
-Boss targeting logic changes depending on player class.
-
-EPIC 3 – Hero Class System
-
-Description: Players choose and control unique hero classes with different mechanics.
-
-User Stories:
-As a player, I want to choose between Warrior, Mage, and Engineer, so that I can play different styles.
-As a player, I want each class to have unique abilities, so that gameplay feels distinct.
-Acceptance Criteria:
-Player selects class before gameplay begins.
-Each class has unique stats, abilities, and mechanics.
-Class systems are independent and modular.
-
-EPIC 4 – Warrior Mechanics
-
-Description: The Warrior uses melee combat and rage-based abilities.
-
-User Stories:
-As a Warrior, I want different weapon types, so that my combat style changes.
-As a Warrior, I want to generate rage through attacks, so that I can use powerful skills.
-As a Warrior, I want rage to decay over time, so that I must stay aggressive.
-As a Warrior, I want to upgrade equipment using gold, so that I become stronger.
-Acceptance Criteria:
-Weapons (longsword, rapier, battle axe) affect abilities.
-Rage increases on attack and decreases over time.
-Rage resets on death or respawn.
-Equipment upgrades increase stats.
-
-EPIC 5 – Mage Mechanics
-
-Description: The Mage uses a flexible skill system powered by mana.
-
-User Stories:
-As a Mage, I want to combine Ice, Fire, and Lightning skills, so that I can customize my build.
-As a Mage, I want mana to regenerate over time, so that I can continuously cast spells.
-As a Mage, I want to spend gold on skills, so that I improve abilities instead of equipment.
-Acceptance Criteria:
-Skill combinations are selectable and usable in gameplay.
-Mana regenerates over time and resets on respawn.
-Skills consume mana when cast.
-Gold is used for skill learning and upgrades only.
-
-EPIC 6 – Engineer & Turret System
-
-Description: The Engineer defends using turrets instead of a direct character.
-
-User Stories:
-As an Engineer, I want to place turrets, so that they automatically attack enemies.
-As an Engineer, I want a limit on turret count, so that I must plan placement.
-As an Engineer, I want to upgrade turrets using wood, so that they become stronger.
-As an Engineer, I want permanent blueprint upgrades using gold, so that I progress over time.
-Acceptance Criteria:
-Turrets can be placed anywhere except restricted zones.
-Total turret count is capped.
-Wood is gained only from enemy kills.
-Turrets attack enemies automatically.
-Blueprint upgrades persist across gameplay.
-
-EPIC 7 – Progression & Resources
-
-Description: Players gain rewards and improve their abilities over time.
-
-User Stories:
-As a player, I want to gain experience from enemies, so that I can level up.
-As a player, I want to earn gold, so that I can upgrade my character.
-As a player, I want class-specific uses for gold, so that progression feels unique.
-As an Engineer, I want to gain wood, so that I can build and upgrade turrets.
-Acceptance Criteria:
-XP is awarded on enemy defeat and triggers level-ups.
-Level-ups grant skill points.
-Gold is awarded consistently from enemies.
-Resource usage differs per class.
-
-EPIC 8 – Ancient Tree System
-
-Description: The Ancient Tree acts as the core objective and life system.
-
-User Stories:
-As a player, I want the Ancient Tree to have health, so that I must protect it.
-As a player, I want to repair the tree using gold, so that I can recover from damage.
-As a player, I want the tree to revive me at a cost, so that death has consequences.
-Acceptance Criteria:
-Tree health decreases when enemies reach it.
-Gold can be spent to restore tree health.
-Player death triggers a respawn timer.
-Tree health is reduced upon player revival.
-
-EPIC 9 – Game States & Win/Lose Conditions
-
-Description: The game clearly defines victory and defeat conditions.
-
-User Stories:
-As a player, I want to win after defeating all waves, so that I feel rewarded.
-As a player, I want to lose when the tree is destroyed, so that failure is clear.
-As a player, I want to respawn after death, so that I can continue playing.
-Acceptance Criteria:
-Game ends in victory when all enemies are defeated.
-Game ends in defeat when tree health reaches zero.
-Respawn system includes a timer and penalty.
-UI clearly communicates game state changes.
-
-EPIC 10 – Technical Architecture & Scalability
-
-Description: The system is modular and maintainable for future expansion.
-
-User Stories:
-As a developer, I want modular systems, so that features are easy to maintain.
-As a developer, I want class systems separated, so that balancing is easier.
-As a developer, I want scalable enemy and wave systems, so that new content can be added easily.
-Acceptance Criteria:
-Systems separated (Combat, AI, Resources, UI, Classes).
-Clear update loop and system interactions.
-Data-driven configs for enemies, waves, and abilities.
-New classes or enemies can be added without rewriting core systems.
+<img width="1200" height="896" alt="chart" src="images/chart.png" />
 
 
 ### Game ideas and analysis
@@ -256,7 +168,8 @@ New classes or enemies can be added without rewriting core systems.
 
 By Week 3, we had translated these ideas into a paper prototype during the workshop. Testing sessions were positive, particularly regarding the different player roles we designed. With the fundamental mechanics validated, we moved forward to develop sprites and assets for digital prototyping, which would allow us to test the gameplay loop more thoroughly.
 
-#### Epics and User stories: 
+## Epics and User stories
+
 Through the process of creating epics, user stories and acceptance requirements, we obtained a greater awareness of the range of stakeholders our game has. We also developed a deeper understanding of the context that our game exists in.
 
 By creating epics, we learned of the different sub-categories of users our game may have, such as users with visual impairments and users with other disabilities. An increased awareness of the importance of the different categories of developers involved in the game, such as ‘front-end developers’ and ‘back-end developers’ was also acquired.
@@ -273,6 +186,19 @@ By considering the plethora of stakeholders around our game, we gained a better 
 | Progressive Map Experience | As a passionate gamer, I want to be able to progress from one map to the next map as if the game is a progressive story so that the game feels exciting and fulfilling | Given that I am playing the game, when I have successfully completed the first map, then I should be able to play on a second map which is different to the first |
 | Dynamic Strategic Combat System | As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement | Given that I am playing a map, when combating against the enemy I should fight against two different types of enemy with different maximum health attributes |
 
+| Epic | Description | User Stories | Acceptance Criteria |
+|------|-------------|-------------|---------------------|
+| EPIC 1 – Core Defense Gameplay | The player must defend the Ancient Tree from waves of undead enemies. | As a player, I want enemies to move toward the Ancient Tree, so that I must defend it. <br> As a player, I want enemies to damage the Ancient Tree on contact, so that there is a clear loss condition. <br> As a player, I want to attack enemies, so that I can stop them from reaching the tree. | Enemies follow predefined paths toward the Ancient Tree. <br> Enemy collision with the tree reduces its health. <br> Player attacks register hits consistently and reduce enemy health. <br> Game ends when the Ancient Tree health reaches zero. |
+| EPIC 2 – Enemy Waves & Boss System | The game progresses through waves of enemies, culminating in powerful boss encounters. | As a player, I want enemies to spawn in waves, so that gameplay escalates over time. <br> As a player, I want a boss at the end of each round, so that I face a major challenge. <br> As a player, I want bosses to have unique attack patterns, so that combat feels varied. <br> As an Engineer player, I want bosses to target the Ancient Tree after destroying turrets, so that my gameplay has distinct risks. | Waves spawn enemies at fixed intervals and locations. <br> Boss spawns after all minions in a wave are defeated. <br> Boss has multiple attack behaviours. <br> Boss targeting logic changes depending on player class. |
+| EPIC 3 – Hero Class System | Players choose and control unique hero classes with different mechanics. | As a player, I want to choose between Warrior, Mage, and Engineer, so that I can play different styles. <br> As a player, I want each class to have unique abilities, so that gameplay feels distinct. | Player selects class before gameplay begins. <br> Each class has unique stats, abilities, and mechanics. <br> Class systems are independent and modular. |
+| EPIC 4 – Warrior Mechanics | The Warrior uses melee combat and rage-based abilities. | As a Warrior, I want different weapon types, so that my combat style changes. <br> As a Warrior, I want to generate rage through attacks, so that I can use powerful skills. <br> As a Warrior, I want rage to decay over time, so that I must stay aggressive. <br> As a Warrior, I want to upgrade equipment using gold, so that I become stronger. | Weapons (longsword, rapier, battle axe) affect abilities. <br> Rage increases on attack and decreases over time. <br> Rage resets on death or respawn. <br> Equipment upgrades increase stats. |
+| EPIC 5 – Mage Mechanics | The Mage uses a flexible skill system powered by mana. | As a Mage, I want to combine Ice, Fire, and Lightning skills, so that I can customise my build. <br> As a Mage, I want mana to regenerate over time, so that I can continuously cast spells. <br> As a Mage, I want to spend gold on skills, so that I improve abilities instead of equipment. | Skill combinations are selectable and usable in gameplay. <br> Mana regenerates over time and resets on respawn. <br> Skills consume mana when cast. <br> Gold is used for skill learning and upgrades only. |
+| EPIC 6 – Engineer & Turret System | The Engineer defends using turrets instead of a direct character. | As an Engineer, I want to place turrets, so that they automatically attack enemies. <br> As an Engineer, I want a limit on turret count, so that I must plan placement. <br> As an Engineer, I want to upgrade turrets using wood, so that they become stronger. <br> As an Engineer, I want permanent blueprint upgrades using gold, so that I progress over time. | Turrets can be placed anywhere except restricted zones. <br> Total turret count is capped. <br> Wood is gained only from enemy kills. <br> Turrets attack enemies automatically. <br> Blueprint upgrades persist across gameplay. |
+| EPIC 7 – Progression & Resources | Players gain rewards and improve their abilities over time. | As a player, I want to gain experience from enemies, so that I can level up. <br> As a player, I want to earn gold, so that I can upgrade my character. <br> As a player, I want class-specific uses for gold, so that progression feels unique. <br> As an Engineer, I want to gain wood, so that I can build and upgrade turrets. | XP is awarded on enemy defeat and triggers level-ups. <br> Level-ups grant skill points. <br> Gold is awarded consistently from enemies. <br> Resource usage differs per class. |
+| EPIC 8 – Ancient Tree System | The Ancient Tree acts as the core objective and life system. | As a player, I want the Ancient Tree to have health, so that I must protect it. <br> As a player, I want to repair the tree using gold, so that I can recover from damage. <br> As a player, I want the tree to revive me at a cost, so that death has consequences. | Tree health decreases when enemies reach it. <br> Gold can be spent to restore tree health. <br> Player death triggers a respawn timer. <br> Tree health is reduced upon player revival. |
+| EPIC 9 – Game States & Win/Lose Conditions | The game clearly defines victory and defeat conditions. | As a player, I want to win after defeating all waves, so that I feel rewarded. <br> As a player, I want to lose when the tree is destroyed, so that failure is clear. <br> As a player, I want to respawn after death, so that I can continue playing. | Game ends in victory when all enemies are defeated. <br> Game ends in defeat when tree health reaches zero. <br> Respawn system includes a timer and penalty. <br> UI clearly communicates game state changes. |
+| EPIC 10 – Technical Architecture & Scalability | The system is modular and maintainable for future expansion. | As a developer, I want modular systems, so that features are easy to maintain. <br> As a developer, I want class systems separated, so that balancing is easier. <br> As a developer, I want scalable enemy and wave systems, so that new content can be added easily. | Systems separated (Combat, AI, Resources, UI, Classes). <br> Clear update loop and system interactions. <br> Data-driven configs for enemies, waves, and abilities. <br> New classes or enemies can be added without rewriting core systems. |
+
 **Prototyping** 
 Gates of cinder paper prototype
 
@@ -281,7 +207,7 @@ Gates of cinder paper prototype
   <!-- ROW 1 -->
   <tr>
     <td width="50%">
-      <img src="frogger.gif" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/frogger.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td width="50%">
       <h3>Prototype — description</h3>
@@ -294,12 +220,14 @@ Gates of cinder paper prototype
   <!-- ROW 2 -->
   <tr>
     <td width="50%">
-      <img src="gates of cinder proto.gif" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/gates_of_cinder.jpeg" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td width="50%">
-      <h3>the start menu can be viewed,choosing difficulty levels and hero mechanics.After that the towers are choosen to protect the objective.</h3>
+      <h3>Prototype — Success state</h3>
       <p>
-      
+        description
+      </p>
+    </td>
   </tr>
 </table>
 **Testing Feedback** 
@@ -344,13 +272,6 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 - 15% ~750 words
 
 - Teamwork. How did you work together, what tools and methods did you use? Did you define team roles? Reflection on how you worked together. Be honest, we want to hear about what didn't work as well as what did work, and importantly how your team adapted throughout the project.
-- <h2 align="center">PROCESS</h2>
-- At  the preparation stage of the game we divided ourselves workload  equally so that everyone contributes and to be balanced.All the six team members worked on their branches to make the game ranging from the lore,aesthictics and core system.
-
-* Cenarius Lu(Developer,System Architecture& Game Lore):Desinged the core mechanics,system and Heroes.Abilities of the heroes and implementation of health bar and RPG elements.
-* Jinhao Han(Co-developer,Assest &Game Lore):Designed the tower defense aspect of the game,Enemy design and contributed towards system design.
-* James Crossley(Frontend development,Assets ,Audio& Co-Developer):designed the frontend and audio for the game.
-* Rajmugundhan(Report,assets &Game lore):
 
 ### Conclusion
 
