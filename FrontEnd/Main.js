@@ -18,6 +18,7 @@ let latestState = null;
 let latestEvents = [];
 let latestResult = null;
 let uiMessageQueue = [];
+let bookPausedGame = false;
 const objectiveSprite = {
     image: null,
     loaded: false,
@@ -225,8 +226,36 @@ const input = new Input({
         input.vectorTargetStart = value;
     },
     postCommand,
+    toggleBook: () => {
+        if (sketchUi) {
+            const nextShowBook = !sketchUi.showBook;
+            sketchUi.showBook = nextShowBook;
+
+            if (nextShowBook) {
+                if (!latestState?.flags?.paused) {
+                    postCommand('game:pause');
+                    bookPausedGame = true;
+                }
+                return;
+            }
+
+            if (bookPausedGame) {
+                postCommand('game:resume');
+                bookPausedGame = false;
+            }
+        }
+    },
+    isBookOpen: () => Boolean(sketchUi?.showBook),
+    handleSkillClick: ({ state, mouse }) => {
+        if (!sketchUi || !state?.hero) {
+            return;
+        }
+
+        sketchUi.handleSkillClick(state.hero, mouse, postCommand);
+    },
 });
 input.vectorTargetStart = null;
+let sketchUi = null;
 
 const sketch = (p) => {
     let uiLayer = null;
@@ -236,6 +265,7 @@ const sketch = (p) => {
         p.createCanvas(GAME_WIDTH, GAME_HEIGHT);
         uiLayer = p.createGraphics(p.width, p.height);
         ui = new UI(uiLayer);
+        sketchUi = ui;
 
         objectiveSprite.promise = p.loadImage('FrontEnd/Assert/Image/Sprite_Tree.png')
             .then((image) => {

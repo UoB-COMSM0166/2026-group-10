@@ -5,7 +5,8 @@ export default class Entity {
         this.velocity = { vx: 0, vy: 0 };
         this.baseSpeed = Number(speed);
         this.speed = this.baseSpeed;
-        this.hitbox = Number(hitbox)
+        this.baseHitbox = Number(hitbox);
+        this.hitbox = this.baseHitbox;
 
         this.target = null;
         this.waypoint = [];

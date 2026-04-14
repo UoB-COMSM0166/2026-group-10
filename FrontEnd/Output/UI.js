@@ -7,10 +7,29 @@ export default class UI {
             objectiveProfile: 'FrontEnd/Assert/Image/Profile_Tree.png',
             heroProfile: 'FrontEnd/Assert/Image/Profile_Archmage.png',
             heroProfileDead: 'FrontEnd/Assert/Image/Profile_Archmage_Dead.png',
+            heroSpellBookBackground: 'FrontEnd/Assert/Image/Book_Background_Archmage.png',
             statSpeed: 'FrontEnd/Assert/Image/Stats_Speed.png',
             statArmor: 'FrontEnd/Assert/Image/Stats_Armor.png',
             statAttack: 'FrontEnd/Assert/Image/Stats_Attack.png',
             statSpell: 'FrontEnd/Assert/Image/Stats_Spell.png',
+            skillBallLightning: 'FrontEnd/Assert/Image/Icon/Skill_BallLightning.png',
+            skillBlizzard: 'FrontEnd/Assert/Image/Icon/Skill_Blizzard.png',
+            skillBurning: 'FrontEnd/Assert/Image/Icon/Skill_Burning.png',
+            skillChainLightning: 'FrontEnd/Assert/Image/Icon/Skill_ChainLightning.png',
+            skillChakra: 'FrontEnd/Assert/Image/Icon/Skill_Chakra.png',
+            skillElectromagneticField: 'FrontEnd/Assert/Image/Icon/Skill_ElectromagneticField.png',
+            skillFierySoul: 'FrontEnd/Assert/Image/Icon/Skill_FierySoul.png',
+            skillFireBall: 'FrontEnd/Assert/Image/Icon/Skill_FireBall.png',
+            skillFlameWave: 'FrontEnd/Assert/Image/Icon/Skill_FlameWave.png',
+            skillFrostShield: 'FrontEnd/Assert/Image/Icon/Skill_FrostShield.png',
+            skillIcePick: 'FrontEnd/Assert/Image/Icon/Skill_IcePick.png',
+            skillLightning: 'FrontEnd/Assert/Image/Icon/Skill_Lightning.png',
+            skillManaDrain: 'FrontEnd/Assert/Image/Icon/Skill_ManaDrain.png',
+            skillMeteorite: 'FrontEnd/Assert/Image/Icon/Skill_Meteorite.png',
+            skillStaticExplosion: 'FrontEnd/Assert/Image/Icon/Skill_StaticExplosion.png',
+            skillStormBlast: 'FrontEnd/Assert/Image/Icon/Skill_StormBlast.png',
+            skillThunderCloud: 'FrontEnd/Assert/Image/Icon/Skill_ThunderCloud.png',
+            skillViperGuardian: 'FrontEnd/Assert/Image/Icon/Skill_ViperGuardian.png',
         });
         this.layout = {
             panelX: 24,
@@ -22,11 +41,12 @@ export default class UI {
             skillSize: 52,
             gap: 12,
         };
-        this.skillOrder = ['A', 'Q', 'W', 'E', 'R', 'Passive'];
+        this.showBook = false;
+        this.skillOrder = ['A', 'Q', 'W', 'E', 'R', 'P'];
         this.skillPalette = {
             Ice: '#4da3ff',
             Fire: '#ff7a1a',
-            Lightning: '#f4d03f',
+            Lightning: '#9a25fb',
             default: '#6c7a89',
         };
         this.buffFallbackColor = '#b8c4d6';
@@ -45,11 +65,18 @@ export default class UI {
         this.drawObjectivePanel(state.objective);
         this.drawHeroProfilePanel(state.hero);
         this.drawHeroSkillsPanel(state.hero);
-        this.drawSkillDetail(state.hero, mouse);
+
         this.drawBuffIconPanel(state.hero);
         this.drawWaveStatsPanel(state.wave, state.flags);
         this.drawHeroStatsPanel(state.hero);
+
+        if (this.showBook) {
+            this.drawSkillBookWindow(state.hero);
+        }
+        this.drawSkillDetail(state.hero, mouse);
         this.drawToasts();
+
+
     }
 
     handleWorkerMessage(message) {
@@ -80,9 +107,18 @@ export default class UI {
             return;
         }
 
+        if ((command === 'hero:upgrade' || command === 'hero:upgrade:skill') && code < 400) {
+            this.pushToast(payload.message, 'success');
+            return;
+        }
+
+        if (command === 'hero:skill:change' && code < 400) {
+            this.pushToast(payload.message, 'success');
+            return;
+        }
+
         if (code >= 400) {
             this.pushToast(payload.message, 'error');
-            return;
         }
     }
 
@@ -120,10 +156,10 @@ export default class UI {
         }
 
         const layer = this.layer;
-        const width = 360;
+        const width = 600;
         const height = 54;
-        const startX = layer.width - width - 24;
-        const startY = layer.height - 24 - height;
+        const startX = (layer.width - width) / 2;
+        const startY = layer.height - 340;
 
         this.drawToast(startX, startY, width, height, this.toast);
     }
@@ -138,13 +174,11 @@ export default class UI {
         layer.fill(layer.red(palette.bg), layer.green(palette.bg), layer.blue(palette.bg), 228 * alpha);
         layer.rect(x, y, width, height, 14);
 
-        layer.fill(palette.accent);
-        layer.rect(x, y, 6, height, 14, 0, 0, 14);
-
         layer.fill(255, 245 * alpha);
         layer.textAlign(layer.LEFT, layer.CENTER);
         layer.textSize(14);
-        layer.text(toast.message, x + 18, y + height / 2, width - 28, height - 16);
+        // layer.text(toast.message, x + 18, y + height / 2, width - 28, height - 16);
+        View.text(layer, x + width / 2, y + height / 2, toast.message, 30, 255 * alpha, false, 0, 0, "Arial", 2);
         layer.pop();
     }
 
@@ -239,17 +273,18 @@ export default class UI {
             layer.color(50, 50, 255), layer.color(0, 0, 100), 25
         )
 
-        View.skillIcon(layer, x + 20, y + 20, 80, 80, 'A', skills.A);
-        View.skillIcon(layer, x + 20 + 100, y + 20, 80, 80, 'Q', skills.Q);
-        View.skillIcon(layer, x + 20 + 200, y + 20, 80, 80, 'W', skills.W);
-        View.skillIcon(layer, x + 20 + 300, y + 20, 80, 80, 'E', skills.E);
-        View.skillIcon(layer, x + 20 + 400, y + 20, 80, 80, 'R', skills.R);
-        View.skillIcon(layer, x + 20 + 500, y + 20 + 5, 70, 70, '', skills.Passive);
-        View.skillIcon(layer, x + 20 + 590, y + 20, 140, 80, 'B', null);
+        View.liveSkillIcon(layer, x + 20, y + 20, 80, 80, 'A', skills.A, this.getSkillIcon(skills.A));
+        View.liveSkillIcon(layer, x + 20 + 100, y + 20, 80, 80, 'Q', skills.Q, this.getSkillIcon(skills.Q));
+        View.liveSkillIcon(layer, x + 20 + 200, y + 20, 80, 80, 'W', skills.W, this.getSkillIcon(skills.W));
+        View.liveSkillIcon(layer, x + 20 + 300, y + 20, 80, 80, 'E', skills.E, this.getSkillIcon(skills.E));
+        View.liveSkillIcon(layer, x + 20 + 400, y + 20, 80, 80, 'R', skills.R, this.getSkillIcon(skills.R));
+        const passiveSkill = this.getHeroSkillBySlot(skills, 'P');
+        View.liveSkillIcon(layer, x + 20 + 500, y + 20 + 5, 70, 70, '', passiveSkill, this.getSkillIcon(passiveSkill));
+        View.liveSkillIcon(layer, x + 20 + 590, y + 20, 140, 80, 'B', null, null);
     }
 
     drawSkillDetail(hero, mouse = null) {
-        const skill = this.getHoveredSkill(hero, mouse);
+        const skill = this.checkMouseAboveSkill(hero, mouse);
         if (!skill) {
             return;
         }
@@ -373,6 +408,71 @@ export default class UI {
         });
 
         layer.pop();
+    }
+
+    drawSkillBookWindow(hero) {
+        const layer = this.layer;
+        const width = 1280;
+        const height = 720;
+        const x = 160;
+        const y = 90;
+
+        layer.push();
+        const portrait = this.art.heroSpellBookBackground;
+        this.drawPanelArtwork(portrait, x, y, width, height, 0);
+        layer.fill(12, 18, 28, 220);
+        layer.rect(x, y, width, height, 0);
+        View.text(layer, x + 240, y + 40, 'ICE', 40, 255, true, 0, 0, "Arial", 4);
+        View.text(layer, x + 560, y + 40, 'FIRE', 40, 255, true, 0, 0, "Arial", 4);
+        View.text(layer, x + 880, y + 40, 'LIGHTNING', 40, 255, true, 0, 0, "Arial", 4);
+        View.text(layer, x + 1160, y + 40, 'HERO', 40, 255, true, 0, 0, "Arial", 4);
+
+        let deltaY = 120;
+        for (const slot of this.skillOrder) {
+            View.text(layer, x + 40, y + 40 + deltaY, slot, 40, 255, true, 0, 0, "Arial", 4);
+            let deltaX = 120;
+            const skills = this.getSkillTreeSlot(hero, slot);
+
+            for (const skill of skills) {
+                if (!skill) {
+                    continue;
+                }
+                const equippedSkill = this.getHeroSkillBySlot(hero.skills, slot);
+                const highLight = skill.name === equippedSkill?.name;
+                View.skillIcon(layer, x + deltaX, y + deltaY, 80, 80, skill, highLight, this.getSkillIcon(skill));
+                deltaX += 320;
+            }
+            deltaY += 96;
+        }
+
+        layer.pop();
+    }
+
+    handleSkillClick(hero, mouse, postCommand) {
+        if (!this.showBook || !hero || !mouse || typeof postCommand !== 'function') {
+            return false;
+        }
+
+        const hoveredSkill = this.checkMouseAboveSkill(hero, mouse);
+        if (!hoveredSkill?.name || !hoveredSkill?.slot) {
+            return false;
+        }
+
+        if (!hero.inFountain) {
+            this.pushToast('Too Far from Objective.', 'error');
+            return true;
+        }
+
+        const equippedSkill = this.getHeroSkillBySlot(hero.skills, hoveredSkill.slot);
+        if (equippedSkill?.name === hoveredSkill.name) {
+            return true;
+        }
+
+        postCommand('hero:skill:change', {
+            slot: hoveredSkill.slot,
+            name: hoveredSkill.name,
+        });
+        return true;
     }
 
     // drawBuffBar(hero) {
@@ -506,9 +606,13 @@ export default class UI {
         return y + 24;
     }
 
-    getHoveredSkill(hero, mouse = null) {
+    checkMouseAboveSkill(hero, mouse = null) {
         if (!mouse) {
             return null;
+        }
+
+        if (this.showBook) {
+            return this.getHoveredBookSkill(hero, mouse);
         }
 
         const skills = hero?.skills ?? {};
@@ -527,13 +631,57 @@ export default class UI {
             { slot: 'W', x: 736, y: 700, width: 80, height: 80 },
             { slot: 'E', x: 836, y: 700, width: 80, height: 80 },
             { slot: 'R', x: 936, y: 700, width: 80, height: 80 },
-            { slot: 'Passive', x: 1036, y: 705, width: 70, height: 70 },
+            { slot: 'P', x: 1036, y: 705, width: 70, height: 70 },
         ];
 
         for (const hitbox of hitboxes) {
             if (this.isPointInRect(mouse, hitbox)) {
                 return hitbox.slot;
             }
+        }
+
+        return null;
+    }
+
+    getHoveredBookSkill(hero, mouse = null) {
+        return this.getHoveredBookSkillWithSlot(hero, mouse)?.skill ?? null;
+    }
+
+    getHoveredBookSkillWithSlot(hero, mouse = null) {
+        if (!mouse) {
+            return null;
+        }
+
+        const bookX = 160;
+        const bookY = 90;
+        const slotOrder = this.skillOrder;
+        let deltaY = 120;
+
+        for (const slot of slotOrder) {
+            let deltaX = 120;
+            const skills = this.getSkillTreeSlot(hero, slot);
+
+            for (const skill of skills) {
+                if (!skill) {
+                    deltaX += 320;
+                    continue;
+                }
+
+                const hitbox = {
+                    x: bookX + deltaX,
+                    y: bookY + deltaY,
+                    width: 80,
+                    height: 80,
+                };
+
+                if (this.isPointInRect(mouse, hitbox)) {
+                    return { slot, skill };
+                }
+
+                deltaX += 320;
+            }
+
+            deltaY += 96;
         }
 
         return null;
@@ -556,7 +704,7 @@ export default class UI {
             'W',
             'E',
             'R',
-            'Passive',
+            'P',
         ].filter(Boolean);
 
         for (const slot of preferredSlots) {
@@ -566,6 +714,66 @@ export default class UI {
         }
 
         return Object.values(skills).find(Boolean) ?? null;
+    }
+
+    getSkillTreeSlot(hero, slot) {
+        const skillTree = hero?.skillTree;
+        if (!skillTree) {
+            return [];
+        }
+
+        const normalizedSlot = this.normalizeSkillSlot(slot);
+        if (skillTree instanceof Map) {
+            return skillTree.get(normalizedSlot) ?? skillTree.get(slot) ?? [];
+        }
+
+        return Array.isArray(skillTree[normalizedSlot])
+            ? skillTree[normalizedSlot]
+            : (Array.isArray(skillTree[slot]) ? skillTree[slot] : []);
+    }
+
+    getHeroSkillBySlot(skills, slot) {
+        if (!skills) {
+            return null;
+        }
+
+        const normalizedSlot = this.normalizeSkillSlot(slot);
+        return skills[normalizedSlot] ?? skills[slot] ?? null;
+    }
+
+    normalizeSkillSlot(slot) {
+        return slot === 'Passive' ? 'P' : slot;
+    }
+
+    getSkillIcon(skill) {
+        const key = this.getSkillIconKey(skill?.name);
+        return key ? (this.art[key] ?? null) : null;
+    }
+
+    getSkillIconKey(skillName) {
+        const normalized = String(skillName ?? '').replace(/\s+/g, '');
+        const iconMap = {
+            BallLightning: 'skillBallLightning',
+            Blizzard: 'skillBlizzard',
+            Burning: 'skillBurning',
+            ChainLightning: 'skillChainLightning',
+            Chakra: 'skillChakra',
+            ElectromagneticField: 'skillElectromagneticField',
+            FierySoul: 'skillFierySoul',
+            FireBall: 'skillFireBall',
+            FlameWave: 'skillFlameWave',
+            FrostShield: 'skillFrostShield',
+            IcePick: 'skillIcePick',
+            Lightning: 'skillLightning',
+            ManaDrain: 'skillManaDrain',
+            Meteorite: 'skillMeteorite',
+            StaticExplosion: 'skillStaticExplosion',
+            StormBlast: 'skillStormBlast',
+            ThunderCloud: 'skillThunderCloud',
+            ViperGuardian: 'skillViperGuardian',
+        };
+
+        return iconMap[normalized] ?? null;
     }
 
     getRespawnSeconds(hero) {

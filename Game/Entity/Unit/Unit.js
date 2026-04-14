@@ -14,12 +14,18 @@ export default class Unit extends Entity {
         this.baseMpRegen = 0;
         this.hpRegen = 0;
         this.mpRegen = 0;
+        this.invulnerable = false;
+        this.skillCastingDisabled = false;
 
         this.buffs = [];
     }
     
     // HP & MP受到影响
     takeDamage(amount) {
+        if (this.invulnerable) {
+            return;
+        }
+
         const effectiveDamage = Math.max(0.01, amount - this.armor);
         this.currentHP = Math.max(0, this.currentHP - effectiveDamage);
     }
@@ -137,9 +143,12 @@ export default class Unit extends Entity {
 
     updateBuffs() {
         this.speed = this.baseSpeed;
+        this.hitbox = this.baseHitbox;
         this.armor = this.baseArmor;
         this.hpRegen = this.baseHpRegen;
         this.mpRegen = this.baseMpRegen;
+        this.invulnerable = false;
+        this.skillCastingDisabled = false;
         this.applyBuffEffect();
         this.buffs = this.buffs.filter((buff) => {
             buff.remaining -= 1;

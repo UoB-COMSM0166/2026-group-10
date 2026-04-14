@@ -216,7 +216,6 @@ export default class GameManager {
     }
 
     updateHero() {
-        this.hero.inFountain = this.hero.getDistance(this.objective.position) <= 100;
         this.hero.updateRespawn();
         if (!this.hero.alive()) {
             return;

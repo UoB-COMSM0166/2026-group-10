@@ -1,11 +1,14 @@
 export default class Input {
     static WORLD_Y_SCALE = 0.7;
 
-    constructor({ getState, getVectorTargetStart, setVectorTargetStart, postCommand }) {
+    constructor({ getState, getVectorTargetStart, setVectorTargetStart, postCommand, toggleBook, isBookOpen, handleSkillClick }) {
         this.getState = getState;
         this.getVectorTargetStart = getVectorTargetStart;
         this.setVectorTargetStart = setVectorTargetStart;
         this.postCommand = postCommand;
+        this.toggleBook = toggleBook;
+        this.isBookOpen = isBookOpen;
+        this.handleSkillClick = handleSkillClick;
     }
 
     bind(sketch) {
@@ -23,6 +26,16 @@ export default class Input {
     }
 
     handleMousePressed(sketch) {
+        if (this.isBookOpen?.()) {
+            if (sketch.mouseButton.left && typeof this.handleSkillClick === 'function') {
+                this.handleSkillClick({
+                    state: this.getState(),
+                    mouse: { x: sketch.mouseX, y: sketch.mouseY },
+                });
+            }
+            return;
+        }
+
         if (sketch.mouseButton.right && !sketch.mouseButton.left) {
             this.setVectorTargetStart(null);
             this.postCommand('hero:move', {
@@ -60,6 +73,11 @@ export default class Input {
     }
 
     handleMouseReleased(sketch) {
+        if (this.isBookOpen?.()) {
+            this.setVectorTargetStart(null);
+            return;
+        }
+
         if (sketch.mouseButton !== sketch.LEFT) {
             return;
         }
@@ -83,6 +101,17 @@ export default class Input {
     }
 
     handleKeyPressed(sketch) {
+        if (String(sketch.key ?? '').toUpperCase() === 'B') {
+            if (typeof this.toggleBook === 'function') {
+                this.toggleBook();
+            }
+            return;
+        }
+
+        if (this.isBookOpen?.()) {
+            return;
+        }
+
         const skillKey = this.getSkillKeyFromKeyboard(sketch.key);
         if (skillKey) {
             this.postCommand(`hero:press:${skillKey}`);

@@ -53,7 +53,7 @@ function buildUnitState(unit) {
         attackAmp: Number(unit.attackAmp) || 0,
         spellAmp: Number(unit.spellAmp) || 0,
         hitbox: Number(unit.hitbox) || 0,
-        inFountain: Boolean(unit.inFountain),
+        inFountain: false,
         alive: typeof unit.alive === 'function' ? unit.alive() : true,
         finished: Boolean(unit.finished),
         buffs: Array.isArray(unit.buffs) ? unit.buffs.map((buff) => ({
@@ -90,6 +90,34 @@ function buildHeroSkillState(hero) {
     }
 
     return skills;
+}
+
+function buildHeroSkillTreeState(hero) {
+    const skillTree = {};
+    if (!(hero?.skillTree instanceof Map)) {
+        return skillTree;
+    }
+
+    for (const [slot, skills] of hero.skillTree.entries()) {
+        skillTree[slot] = Array.isArray(skills)
+            ? skills.map((skill) => skill ? {
+                slot,
+                name: skill.name,
+                category: skill.category,
+                description: skill.description ?? '',
+                cooldown: Number(skill.cooldown) || 0,
+                currentCooldown: Number(skill.currentCooldown) || 0,
+                manaCost: Number(skill.manaCost) || 0,
+                range: Number(skill.range) || 0,
+                targetCategory: skill.targetCategory ?? null,
+                passive: Boolean(skill.passive),
+                active: Boolean(skill.active),
+                upgraded: Boolean(skill.upgraded),
+            } : null)
+            : [];
+    }
+
+    return skillTree;
 }
 
 function buildEntityState(entity) {
@@ -142,12 +170,16 @@ function buildStateSnapshot() {
         },
         hero: {
             ...buildUnitState(game.hero),
+            inFountain: typeof game.hero.inFountain === 'function'
+                ? Boolean(game.hero.inFountain(game.objective.position))
+                : false,
             remainingRespawnCD: Number(game.hero.remainingRespawnCD) || 0,
             respawnCD: Number(game.hero.respawnCD) || 0,
             selectedSkill: heroTargetingState.skillKey,
             targeting: { ...heroTargetingState },
             casting: game.hero.isCasting(),
             skills: buildHeroSkillState(game.hero),
+            skillTree: buildHeroSkillTreeState(game.hero),
         },
         objective: buildUnitState(game.objective),
         enemies: [...game.enemies.values()].map((enemy) => buildUnitState(enemy)),
@@ -598,6 +630,119 @@ function handleHeroCast(command, requestId, payload = {}) {
     });
 }
 
+function handleHeroUpgradeSkill(command, requestId, payload = {}) {
+    if (!game.started) {
+        emitResult(command, requestId, 400, 'Game has not started.');
+        return;
+    }
+
+    const key = normalizeKey(payload.slot ?? payload.key);
+    if (!key) {
+        emitResult(command, requestId, 400, 'Skill slot is required.');
+        return;
+    }
+
+    const equippedSkill = game.hero.skill.get(key) ?? null;
+    const targetName = String(payload.name ?? equippedSkill?.name ?? '').trim();
+    if (!targetName) {
+        emitResult(command, requestId, 404, `No upgrade target found for slot ${key}.`);
+        return;
+    }
+
+    if (typeof game.hero.upgradeSkill !== 'function') {
+        emitResult(command, requestId, 501, 'Hero upgrade command is not supported.');
+        return;
+    }
+
+    const upgradedSkill = game.hero.upgradeSkill(key, targetName);
+    if (!upgradedSkill) {
+        emitResult(command, requestId, 404, `Unable to upgrade ${targetName} in slot ${key}.`);
+        return;
+    }
+
+    emitState();
+    emitResult(command, requestId, 200, `${upgradedSkill.name} upgraded.`, {
+        slot: key,
+        name: upgradedSkill.name,
+        upgraded: true,
+    });
+}
+
+function handleHeroUpgrade(command, requestId, payload = {}) {
+    if (!game.started) {
+        emitResult(command, requestId, 400, 'Game has not started.');
+        return;
+    }
+
+    const category = String(payload.category ?? payload.type ?? '').trim();
+    if (!category) {
+        emitResult(command, requestId, 400, 'Upgrade category is required.');
+        return;
+    }
+
+    if (typeof game.hero.upgrade !== 'function') {
+        emitResult(command, requestId, 501, 'Hero upgrade command is not supported.');
+        return;
+    }
+
+    const result = game.hero.upgrade(category);
+    emitState();
+    emitResult(
+        command,
+        requestId,
+        result?.success ? 200 : 400,
+        result?.message ?? 'Hero upgrade failed.',
+        {
+            category,
+            success: Boolean(result?.success),
+        }
+    );
+}
+
+function handleHeroSkillChange(command, requestId, payload = {}) {
+    if (!game.started) {
+        emitResult(command, requestId, 400, 'Game has not started.');
+        return;
+    }
+
+    if (typeof game.hero.inFountain !== 'function' || !game.hero.inFountain(game.objective.position)) {
+        emitResult(command, requestId, 409, 'Skills can only be changed in the fountain.');
+        return;
+    }
+
+    const slot = normalizeKey(payload.slot ?? payload.key);
+    const name = String(payload.name ?? '').trim();
+    if (!slot || !name) {
+        emitResult(command, requestId, 400, 'Skill slot and name are required.');
+        return;
+    }
+
+    if (typeof game.hero.changeSkill !== 'function') {
+        emitResult(command, requestId, 501, 'Hero skill change command is not supported.');
+        return;
+    }
+
+    const nextSkill = game.hero.skillTree?.get(slot)?.find((skill) => skill?.name === name) ?? null;
+    if (!nextSkill) {
+        emitResult(command, requestId, 404, `Unable to equip ${name} in slot ${slot}.`);
+        return;
+    }
+
+    game.hero.changeSkill(slot, nextSkill);
+    const changedSkill = game.hero.skill.get(slot) ?? null;
+    if (!changedSkill || changedSkill.name !== name) {
+        emitResult(command, requestId, 404, `Unable to equip ${name} in slot ${slot}.`);
+        return;
+    }
+
+    clearHeroTargetingState();
+    emitState();
+    emitResult(command, requestId, 200, `${changedSkill.name} equipped to slot ${slot}.`, {
+        slot,
+        name: changedSkill.name,
+    });
+}
+
 function handleShopCommand(command, requestId) {
     emitResult(command, requestId, 501, 'Shop command is not implemented yet.');
 }
@@ -651,6 +796,21 @@ self.onmessage = (event) => {
 
     if (normalizedCommand === 'hero:stop') {
         handleHeroStop(normalizedCommand, requestId);
+        return;
+    }
+
+    if (normalizedCommand === 'hero:upgrade') {
+        handleHeroUpgrade(normalizedCommand, requestId, payload);
+        return;
+    }
+
+    if (normalizedCommand === 'hero:upgrade:skill') {
+        handleHeroUpgradeSkill(normalizedCommand, requestId, payload);
+        return;
+    }
+
+    if (normalizedCommand === 'hero:skill:change') {
+        handleHeroSkillChange(normalizedCommand, requestId, payload);
         return;
     }
 

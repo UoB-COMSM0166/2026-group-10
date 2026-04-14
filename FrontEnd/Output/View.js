@@ -52,25 +52,43 @@ export default class View {
         layer.pop();
     }
 
-    static skillIcon(layer, x, y, width, height, key, skill, cd, maxCd) {
+    static image(layer, x, y, width, height) {}
+
+    static skillIcon(layer, x, y, width, height, skill, highLight, iconImage = null) {
+        layer.push();
+        layer.stroke('rgba(255,255,255,0.08)');
+        layer.strokeWeight(1);
+        layer.fill(skill ? (highLight ? '#ffff00' : '#4a5568') : '#2f3640');
+        layer.rect(x, y, width, height, 10);
+
+        if (iconImage?.complete) {
+            layer.drawingContext.save();
+            layer.drawingContext.beginPath();
+            layer.drawingContext.roundRect(x + 4, y + 4, width - 8, height - 8, 8);
+            layer.drawingContext.clip();
+            layer.drawingContext.drawImage(iconImage, x + 4, y + 4, width - 8, height - 8);
+            layer.drawingContext.restore();
+        }
+
+        layer.pop();
+    }
+
+    static liveSkillIcon(layer, x, y, width, height, key, skill, iconImage = null, cd, maxCd) {
         const currentCooldown = Number(cd ?? skill?.currentCooldown) || 0;
         const totalCooldown = Number(maxCd ?? skill?.cooldown) || 0;
         const cooldownRatio = totalCooldown > 0
             ? Math.max(0, Math.min(1, currentCooldown / totalCooldown))
             : 0;
-        const label = skill?.name ? String(skill.name).slice(0, 10) : '';
+
+        View.skillIcon(layer, x, y, width, height, skill, false, iconImage);
 
         layer.push();
-        layer.stroke('rgba(255,255,255,0.08)');
-        layer.strokeWeight(1);
-        layer.fill(skill ? '#4a5568' : '#2f3640');
-        layer.rect(x, y, width, height);
 
         if (skill && currentCooldown > 0 && totalCooldown > 0) {
             const overlayHeight = height * cooldownRatio;
             layer.noStroke();
             layer.fill(6, 10, 18, 190);
-            layer.rect(x, y, width, overlayHeight);
+            layer.rect(x, y, width, overlayHeight, 10, 10, 0, 0);
         }
 
         // layer.text(String(key ?? ''), x + 6, y + 4);
@@ -81,13 +99,11 @@ export default class View {
             return;
         }
 
-        // layer.text(label, x + width / 2, y + height / 2 + height * 0.14);
-        View.text(layer, x + width / 2, y + height - 20, label, Math.max(10, Math.round(Math.min(width, height) * 0.14)), 255, true, 0, 0, "Arial", 2);
-
         if (currentCooldown > 0) {
             layer.fill(255);
             layer.textSize(Math.max(16, Math.round(Math.min(width, height) * 0.3)));
-            layer.text(Math.ceil(currentCooldown), x + width / 2, y + height / 2 - height * 0.1);
+            // layer.text(Math.ceil(currentCooldown), x + width / 2, y + height / 2);
+            View.text(layer, x + width / 2, y + height / 2, Math.round(currentCooldown/60), 30, 255, false, 0, 0, "Arial", 3);
         }
 
         layer.pop();

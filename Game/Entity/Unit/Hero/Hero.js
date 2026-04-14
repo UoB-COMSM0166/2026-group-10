@@ -1,8 +1,5 @@
 import Unit from '../Unit.js';
 
-const EXPERIENCE_TABLE = [
-    100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500,
-];
 const BASE_RESPAWN_CD = 600;  // Ticks
 
 export default class Hero extends Unit {
@@ -20,33 +17,33 @@ export default class Hero extends Unit {
 
         this.baseArmor = Number(armor);
         this.armor = this.baseArmor;
-        this.attackAmp = Number(attackAmp);
-        this.spellAmp = Number(spellAmp);
+        this.baseAttackAmp = Number(attackAmp);
+        this.attackAmp = this.baseAttackAmp
+        this.baseSpellAmp = Number(spellAmp);
+        this.spellAmp = this.baseSpellAmp;
 
         this.respawnCD = BASE_RESPAWN_CD;
         this.active = false;
         this.remainingRespawnCD = 0;
-        this.spawnPosition = { x: position.x, y: position.y };
-        this.inFountain = false;
 
         this.gold = 0;
         this.castState = null;
 
-        // 技能和装备系统
+        this.speedLevel = 0;
+        this.armorLevel = 0;
+        this.attackAmpLevel = 0;
+        this.spellAmpLevel = 0;
+        this.spellSlotLevel = 0;
+
         this.skill = new Map();
         this.skill.set('A', null);
         this.skill.set('Q', null);
         this.skill.set('W', null);
         this.skill.set('E', null);
         this.skill.set('R', null);
-        this.skill.set('Passive', null);
+        this.skill.set('P', null);
         this.renderRange = null;
         this.applyPassiveSkills();
-
-        this.inventory = new Map();
-        this.inventory.set('weapon', null);
-        this.inventory.set('armor', null);
-        this.inventory.set('shoes', null);
     }
 
     takeDamage(amount) {
@@ -114,6 +111,55 @@ export default class Hero extends Unit {
         }
     }
 
+    upgrade(category) {
+        let goldRequired = 0;
+        switch (category) {
+            case 'SpellSlot':
+                if (this.spellSlotLevel >= 3) return { success: false, message: 'Spell Slot Level Maxed Out.' };
+                goldRequired = this.spellSlotLevel * 40 + 20;
+                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
+                this.gold -= goldRequired;
+                this.spellSlotLevel += 1;
+                return { success: true, message: 'New Spell Slot Unlocked.' };
+            case 'Speed':
+                goldRequired = this.speedLevel * 40 + 20;
+                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
+                this.gold -= goldRequired;
+                this.speedLevel += 1;
+                return { success: true, message: `Speed Upgraded to Lv. ${this.speedLevel}` };
+            case 'Armor':
+                goldRequired = this.armorLevel * 40 + 20;
+                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
+                this.gold -= goldRequired;
+                this.armorLevel += 1;
+                return { success: true, message: `Armor Upgraded to Lv. ${this.armorLevel}` };
+            case 'AttackAmp':
+                goldRequired = this.attackAmpLevel * 40 + 20;
+                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
+                this.gold -= goldRequired;
+                this.attackAmpLevel += 1;
+                return { success: true, message: `Attack Amplification Upgraded to Lv. ${this.speedLevel}` };
+            case 'SpellAmp':
+                goldRequired = this.spellAmpLevel * 40 + 20;
+                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
+                this.gold -= goldRequired;
+                this.spellAmpLevel += 1;
+                return { success: true, message: `Spell Amplification Upgraded to Lv. ${this.spellAmpLevel}` };
+            default:
+                return { success: false, message: 'Unknown Category. This should not happen.' };
+        }
+    }
+
+    upgradeSkill(slot, name) {
+        const findSkill = this.skillTree.get(slot)?.find(s => s.name === name);
+        if (findSkill) {
+            findSkill.upgrade();
+            return findSkill;
+        }
+
+        return null;
+    }
+
     stop() {
         super.stop();
         this.clearWaypoints();
@@ -159,5 +205,9 @@ export default class Hero extends Unit {
                 skill.applyTo(this);
             }
         }
+    }
+
+    inFountain(objectivePosition) {
+        return this.getDistance(objectivePosition) <= 100;
     }
 }

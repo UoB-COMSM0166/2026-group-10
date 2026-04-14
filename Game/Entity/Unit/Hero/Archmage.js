@@ -48,7 +48,7 @@ export default class Archmage extends Hero {
         this.skillTree.set('W', [frostShield, burning, chainLightning]);
         this.skillTree.set('E', [chakra, viperGuardian, ballLightning]);
         this.skillTree.set('R', [blizzard, meteorite, staticExplosion]);
-        this.skillTree.set('Passive', [manaDrain, fierySoul, electromagneticField]);
+        this.skillTree.set('P', [manaDrain, fierySoul, electromagneticField]);
 
         if (element === 'Ice') {
             this.skill.set('A', icePick);
@@ -56,7 +56,7 @@ export default class Archmage extends Hero {
             this.skill.set('W', frostShield);
             this.skill.set('E', chakra);
             this.skill.set('R', blizzard);
-            this.skill.set('Passive', manaDrain);
+            this.skill.set('P', manaDrain);
         } 
         else if (element === 'Fire') {
             this.skill.set('A', fireBall);
@@ -64,7 +64,7 @@ export default class Archmage extends Hero {
             this.skill.set('W', burning);
             this.skill.set('E', viperGuardian);
             this.skill.set('R', meteorite);
-            this.skill.set('Passive', fierySoul);
+            this.skill.set('P', fierySoul);
         } 
         else if (element === 'Lightning') {
             this.skill.set('A', lightning);
@@ -72,7 +72,7 @@ export default class Archmage extends Hero {
             this.skill.set('W', chainLightning);
             this.skill.set('E', ballLightning);
             this.skill.set('R', staticExplosion);
-            this.skill.set('Passive', electromagneticField);
+            this.skill.set('P', electromagneticField);
         } 
 
         this.applyPassiveSkills();
@@ -105,20 +105,16 @@ export default class Archmage extends Hero {
         }
     }
 
-    changeSkill(slot, name) {
-        const findSkill = this.skillTree.get(slot)?.find(s => s.name === name);
-        if (findSkill) {
-            this.skill.set(slot, findSkill);
-            if (slot === 'Passive') {
-                this.applyPassiveSkills();
-            }
+    changeSkill(slot, skill) {
+        if (!skill) {
+            return null;
         }
-    }
 
-    upgradeSkill(slot, name) {
-        const findSkill = this.skillTree.get(slot)?.find(s => s.name === name);
-        if (findSkill) {
-            findSkill.upgrade();
+        this.skill.set(slot, skill);
+        if (slot === 'P') {
+            this.applyPassiveSkills();
         }
+
+        return skill;
     }
 }
