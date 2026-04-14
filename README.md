@@ -1,7 +1,8 @@
-<p align="center">
-  <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width= "600" vertical-align="middle">
-  <h2 align="center">GATES OF CINDER</h2>
-</p>
+<div align="center">
+  <img src="images/fireball-fireball-pixel-art.png" width="600">
+
+  <h1 style="margin-top: -40px;">GATES OF CINDER</h1>
+</div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/LANGUAGE-JAVASCRIPT-FFFF00?style=for-the-badge&logo=javascript&logoColor=white&labelColor=606060" />
