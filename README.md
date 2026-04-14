@@ -1,12 +1,12 @@
-<table align="center" cellspacing="0" cellpadding="0" style="border: none; border-collapse: collapse;">
-  <tr style="border: none;">
-    <td align="center" style="border: none; padding: 10px;">
+<table align="center" border="0">
+  <tr>
+    <td align="center" style="border: none;">
       <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="120" style="transform: scaleX(-1);">
     </td>
-    <td align="center" style="border: none; vertical-align: middle; padding: 10px;">
-       <h2 style="margin: 0; padding-top: 70px; border: none;">GATES OF CINDER</h2>
+    <td align="center" style="border: none; vertical-align: middle;">
+       <h2 style="margin: 0; padding-top: 70px;">GATES OF CINDER</h2>
     </td>
-    <td align="center" style="border: none; padding: 10px;">
+    <td align="center" style="border: none;">
       <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="120">
     </td>
   </tr>
