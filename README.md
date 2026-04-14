@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/HOST-GITHUB_PAGES-b0bad9?style=for-the-badge&logo=github&logoColor=white&labelColor=606060" />
 </p>
 
-[![Gates of Cinder Banner](images/GatesOfCinderBanner.png)](GatesOfCinderBanner)
+[![Gates of Cinder Banner](images/GatesOfCinderBanner.png)](https://uob-comsm0166.github.io/2026-group-10/)
 
 <p align="center">
   <a href="https://uob-comsm0166.github.io/2026-group-10/"><img src="https://img.shields.io/badge/🎮%20PLAY%20THE%20GAME-4CAF50?style=for-the-badge"></a>
