@@ -1,10 +1,16 @@
-<div style="display:flex; align-items:center; justify-content:center; gap:20px;">
-  <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="100" style="transform: scaleX(-1);">
-
-  <h2 style="position:relative; top:30px; margin:0;">GATES OF CINDER</h2>
-
-  <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="100">
-</div>
+<table align="center" cellspacing="0" cellpadding="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
+    <td align="center" style="border: none; padding: 10px;">
+      <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="120" style="transform: scaleX(-1);">
+    </td>
+    <td align="center" style="border: none; vertical-align: middle; padding: 10px;">
+       <h2 style="margin: 0; padding-top: 70px; border: none;">GATES OF CINDER</h2>
+    </td>
+    <td align="center" style="border: none; padding: 10px;">
+      <img src="images/fireball-fireball-pixel-art.png" alt="Fireball" width="120">
+    </td>
+  </tr>
+</table>
 
 <p align="center">
   <img src="https://img.shields.io/badge/LANGUAGE-JAVASCRIPT-FFFF00?style=for-the-badge&logo=javascript&logoColor=white&labelColor=606060" />
