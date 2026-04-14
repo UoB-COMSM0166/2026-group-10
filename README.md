@@ -52,8 +52,7 @@
 
 ## 1. Introduction
 
-Gates of cinder combines elements of RPG and tower defense to deliver an engaging and strategic gameplay experience. The game features three progressively challenging levels, where enemies become increasingly difficult to defeat. Players must carefully select the appropriate hero and strategically place towers to effectively defend their objective, requiring both planning and critical thinking.
-
+The gates of cinder is combines the tower defense and RPG aspects to bring the game alive.The game takes place within a ancient forest where corona tree provides the life energy to all the beings in the forest.But an army of undead has risen to destroy the tree .So the player must defend the tree by choosing one of three heros to attack the waves of enemies and final boss.player must also choose and place towers in correct position and heroes abilities to  manage enemy waves.Each enemy follows fixed path towards corona tree.The twist is that both objective and heroes lives is tied together,if one of them is defeated the game ends.There are three heroes to choose from:Warrior,mage and engineer,each offering unique abilities.warrior excels in close combat while Mage has high range and spell abilities and engineer rely on their machines .The game is in retro art style .The game encourages players to adapt their strategies making each level challenging and rewarding
 
 **1.1. Ideation Process** 
 
