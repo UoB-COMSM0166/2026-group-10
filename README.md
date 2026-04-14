@@ -1,67 +1,68 @@
-# 2026-group-10
-2026 COMSM0166 group 10
 
-# COMSM0166 Project Template
-A project template for the Software Engineering Discipline and Practice module (COMSM0166).
-
-## Info
-
-This is the template for your group project repo/report. We'll be setting up your repo and assigning you to it after the group forming activity. You can delete this info section, but please keep the rest of the repo structure intact.
-
-You will be developing your game using [P5.js](https://p5js.org) a javascript library that provides you will all the tools you need to make your game. However, we won't be teaching you javascript, this is a chance for you and your team to learn a (friendly) new language and framework quickly, something you will almost certainly have to do with your summer project and in future. There is a lot of documentation online, you can start with:
-
-- [P5.js tutorials](https://p5js.org/tutorials/) 
-- [Coding Train P5.js](https://thecodingtrain.com/tracks/code-programming-with-p5-js) course - go here for enthusiastic video tutorials from Dan Shiffman (recommended!)
 
 <h2 align="center">GATES OF CINDER</h2>
----
-STRAPLINE. Add an exciting one sentence description of your game here.
 
-IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
+<p align="center">
+  <img src="https://img.shields.io/badge/LANGUAGE-JAVASCRIPT-FFFF00?style=for-the-badge&logo=javascript&logoColor=white&labelColor=606060" />
+  <img src="https://img.shields.io/badge/LIBRARY-P5.JS-ed235f?style=for-the-badge&logo=p5.js&logoColor=white&labelColor=606060" />
+  <img src="https://img.shields.io/badge/HOST-GITHUB_PAGES-b0bad9?style=for-the-badge&logo=github&logoColor=white&labelColor=606060" />
+</p>
 
-LINK. Add a link here to your deployed game, you can also make the image above link to your game if you wish. Your game lives in the [/docs](/docs) folder, and is published using Github pages. 
+<p align="center">
+  <a href="https://uob-comsm0166.github.io/2026-group-10/">
+    <img src="https://img.shields.io/badge/🎮%20PLAY%20THE%20GAME-4CAF50?style=for-the-badge">
+  </a>
+  &nbsp;
+  <a href="https://your-link.com">
+    <img src="https://img.shields.io/badge/🎥%20WATCH%20VIDEO-E91E63?style=for-the-badge">
+  </a>
+  &nbsp;
+  <a href="https://github.com/orgs/UoB-COMSM0166/projects/153">
+    <img src="https://img.shields.io/badge/📌%20KANBAN%20BOARD-7C4DFF?style=for-the-badge">
+  </a>
+  &nbsp;
+</p>
 
-VIDEO. Include a demo video of your game here (you don't have to wait until the end, you can insert a work in progress video)
 
-## Development Team
-----
-### Team Photo 
-![WhatsApp Image 2026-03-28 at 18 40 07](https://github.com/user-attachments/assets/c30621c0-e8ce-41dc-9768-56f7e3a1f887)
-## Table of Contents
+<h2 align="center">Table of Contents</h2>
 
+<div align="center">
+  
 | #  | Section          | Description                                      |
 |----|------------------|--------------------------------------------------|
-| 00 | [Labs](#labs) | Weekly lab tasks & documentation                |
-| 01 | [Introduction](#introduction) | Game overview & what makes it novel       |
-| 02 | [Requirements](#requirements) | Ideation, use cases & user stories        |
-| 03 | [Design](#design) | System architecture, state machine & class diagrams |
-| 04 | [Implementation](#implementation) | Key technical challenges           |
-| 05 | [Evaluation](#evaluation) | Qualitative & quantitative testing     |
-| 06 | [Process](#process) | Team workflow & reflection               |
-| 07 | [Conclusion](#conclusion) | Lessons learnt & future work         |
-| 08 | [Contribution](#contribution) | Individual contributions         |
+| 0 | [Labs](#labs) | Weekly lab tasks & documentation                |
+| 1 | [Introduction](#introduction) | Game overview & what makes it novel       |
+| 2 | [Requirements](#requirements) | Ideation, use cases & user stories        |
+| 3 | [Design](#design) | System architecture, state machine & class diagrams |
+| 4 | [Implementation](#implementation) | Key technical challenges           |
+| 5 | [Evaluation](#evaluation) | Qualitative & quantitative testing     |
+| 6 | [Process](#process) | Team workflow & reflection               |
+| 7 | [Conclusion](#conclusion) | Lessons learnt & future work         |
+| 8 | [Contribution](#contribution) | Individual contributions         |
+</div>
 
+<h2 align="center">Group Members</h2>
 
-
-### Group Members 
------
+![WhatsApp Image 2026-03-28 at 18 40 07](https://github.com/user-attachments/assets/c30621c0-e8ce-41dc-9768-56f7e3a1f887)
+<div align="center">
 
 | Name                 | Email                 | Github Username       |
 | -------------------- | --------------------- | --------------------- |
-| Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |       
+| Dhanitha Rajapaksa   | we25139@bristol.ac.uk | dhanitha-26           |
 | Cenarius Lu          | ig25518@bristol.ac.uk | Shadow-Song           |
 | Rajmugundhan nagappan| je25549@bristol.ac.uk | Rajmugundhan2002-tech |
 | Ayush Raizada        | ff25412@bristol.ac.uk | Raizada8              |
 | James Crossley       | qe25280@bristol.ac.uk | jamescr1              |
 | Jinhao Han           | bt25224@bristol.ac.uk | memoryzea             |
 
+</div>
 
-## 📚 Project Report
+## 1. Introduction
 
-<h2 align="center">INTRODUCTION</h2>
 Gates of cinder  combines the elements of RPG and tower defense to create a fun yet needs brain power to play.It has three levels and enemies become harder in each level and is upto to the player to choose correct hero and towers to defend the objective.
 
----
+
+**1.1. Ideation Process** 
 
 <h2 align="center">GAME MECHANICS-INSPRATION</h2>
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
@@ -83,9 +84,9 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 
 ---
 
-### Requirements 
+## 3. Requirements 
 
-**Ideation Process** 
+**3.1. Ideation Process** 
 
 In the early stages of our project, we began by exploring what inspired us. Each team member brought one or two games to an in-person meeting, sharing what captivated them whilst considering the practical constraints of developing from scratch. After an initial round of ideas shared via our team group chat, we met to pitch specific inspirations. This resulted in a split between three very distinct genres: tower defence, RPG, and arcade. 
 
@@ -96,13 +97,12 @@ With this direction established, we divided the research effort. Each team membe
 <h2 align="center">STAKE HOLDERS</h2>
 
 
-##STAKE HOLDERS
-
+### Stakeholders
 
 <img width="1200" height="896" alt="chart" src="https://github.com/user-attachments/assets/89ad8717-d669-4e34-94fb-6b47acaf9330" />
 
-<details>
-  <summary><strong>Game ideas and analysis</strong></summary>
+
+### Game ideas and analysis
 
 | Game                    | Game Description                                                                                                                                                                                                                                                                                                                              | Twist Potential                                                                                                                                                                                                                      | Implementation Challenges                                                                                                                                                                                     |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -115,8 +115,6 @@ With this direction established, we divided the research effort. Each team membe
 | **Crossy Road**         | Endless arcade hopper where players navigate freeways, railways, and rivers whilst avoiding cars and collecting custom characters.                                                                                                                                                                                                            | • Player moves forward in direction cars are travelling <br>• Adaptive environment transitions between road types <br>• Character unlocks with different abilities <br>• Procedurally generated obstacles with increasing complexity | • Designing varied objects within frontend constraints <br>• Programming mechanics for multiple object types <br>• Generating adaptive environments with smooth transitions <br>• Obstacle difficulty scaling |
 | **Pong**                | Pong is one of the earliest arcade games where two players control paddles to deflect a ball back and forth.                                                                                                                                                                                                                                  | • Ball modifiers like splits, gravity changes, or curve or spin <br>• Paddle upgrade options, sizes, shapes, or abilities <br>• Environmental hazards like moving obstacles or portal zones                                             | • Ball physics with consistent bounce angles <br>• Paddle collision detection and response <br>• AI opponent balancing for single-player                                                                    |
 | **Breakout**            | Breakout is a single-player brick-breaking game where players control a paddle to bounce a ball upwards to destroy rows of bricks.                                                                                                                                                                                                            | • Brick types requiring multiple hits or special conditions <br>• Power-ups dropped from destroyed bricks <br>• Dynamic brick layouts that move or regenerate                                                                      | • Ball physics and angle calculations <br>• Brick collision detection and destruction                                                                                                                        |
-
-</details>
 
 **Early Stage Design**
 
