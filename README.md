@@ -1,6 +1,4 @@
-<div align="center">
-  <img src="images/fireball-fireball-pixel-art.png" width="600">
-</div>
+![Fireballs](images/fireball-fireball-pixel-art.png)
 
 <p align="center">
   <img src="https://img.shields.io/badge/LANGUAGE-JAVASCRIPT-FFFF00?style=for-the-badge&logo=javascript&logoColor=white&labelColor=606060" />
