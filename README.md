@@ -57,8 +57,9 @@ Gates of cinder combines elements of RPG and tower defense to deliver an engagin
 
 **1.1. Ideation Process** 
 
-<h2 align="center">GAME MECHANICS-INSPRATION</h2>
-The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
+<h2 align="center">GAME MECHANICS-INSPIRATION</h2>
+The game mechanics are inspired by the dynamic gameplay of popular titles such as Kingdom Rush and League of Legends, combining elements of tower defense with role-playing features. Players are required to strategically defend a central objective by placing different types of towers while also selecting and controlling heroes with unique abilities. Success in the game depends on the player’s ability to make thoughtful decisions, such as choosing the right combination of towers and heroes to effectively counter increasingly difficult waves of enemies.
+The game features a pixelated art style, which gives it a nostalgic and visually engaging appearance while maintaining clarity during gameplay. The story is set within a dense and mysterious forest, where players progress through multiple levels, each presenting new challenges and stronger enemies. As the game advances, players must adapt their strategies and upgrade their defenses to survive. The ultimate goal is to defeat a powerful final boss, requiring careful planning, efficient resource management, and skillful use of both towers and hero abilities.
 
 <table width="100%">
   <tr>
