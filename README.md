@@ -339,10 +339,11 @@ Gates of cinder paper prototype
 - Teamwork. How did you work together, what tools and methods did you use? Did you define team roles? Reflection on how you worked together. Be honest, we want to hear about what didn't work as well as what did work, and importantly how your team adapted throughout the project.
 <h2 align="center">PROCESS</h2>
 - At  the preparation stage of the game we divided ourselves workload  equally so that everyone contributes and to be balanced.All the six team members worked on their branches to make the game ranging from the lore,aesthictics and core system.
--Cenarius Lu(Developer,System Architecture& Game Lore):Desinged the core mechanics,system and Heroes.Abilities of the heroes and implementation of health bar and RPG elements.
--Jinhao Han(Co-developer,Assest &Game Lore):Designed the tower defense aspect of the game,Enemy design and contributed towards system design.
--James Crossley(Frontend development,Assets ,Audio& Co-Developer):designed the frontend and audio for the game.
--Rajmugundhan(Report,assets &Game lore):
+
+*Cenarius Lu(Developer,System Architecture& Game Lore):Desinged the core mechanics,system and Heroes.Abilities of the heroes and implementation of health bar and RPG elements.
+*Jinhao Han(Co-developer,Assest &Game Lore):Designed the tower defense aspect of the game,Enemy design and contributed towards system design.
+*James Crossley(Frontend development,Assets ,Audio& Co-Developer):designed the frontend and audio for the game.
+*Rajmugundhan(Report,assets &Game lore):
 
 ### Conclusion
 
