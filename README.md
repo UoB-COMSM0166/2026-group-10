@@ -59,13 +59,7 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 ## 📚 Project Report
 
 <h2 align="center">INTRODUCTION</h2>
-Our game is a strategic tower defense and action-RPG experience set within a mysterious and ancient forest, where players must protect a sacred entity known as the Ancient Tree,the very source of life. Recently, an army of the undead has risen, corrupting the land and advancing toward the tree with the intent to destroy it and plunge the world into darkness. As the last remaining hope, the player takes on the role of a chosen hero, tasked with defending the tree against relentless waves of enemies culminating in powerful boss encounters.
-
-The core gameplay blends mechanics inspired by Kingdom Rush and League of Legends, combining tactical tower placement with real-time hero control and progression systems. Players must carefully choose and position defensive towers while actively using their hero’s abilities to manage increasingly difficult enemy waves. Each enemy follows fixed paths toward the Ancient Tree, and failure to stop them results in damage to the objective, creating constant pressure and strategic depth.
-
-Players can select from three distinct hero classes: Warrior, Mage, and Engineer,each offering a unique playstyle. Warriors excel in close combat with high durability and range based abilities, Mages focus on ranged attacks and flexible spell combinations, while Engineers rely entirely on turret placement and resource management, offering a more strategic, non-traditional approach.
-
-The game features a pixelated art style that enhances its nostalgic appeal while clearly presenting gameplay elements. Combined with progression systems such as leveling, skill upgrades, and resource management, the game encourages players to adapt their strategies, making each playthrough both challenging and rewarding.
+The gates of cinder is combines the tower defense and RPG aspects to bring the game alive.The game takes place within a ancient forest where corona tree provides the life energy to all the beings in the forest.But an army of undead has risen to destroy the tree .So the player must defend the tree by choosing one of three heros to attack the waves of enemies and final boss.player must also choose and place towers in correct position and heroes abilities to  manage enemy waves.Each enemy follows fixed path towards corona tree.The twist is that both objective and heroes lives is tied together,if one of them is defeated the game ends.There are three heroes to choose from:Warrior,mage and engineer,each offering unique abilities.warrior excels in close combat while Mage has high range and spell abilities and engineer rely on their machines .The game is in retro art style .The game encourages players to adapt their strategies making each level challenging and rewarding
 
 ---
 
