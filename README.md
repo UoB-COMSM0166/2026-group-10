@@ -346,10 +346,9 @@ To bridge the gap between 3D logic and 2D rendering, we implemented a 45 degree 
 
 ### Implementation
 
-- 15% ~750 words
+**Base System**
 
-- Describe implementation of your game, in particular highlighting the TWO areas of *technical challenge* in developing your game. 
-
+This project uses OOP to implement features such as Entity and Unit. The Entity class is used to implement the movement functionality of movable objects in the game, and the Unit class is used to implement features such as unit health and survival status.
 
 
 
