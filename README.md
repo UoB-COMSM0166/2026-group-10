@@ -12,7 +12,7 @@
 [![Gates of Cinder Banner](images/GatesOfCinderBanner.png)](https://uob-comsm0166.github.io/2026-group-10/)
 
 <p align="center">
-  <a href="https://uob-comsm0166.github.io/2026-group-10/"><img src="https://img.shields.io/badge/🎮%20PLAY%20THE%20GAME-4CAF50?style=for-the-badge"></a>
+  <a href="https://uob-comsm0166.github.io/2026-group-10/"><img src="https://img.shields.io/badge/🎮%20PLAY%20GAME-4CAF50?style=for-the-badge"></a>
   &nbsp;
   <a href="https://your-link.com"><img src="https://img.shields.io/badge/🎥%20WATCH%20VIDEO-E91E63?style=for-the-badge"></a>
   &nbsp;
@@ -23,7 +23,7 @@
 
 ### Play Online 
 Gates of Cinder is hosted on GitHub Pages, so you can jump straight into the action without any installations!
-1. Click the ‘**PLAY THE GAME**’ button above. If it does not open, launch your browser, Chrome is recommended, and go to: https://uob-comsm0166.github.io/2026-group-10/ 
+1. Click ‘**PLAY GAME**’ button above. If it does not open, launch your browser, Chrome is recommended, and go to: https://uob-comsm0166.github.io/2026-group-10/ 
 2. The game will load instantly.
 3. On the main screen, select ‘Start Game’ to begin character selection, or choose ‘Intro’ for a quick overview of the game lore and controls.
 
@@ -287,6 +287,10 @@ By considering the plethora of stakeholders around our game, we gained a better 
   </tr>
 </table>
 
+**Initial Sketch** 
+![Inital Game Layout](images/initalPrototype.jpg)
+
+
 
 
 
@@ -311,11 +315,18 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 
 `activeScene` then iterates through all of its buttons, calling the `wasIClicked()` function for each one. If the `wasIClicked()` function verifies that this button was indeed the one the user clicked, it will invoke its `onClick()` callback function that was passed to the button during the button's creation. Since the `onClick()` method is stored within the button that invokes it, it is represented in the sequence diagram by an arrow from the button pointing back to itself (a self-call).
 
+#### Spatial Mapping and Rendering Logic
+![2D visual projection](images/2D_visual_projection.jpg)
+To bridge the gap between 3D logic and 2D rendering, we implemented a 45 degree projection system that translates spatial coordinates into a visual perspective. We defined the game world using a standard $x, y, z$ coordinate system for logic and collisions, but applied a scaling factor between 0.5 and 0.7 to the $y$ axis to create the rendered $y'$ depth. This compression ensures that circular hitboxes appear as ellipses on screen, providing the player with a clear sense of depth and grounding. To handle verticality, we treated the $z$ axis as a direct vertical offset. This separation of logic and render allowed us to maintain simplified circular collision detection while visually representing complex height changes, such as a character jumping or holding an item aloft. The result is a cohesive 2.5D environment where the character sprites and their shadows remain mathematically aligned with the underlying physics grid.
+
 ### Implementation
 
 - 15% ~750 words
 
 - Describe implementation of your game, in particular highlighting the TWO areas of *technical challenge* in developing your game. 
+
+
+
 
 ### Evaluation
 
