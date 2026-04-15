@@ -193,6 +193,7 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 
 
 ---
+### UI/UX of the game inspiration
 
 
 ### Stakeholders - Onion Model
