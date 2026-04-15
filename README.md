@@ -364,9 +364,13 @@ Each hero possesses multiple skills, which players can change using the skill bo
 
 **UI**
 
-We've attempted to replicate the Dota 2 UI in this game. The UI updates in real-time based on snapshots obtained from Worker threads, containing information such as the target's health, hero's health and mana, and the status of various skills.
+We've attempted to replicate the Dota 2 UI in this game. The UI updates in real time based on snapshots obtained from Worker threads, containing information such as the target's health, hero's health and mana, and the status of various skills.
 
 Pressing the B key opens the skill book window. Opening the skill book pauses the game and disables keyboard and mouse input. Players select or upgrade skills by clicking within the skill book window.
+
+**Event Emitter**
+
+In the game logic section, GameManager creates an event emitter to implement an event driven system. When an event needs to be listened to at a certain location, the emitter's `on` function is called, specifying the event name to be listened to and the event to be emitted. When an event needs to be emitted, the emitter's `emit` function is called, and a payload is sent.
 
 
 
