@@ -23,7 +23,7 @@
 
 ### Play Online 
 Gates of Cinder is hosted on GitHub Pages, so you can jump straight into the action without any installations!
-1. Click the ‘**PLAY THE GAME**’ button. If it does not open, launch your browser, Chrome is recommended, and go to: https://uob-comsm0166.github.io/2026-group-10/ 
+1. Click the ‘**PLAY THE GAME**’ button above. If it does not open, launch your browser, Chrome is recommended, and go to: https://uob-comsm0166.github.io/2026-group-10/ 
 2. The game will load instantly.
 3. On the main screen, select ‘Start Game’ to begin character selection, or choose ‘Intro’ for a quick overview of the game lore and controls.
 
