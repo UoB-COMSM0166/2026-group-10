@@ -137,18 +137,24 @@ project/
 
 ## 1. Introduction
 
-The gates of cinder is combines the tower defense and RPG aspects to bring the game alive.The game takes place within a ancient forest where corona tree provides the life energy to all the beings in the forest.But an army of undead has risen to destroy the tree .So the player must defend the tree by choosing one of three heros to attack the waves of enemies and final boss.player must also choose and place towers in correct position and heroes abilities to manage enemy waves.Each enemy follows fixed path towards corona tree.The twist is that both objective and heroes lives is tied together,if one of them is defeated the game ends.There are three heroes to choose from:Warrior,mage and engineer,each offering unique abilities.warrior excels in close combat while Mage has high range and spell abilities and engineer rely on their machines .The game is in retro art style .The game encourages players to adapt their strategies making each level challenging and rewarding
+The gates of cinder is combines the tower defense and RPG aspects to bring the game alive.The game takes place within a ancient forest where corona tree provides the life energy to all the beings in the forest.But an army of undead has risen to destroy the tree .So the player must defend the tree by choosing one of three heros to attack the waves of enemies and final boss.player must also choose and place towers in correct position and heroes abilities to manage enemy waves.Each enemy follows fixed path towards corona tree.The twist is that both objective and heroes lives is tied together,if one of them is defeated the game ends.There are three heroes to choose from:Warrior,mage and engineer,each offering unique abilities.warrior excels in close combat while Mage has high range and spell abilities and engineer rely on their machines .The game is in retro art style .The game encourages players to adapt their strategies making each level challenging and rewarding.
 
+## 3. Requirements 
 
-**1.1. Ideation Process** 
+**3.1. Ideation Process** 
 
-<h2 align="center">GAME MECHANICS-INSPRATION</h2>
-The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
+In the early stages of our project, we began by exploring what inspired us. Each team member brought one or two games to an in-person meeting, sharing what captivated them whilst considering the practical constraints of developing from scratch. After an initial round of ideas shared via our team group chat, we met to pitch specific inspirations. This resulted in a split between three very distinct genres: tower defence, RPG, and arcade. 
+
+After analysing the strengths of each, the team identified a unique opportunity to create a hybrid mechanic. Rather than replicating existing titles, we decided to integrate the management strategy of _Kingdom Rush_ with the hero-centric mechanics of Diablo 2. Tower defence games offered proven engagement through strategic placement and resource management, whilst action RPGs provided the visceral satisfaction of character progression and skill-based combat.
+
+With this direction established, we divided the research effort. Each team member investigated specific game rules, dynamics, and development challenges to ensure our hybrid concept remained feasible within our technical constraints and timeline. 
+#### 3.2. Game Mechanics 
+The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively. The game is in a pixelated art style and the story takes place in a forest the defeat the final boss.
 
 <table width="100%">
   <tr>
-    <th align="center" width="50%">Kingdom Rush — Strategy tower defence</th>
-    <th align="center" width="50%">League of Legends — RPG combat</th>
+    <th align="center" width="50%">Kingdom Rush — Strategy Tower Defence</th>
+    <th align="center" width="50%">League of Legends — RPG Combat</th>
   </tr>
   <tr>
     <td align="center">
@@ -160,25 +166,22 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
   </tr>
 </table>
 
+
 ---
 
-## 3. Requirements 
 
-**3.1. Ideation Process** 
+### Stakeholders - Onion Model
 
-In the early stages of our project, we began by exploring what inspired us. Each team member brought one or two games to an in-person meeting, sharing what captivated them whilst considering the practical constraints of developing from scratch. After an initial round of ideas shared via our team group chat, we met to pitch specific inspirations. This resulted in a split between three very distinct genres: tower defence, RPG, and arcade. 
+<img width="1200" height="896" alt="chart" src="images/OnionDiagram.jpg" />
 
-After analysing the strengths of each, the team identified a unique opportunity to create a hybrid mechanic. Rather than replicating existing titles, we decided to integrate the management strategy of _Kingdom Rush_ with the hero-centric mechanics of Diablo 2. Tower defence games offered proven engagement through strategic placement and resource management, whilst action RPGs provided the visceral satisfaction of character progression and skill-based combat.
+<div align="center">
 
-With this direction established, we divided the research effort. Each team member investigated specific game rules, dynamics, and development challenges to ensure our hybrid concept remained feasible within our technical constraints and timeline. 
+*Figure 1*  
+Onion Model of the System
 
-<h2 align="center">STAKE HOLDERS</h2>
+</div>
 
-
-### Stakeholders
-
-<img width="1200" height="896" alt="chart" src="images/chart.png" />
-
+---
 
 ### Game ideas and analysis
 
@@ -229,37 +232,39 @@ By considering the plethora of stakeholders around our game, we gained a better 
 | EPIC 9 – Game States & Win/Lose Conditions | The game clearly defines victory and defeat conditions. | As a player, I want to win after defeating all waves, so that I feel rewarded. <br> As a player, I want to lose when the tree is destroyed, so that failure is clear. <br> As a player, I want to respawn after death, so that I can continue playing. | Game ends in victory when all enemies are defeated. <br> Game ends in defeat when tree health reaches zero. <br> Respawn system includes a timer and penalty. <br> UI clearly communicates game state changes. |
 | EPIC 10 – Technical Architecture & Scalability | The system is modular and maintainable for future expansion. | As a developer, I want modular systems, so that features are easy to maintain. <br> As a developer, I want class systems separated, so that balancing is easier. <br> As a developer, I want scalable enemy and wave systems, so that new content can be added easily. | Systems separated (Combat, AI, Resources, UI, Classes). <br> Clear update loop and system interactions. <br> Data-driven configs for enemies, waves, and abilities. <br> New classes or enemies can be added without rewriting core systems. |
 
-**Prototyping** 
-Gates of cinder paper prototype
+### **Prototyping** 
 
-
-<table width="100%">
+<table align="center" width="80%" style="margin: auto; text-align: center;">
   <!-- ROW 1 -->
   <tr>
-    <td width="50%">
+    <td width="50%" style="padding: 10px;">
       <img src="images/frogger.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
-    <td width="50%">
-      <h3>Prototype — description</h3>
+    <td width="50%" style="padding: 10px; vertical-align: middle;">
+      <h3>Prototype 1: Frogger</h3>
       <p>
-       description
+        A classic 1980s arcade game in which the player controls a frog attempting to cross a busy road and a hazardous river. The goal is to safely guide the frog to its home while avoiding traffic and moving dangers.
       </p>
     </td>
   </tr>
 
   <!-- ROW 2 -->
   <tr>
-    <td width="50%">
+    <td width="50%" style="padding: 10px;">
       <img src="images/gates_of_cinder.jpeg" width="100%" height="250px" style="object-fit: cover;">
     </td>
-    <td width="50%">
-      <h3>Prototype — Success state</h3>
+    <td width="50%" style="padding: 10px; vertical-align: middle;">
+      <h3>Prototype 2: Tower Defence RPG</h3>
       <p>
-        description
+        A hybrid of tower defence and role playing mechanics, where the player must protect a magical tree from waves of enemies. Players can cast spells, use special abilities, and purchase upgrades from an in game store to strengthen their defences.
       </p>
     </td>
   </tr>
 </table>
+
+
+
+
 **Testing Feedback** 
 
 - 15% ~750 words
