@@ -202,10 +202,10 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
   </tr>
   <tr>
     <td align="center">
-      <img src="images/diablo start menu" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/diablo start menu.jpg" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td align="center">
-      <img src="images/diablo start menu" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/diablo start menu.jpg" width="100%" height="250px" style="object-fit: cover;">
     </td>
   </tr>
 </table>
