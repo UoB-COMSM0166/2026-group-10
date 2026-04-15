@@ -19,6 +19,28 @@
   <a href="https://github.com/orgs/UoB-COMSM0166/projects/153"><img src="https://img.shields.io/badge/📌%20KANBAN%20BOARD-7C4DFF?style=for-the-badge"></a>
 </p>
 
+<h2 align="center">🎮 How to Play </h2>
+
+### Play Online 
+Gates of Cinder is hosted on GitHub Pages, so you can jump straight into the action without any installations!
+1. Click the ‘**PLAY THE GAME**’ button. If it does not open, launch your browser, Chrome is recommended, and go to: https://uob-comsm0166.github.io/2026-group-10/ 
+2. The game will load instantly.
+3. On the main screen, select ‘Start Game’ to begin character selection, or choose ‘Intro’ for a quick overview of the game lore and controls.
+
+### Run locally (for Development or Offline Play)
+For those looking to modify the code or play offline, you can host Gates of Cinder locally:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/UoB-COMSM0166/2026-group-10.git
+   cd 2026-group-10/docs
+   ```
+2. Launch the server: Use `npx` to start a local environment:
+   
+   ```bash
+   npx http-server -c-1 -p 8000
+   ```
+3. **Play:** Open Chrome and navigate to `http://localhost:8000/`
+
 
 <h2 align="center">Table of Contents</h2>
 
