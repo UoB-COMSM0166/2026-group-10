@@ -350,6 +350,12 @@ To bridge the gap between 3D logic and 2D rendering, we implemented a 45 degree 
 
 This project uses OOP to implement features such as Entity and Unit. The Entity class is used to implement the movement functionality of movable objects in the game, and the Unit class is used to implement features such as unit health and survival status.
 
+**Challenge 1: Multithreading**
+
+The game's logic and front-end are completely separate and run independently in two different threads. The front-end is the entry point for the game instance; upon startup, a new thread is created, and the game logic runs looped on this new thread.
+
+The game logic runs on the Worker thread, maintaining a tick rate of 60 and handling entity movement, damage calculations, etc. This logic doesn't handle any input or output processing; it only receives messages from the main thread and calls relevant functions to modify the current state.
+
 
 
 ### Evaluation
