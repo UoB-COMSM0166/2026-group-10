@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/LIBRARY-P5.JS-ed235f?style=for-the-badge&logo=p5.js&logoColor=white&labelColor=606060" />
   <img src="https://img.shields.io/badge/HOST-GITHUB_PAGES-b0bad9?style=for-the-badge&logo=github&logoColor=white&labelColor=606060" />
   <a href="https://github.com/UoB-COMSM0166/2026-group-10/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/Licence-MIT-0080Fe?style=for-the-badge&logo=github&logoColor=white&labelColor=606060" />
+  <img src="https://img.shields.io/badge/Licence-MIT-0080Fe?style=for-the-badge&labelColor=606060" />
   </a>
 </p>
 
