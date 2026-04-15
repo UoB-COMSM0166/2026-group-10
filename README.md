@@ -251,7 +251,7 @@ By considering the plethora of stakeholders around our game, we gained a better 
   <!-- ROW 2 -->
   <tr>
     <td width="50%" style="padding: 10px;">
-      <img src="images/gates_of_cinder.jpeg" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/gates_of_cinder_proto.gif" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td width="50%" style="padding: 10px; vertical-align: middle;">
       <h3>Prototype 2: Tower Defence RPG</h3>
