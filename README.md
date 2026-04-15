@@ -362,6 +362,10 @@ The game frontend handles UI, sound effects, rendering, and hardware input. UI, 
 
 Each hero possesses multiple skills, which players can change using the skill book system. Based on hotkey bindings, skill types include A, Q, W, E, R, and passive skills. Each skill is a subclass of the Skill class and has mana cost and cooldown time, among other things. Most skills generate skill entities that can move and trigger hit detection. When a hit is detected, a callback function within the skill is executed, which may deal damage or apply debuffs.
 
+**UI**
+
+We've attempted to replicate the Dota 2 UI in this game. The UI updates in real-time based on snapshots obtained from Worker threads, containing information such as the target's health, hero's health and mana, and the status of various skills.
+
 
 
 ### Evaluation
