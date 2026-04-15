@@ -161,8 +161,16 @@ project/
 
 
 ## 1. Introduction
+Gates of Cinder is a combination of tower defense and RPG elements designed to create an engaging gameplay experience. The game takes place in an ancient forest, where the Corona Tree provides life energy to all living beings. However, an army of undead has risen to destroy the tree.
 
-The gates of cinder is combines the tower defense and RPG aspects to bring the game alive.The game takes place within a ancient forest where corona tree provides the life energy to all the beings in the forest.But an army of undead has risen to destroy the tree .So the player must defend the tree by choosing one of three heros to attack the waves of enemies and final boss.player must also choose and place towers in correct position and heroes abilities to manage enemy waves.Each enemy follows fixed path towards corona tree.The twist is that both objective and heroes lives is tied together,if one of them is defeated the game ends.There are three heroes to choose from:Warrior,mage and engineer,each offering unique abilities.warrior excels in close combat while Mage has high range and spell abilities and engineer rely on their machines .The game is in retro art style .The game encourages players to adapt their strategies making each level challenging and rewarding.
+The player must defend the tree by choosing one of three heroes to fight against waves of enemies, culminating in a final boss battle. Players must also strategically place towers and use hero abilities effectively to manage incoming enemy waves. Each enemy follows a fixed path toward the Corona Tree.
+
+A unique twist in the game is that both the objective (the tree) and the hero’s life are interconnected—if either is defeated, the game ends.
+
+There are three heroes to choose from: Warrior, Mage, and Engineer, each offering unique abilities. The Warrior excels in close combat, the Mage specializes in long-range spells, and the Engineer relies on machines and technology.
+
+The game features a retro art style and encourages players to adapt their strategies, making each level both challenging and rewarding.
+
 
 ## 3. Requirements 
 
