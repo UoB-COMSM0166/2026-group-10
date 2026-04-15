@@ -346,9 +346,9 @@ To bridge the gap between 3D logic and 2D rendering, we implemented a 45 degree 
 
 ### Conclusion
 
-- 10% ~500 words
+Honestly, the thing we're most proud of is simply that the game runs. That might sound like a low bar, but coming into this project with no prior experience in p5.js and building a functioning game loop, a hero with abilities, waves of enemies, a working event system, and a layered rendering pipeline from scratch it genuinely felt like an achievement when everything came together for the first time. There were plenty of moments where it wasn't clear it would, particularly in the earlier weeks when systems were being built in isolation and nobody was quite sure how they would connect. Seeing it actually run as a complete game was satisfying in a way that is hard to overstate.
 
-- Reflect on the project as a whole. Lessons learnt. Reflect on challenges. Future work, describe both immediate next steps for your current game and also what you would potentially do if you had chance to develop a sequel.
+The biggest lesson we take away is that we tried to build too much. Early on, ideas kept coming a shop, a skill tree, multiple heroes, multiple maps, an inventory system and it felt wrong to say no to any of them. The codebase reflects that. The shop is wired to the B key but was never finished. The Ranger and Warrior hero configs exist in the data folder but are never actually loaded into the game. The skill tree opens but does not do anything meaningful yet. These are not failures exactly, but they are a reminder that half finished features add up quickly and eat into the time needed to properly complete the core ones. If we were starting again, we would have agreed on a smaller, tighter scope at the beginning and protected it as the project developed. The temptation to keep adding things is real, especially when the team is enthusiastic, but enthusiasm without boundaries is what turns a focused game into a collection of unfinished systems.
 
 ### Contribution Statement
 
