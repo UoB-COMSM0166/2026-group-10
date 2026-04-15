@@ -356,6 +356,8 @@ The game's logic and front-end are completely separate and run independently in 
 
 The game logic runs on the Worker thread, maintaining a tick rate of 60 and handling entity movement, damage calculations, etc. This logic doesn't handle any input or output processing; it only receives messages from the main thread and calls relevant functions to modify the current state.
 
+The game frontend handles UI, sound effects, rendering, and hardware input. UI, sound effects, and rendering output require obtaining the current game state from the Worker thread, such as hero health and the position of each entity. The main thread requests snapshots of the game state from the Worker thread at a certain rate to update the output. The input part receives hardware input from the mouse and keyboard and converts it into commands that the Worker thread can understand.
+
 
 
 ### Evaluation
