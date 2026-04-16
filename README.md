@@ -389,6 +389,10 @@ In the game logic section, GameManager creates an event emitter to implement an 
 - 15% ~750 words
 
 - Teamwork. How did you work together, what tools and methods did you use? Did you define team roles? Reflection on how you worked together. Be honest, we want to hear about what didn't work as well as what did work, and importantly how your team adapted throughout the project.
+- The team used Git for synchronous development, with members writing different functionalities maintaining different branches, which were then merged by Cenarius.
+
+The game's main architecture was designed and implemented by Cenarius. The main architecture went through three major versions: Entity-Component System, OOP system, and multi-threaded system. The multi-threaded system was ultimately adopted. Cenarius implemented the following functionalities:
+
 
 ### Conclusion
 **Reflecting on the Project as a Whole**
