@@ -85,7 +85,7 @@ For those looking to modify the code or play offline, you can host Gates of Cind
 | Cenarius Lu           | Lead Developer, System Architecture, Game Lore    | Designed core mechanics and system architecture. Developed heroes, their abilities, and implemented health bar and RPG elements.         | 1.0     |
 | Dhanitha Rajapaksa    | Integration Development, Co-developer, Report     | Integrated front end and back end components, ensuring system cohesion. Contributed to development and assisted with the project report. | 1.0     |
 | James Crossley        | Frontend Development, Assets, Audio, Co-developer | Developed the frontend interface and handled audio design, and assisted with the project report.                                         | 1.0     |
-| Rajmugundhan Nagappan | Report, Assets, Game Lore                         | Contributed to report writing, asset creation, and game lore development.                                                                | 1.0   |
+| Rajmugundhan Nagappan | Report, Assets, Game Lore development,Co-developer                        | Contributed to report writing, asset creation, and game lore                                                                 | 1.0   |
 | Ayush Raizada         | Scrum Master, Frontend Development | Coordinated the team, managed communication and workflow, and contributed to the project report.                                         | 1.0     |
 
 </div>
