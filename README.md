@@ -205,19 +205,19 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
 
 <table>
   <tr>
-    <th>Diablo</th>
-    <th>Warcraft</th>
-    <th>Persona 5</th>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="diablo start menu.jpg" width="100%">
+    <td align="center" width="33%">
+      <b>Diablo</b><br>
+      <img src="images/diablo start menu.jpg" width="100%">
     </td>
-    <td align="center">
-      <img src="warcraft.jpg" width="100%">
+
+   <td align="center" width="33%">
+      <b>Warcraft</b><br>
+      <img src="images/warcraft.png" width="100%">
     </td>
-    <td align="center">
-      <img src="warcraft.jpg" width="100%">
+
+  <td align="center" width="33%">
+      <b>Third Game</b><br>
+      <img src="images/third.png" width="100%">
     </td>
   </tr>
 </table>
