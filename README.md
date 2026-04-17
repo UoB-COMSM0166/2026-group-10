@@ -211,7 +211,7 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
   </tr>
   <tr>
     <td align="center">
-      <img src="diablo.jpg" width="100%">
+      <img src="diablo start menu.jpg" width="100%">
     </td>
     <td align="center">
       <img src="warcraft.jpg" width="100%">
