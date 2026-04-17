@@ -75,22 +75,18 @@ For those looking to modify the code or play offline, you can host Gates of Cind
 
 </div>
 
-
-
 <div align="center">
   
-  | Name                  | Role(s)                                           | Contribution                                                                                                                             | % |
+  | Name                  | Role                                          | Contribution                                                                                                                             | % |
 | --------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| Jinhao Han            | Co-developer, Assets, Game Lore                   | Designed tower defence aspects, including enemy design, and contributed to system design.                                                | 1.0     |
-| Cenarius Lu           | Lead Developer, System Architecture, Game Lore    | Designed core mechanics and system architecture. Developed heroes, their abilities, and implemented health bar and RPG elements.         | 1.0     |
-| Dhanitha Rajapaksa    | Integration Development, Co-developer, Report     | Integrated front end and back end components, ensuring system cohesion. Contributed to development and assisted with the project report. | 1.0     |
-| James Crossley        | Frontend Development, Assets, Audio, Co-developer | Developed the frontend interface and handled audio design, and assisted with the project report.                                         | 1.0     |
-| Rajmugundhan Nagappan | Report, Assets, Game Lore development,Co-developer                        | Contributed to report writing, asset creation, and game lore                                                                 | 1.0   |
-| Ayush Raizada         | Scrum Master, Frontend Development | Coordinated the team, managed communication and workflow, and contributed to the project report.                                         | 1.0     |
+| Jinhao Han            | Co-developer                   | Designed tower defence aspects, including enemy design, and contributed to system design.                                                | 1.0     |
+| Cenarius Lu           | Lead Developer & System Architect| Designed core mechanics and system architecture. Developed heroes, their abilities, and implemented health bar and RPG elements.         | 1.0     |
+| Dhanitha Rajapaksa    | Co-developer| Integrated front end and back end components, ensuring system cohesion. Contributed to development and assisted with the project report. | 1.0     |
+| James Crossley        | Co-developer | Developed the frontend interface and handled audio design, and assisted with the project report.                                         | 1.0     |
+| Rajmugundhan Nagappan | Game Lore & Documentation                        | Contributed to report writing, asset creation, and game lore                                                                 | 1.0   |
+| Ayush Raizada         | Scrum Master & Co-developer| Coordinated the team, managed communication and workflow, and contributed to the project report.                                         | 1.0     |
 
 </div>
-
-
 
 
 <h2 align="center">File Structure</h2>
@@ -453,9 +449,32 @@ If we had more time, the first thing we would focus on would be adding more enem
 
 After that, it would make sense to finish the systems we already started, such as the shop and full hero selection. Since the groundwork for these features is already there, completing them would be a logical next step and would significantly improve the overall experience.
 
-### Contribution Statement
+### Contribution to Development Process
 
-- Provide a table of everyone's contribution, which *may* be used to weight individual grades. We expect that the contribution will be split evenly across team-members in most cases. Please let us know as soon as possible if there are any issues with teamwork as soon as they are apparent and we will do our best to help your team work harmoniously together.
+<div align="center">
+
+
+| Contributor           | Contribution                                                          | Weight |
+| --------------------- | --------------------------------------------------------------------- | ------ |
+| Jinhao Han            | Designed tower defence features, including enemies and system design. | 1.0    |
+| Cenarius Lu           | Built core systems, heroes, abilities, and RPG elements.              | 1.0    |
+| Dhanitha Rajapaksa    | Integrated frontend and backend, supported development and reporting. | 1.0    |
+| James Crossley        | Developed frontend, audio, and assisted with reporting.               | 1.0    |
+| Rajmugundhan Nagappan | Created assets, game lore, and contributed to documentation.          | 1.0    |
+| Ayush Raizada         | Managed workflow, contributed to frontend elements and reporting.     | 1.0    |
+
+</div>
+
+<div align="center">
+
+**Table 1**
+Team Contributions and Responsibilities
+</div>
+
+### References
+1.
+2.
+3.
 
 ### Additional Marks
 
