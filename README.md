@@ -454,21 +454,21 @@ After that, it would make sense to finish the systems we already started, such a
 <div align="center">
 
 
-| Contributor           | Contribution                                                          | Weight |
-| --------------------- | --------------------------------------------------------------------- | ------ |
-| Jinhao Han            | Designed tower defence features, including enemies and system design. | 1.0    |
-| Cenarius Lu           | Built core systems, heroes, abilities, and RPG elements.              | 1.0    |
-| Dhanitha Rajapaksa    | Integrated frontend and backend, supported development and reporting. | 1.0    |
-| James Crossley        | Developed frontend, audio, and assisted with reporting.               | 1.0    |
-| Rajmugundhan Nagappan | Created assets, game lore, and contributed to documentation.          | 1.0    |
-| Ayush Raizada         | Managed workflow, contributed to frontend elements and reporting.     | 1.0    |
+| Contributor              | Contribution Weighting |
+|--------------------------|--------|
+| Jinhao Han              | 1.0    |
+| Cenarius Lu             | 1.0    |
+| Dhanitha Rajapaksa      | 1.0    |
+| James Crossley          | 1.0    |
+| Rajmugundhan Nagappan   | 1.0    |
+| Ayush Raizada           | 1.0    |
 
 </div>
 
 <div align="center">
 
 **Table 1**
-Team Contributions and Responsibilities
+Team Contributions
 </div>
 
 ### References
