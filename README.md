@@ -374,12 +374,42 @@ In the game logic section, GameManager creates an event emitter to implement an 
 
 
 
-### Evaluation
+## 5. Evaluation
 
-- 15% ~750 words
+This week, we invited other team members to try out the newly released version of our game. The overall gameplay response was largely positive, though a few issues were flagged along with a number of helpful suggestions and ideas shared throughout the session. The feedback gathered proved to be invaluable in helping us to better understand how players interact with the game and where improvements can be made. To obtain a well-rounded understanding of our game, we conducted several evaluation methods, including **Think Aloud Evaluation**, **NASA-TLX for workload assessment**, and the **System Usability Scale (SUS)**. These methods allowed us to assess different dimensions of the player experience, from usability and cognitive workload to overall satisfaction and interface design. 
 
-- One qualitative evaluation (of your choice) 
+### 5a. Qualitative Evaluation
 
+**Think Aloud Evaluation:**
+
+![Think Aloud Diagram](images/ThinkAloud.png)
+<div align="center">
+
+*Figure 1*  
+Summary of Think Aloud Evaluation
+
+</div>
+
+**Methodology:**
+
+A group of 6 participants (**N = 6**), made up of friends and classmates with differing levels of gaming experience, took part in the session and were asked to play the game for around 10-15 minutes. Throughout the gameplay, they were encouraged to verbalise their thoughts and reactions as they occurred, providing realtime commentary on their experience. With their permission, responses were captured using audio recordings, enabling us to analyse the feedback and draw out a number of recurring themes, with a particular focus on instances of confusion and engagement. These were then organised into a Thematic Map to aid visualisation (see above Figure 1). The table below addresses each of the key focus areas identified from the mind map in turn.
+
+**Key Observations and Reactions:**
+
+| Focus Area | Issue Identified | Solution |
+|---|---|---|
+| **Player Control** | 1. Lack of health and mana indicators. <br> 2. Current status of each skill, including remaining cooldown times, is unclear.  | 1. Health and mana bars added to the bottom of the screen. <br> 2. Cooldown indicators made more prominent and easier to read. <br> 3. Enemy health now displayed above each enemy. |
+| **Game Instructions & Clarity** | 1. The absence of an instruction page makes it challenging for players to familiarise themselves with the game's controls, spells, hero mechanics, and other core elements. <br> 2. Players feel buttons are not responsive <br> 3. Lack of information on the objective/goal <br> 4. Unaware of how skill works| 1. Add an instruction page accessible by pressing "Esc". <br> 2. Introduced a tutorial screen that players must read through before proceeding, ensuring that they have a thorough understanding of the game's core mechanics and objectives prior to gameplay. <br> 3. Add a clearer skill-cooldown indicator in the bottom-right corner. <br> 4. Real-time feedback to clarify objectives. <br> 5. Enabled tooltip-on-hover in the skill shop.|
+| **Difficulty** | 1. Game offers no difficulty settings. <br> 2. Enemy waves progress at a pace that many players found overwhelming. | 1. Add difficulty options, giving players the ability to choose between Easy, Medium, and Hard before beginning the game. |
+| **Player Movement & Sounds** | 1. Movement felt sluggish <br> 2. Add music to the main game not just the Front-end| 1. Adjusted the hero's movement speed values. <br> 2. Added music|
+
+**Outcome:**
+
+The implemented improvements showed clear results during follow-up testing, with players demonstrating greater confidence and notably less confusion while navigating the game. Usability and overall gameplay experience were meaningfully enhanced as a result. The Think-Aloud method also provided deeper insight into player concerns, helping the team address issues more effectively. However, we remain mindful that social desirability bias may have influenced some participants responses.
+
+
+### 5b. Quantitative Evaluation
+**NASA Task Load Index (NASA-TLX) and System Usability Survey (SUS)**
 - One quantitative evaluation (of your choice) 
 
 - Description of how code was tested. 
