@@ -212,7 +212,7 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
 
    <td align="center" width="33%">
       <b>Warcraft</b><br>
-      <img src="images/warcraft.png" width="100%">
+      <img src="images/warcraft.jpg" width="100%">
     </td>
 
   <td align="center" width="33%">
