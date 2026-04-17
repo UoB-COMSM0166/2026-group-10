@@ -53,7 +53,7 @@ For those looking to modify the code or play offline, you can host Gates of Cind
 | 2 | [Requirements](#requirements) | Ideation, use cases & user stories        |
 | 3 | [Design](#design) | System architecture, state machine & class diagrams |
 | 4 | [Implementation](#implementation) | Key technical challenges           |
-| 5 | [Evaluation](#evaluation) | Qualitative & quantitative testing     |
+| 5 | [Evaluation](#5-evaluation) | Qualitative & quantitative testing     |
 | 6 | [Process](#process) | Team workflow & reflection               |
 | 7 | [Conclusion](#conclusion) | Lessons learnt & future work         |
 | 8 | [Contribution](#contribution) | Individual contributions         |
