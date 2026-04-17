@@ -207,14 +207,14 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
 <table width="100%">
   <tr>
     <th align="center" width="50%">Diablo</th>
-    <th align="center" width="50%">GAME</th>
+    <th align="center" width="50%">Warcraft</th>
   </tr>
   <tr>
     <td align="center">
       <img src="images/diablo start menu.jpg" width="100%" height="250px" style="object-fit: cover;">
     </td>
     <td align="center">
-      <img src="images/diablo start menu.jpg" width="100%" height="250px" style="object-fit: cover;">
+      <img src="images/warcraft.jpg" width="100%" height="250px" style="object-fit: cover;">
     </td>
   </tr>
 </table>
