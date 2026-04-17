@@ -203,21 +203,24 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 ###  3.3. UI/UX inspiration
 Our game UI is deeply inspired by diablo game which suits our game title and overall game.The hero's design is inspired by World of Warcraft. The skill icons are taken  from a fantasy RPG icon asserts pack from Unreal Engine Market
 
-<table width="100%">
+<table>
   <tr>
-    <th align="center" width="50%">Diablo</th>
-    <th align="center" width="50%">Warcraft</th>
+    <th>Diablo</th>
+    <th>Warcraft</th>
+    <th>Persona 5</th>
   </tr>
   <tr>
     <td align="center">
-      <img src="images/diablo start menu.jpg" width="100%" height="250px" style="object-fit: cover;">
+      <img src="diablo.jpg" width="100%">
     </td>
     <td align="center">
-      <img src="images/warcraft.jpg" width="100%" height="250px" style="object-fit: cover;">
+      <img src="warcraft.jpg" width="100%">
+    </td>
+    <td align="center">
+      <img src="warcraft.jpg" width="100%">
     </td>
   </tr>
 </table>
-
 ---
 
 ### Stakeholders - Onion Model
