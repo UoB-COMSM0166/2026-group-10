@@ -380,7 +380,9 @@ This week, we invited other team members to try out the newly released version o
 
 ### 5a. Qualitative Evaluation
 
-**Think Aloud Evaluation:**
+**Think Aloud**
+
+Given its proven track record in Human Computer Interaction (Nielsen et al., 2002; Joe et al., 2015), the Think Aloud technique was deemed the most suitable qualitative approach for exploring player perceptions of the initial level design, difficulty, and core game concept.
 
 ![Think Aloud Diagram](images/ThinkAloud.png)
 <div align="center">
@@ -405,7 +407,7 @@ A group of 6 participants (**N = 6**), made up of friends and classmates with di
 
 **Outcome:**
 
-The implemented improvements showed clear results during follow-up testing, with players demonstrating greater confidence and notably less confusion while navigating the game. Usability and overall gameplay experience were meaningfully enhanced as a result. The Think-Aloud method also provided deeper insight into player concerns, helping the team address issues more effectively. However, we remain mindful that social desirability bias may have influenced some participants responses.
+The implemented improvements showed clear results during follow-up testing, with players demonstrating greater confidence and notably less confusion while navigating the game. Usability and overall gameplay experience were meaningfully enhanced as a result. The use of Think-Aloud provided deeper insights into player concerns, helping the team address issues more effectively. However, we remain mindful that social desirability bias may have influenced some participants responses.
 
 
 ### 5b. Quantitative Evaluation
