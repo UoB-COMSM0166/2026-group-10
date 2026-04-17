@@ -200,7 +200,6 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 </table>
 
 
----
 ###  3.3. UI/UX inspiration
 Our game UI is deeply inspired by diablo game which suits our game title and overall game.The hero's design is inspired by World of Warcraft. The skill icons are taken  from a fantasy RPG icon asserts pack from Unreal Engine Market
 
@@ -219,6 +218,7 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
   </tr>
 </table>
 
+---
 
 ### Stakeholders - Onion Model
 
