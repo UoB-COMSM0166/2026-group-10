@@ -216,11 +216,12 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
     </td>
 
   <td align="center" width="33%">
-      <b>Third Game</b><br>
+      <b>Icons</b><br>
       <img src="images/icons.jpg" width="100%">
     </td>
   </tr>
 </table>
+
 ---
 
 ### Stakeholders - Onion Model
