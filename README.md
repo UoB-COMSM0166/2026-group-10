@@ -217,7 +217,7 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
 
   <td align="center" width="33%">
       <b>Third Game</b><br>
-      <img src="images/third.png" width="100%">
+      <img src="images/icons.jpg" width="100%">
     </td>
   </tr>
 </table>
