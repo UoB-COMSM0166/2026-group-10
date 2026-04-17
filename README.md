@@ -85,13 +85,13 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 
 <table>
   <tr>
-    <td align="center" width="33%">
-      <img src="warcraft.jpg" width="100%" style="border-radius:15px;"><br><br>
+    <td align="center" width="100%">
+      <img src="gates of cinder proto.gif" width="100%" style="border-radius:15px;"><br><br>
       <b>Project Title</b><br>
       <sub>Short clean description here</sub>
     </td>
     <td align="center" width="33%">
-      <img src="diablo.jpg" width="100%" style="border-radius:15px;"><br><br>
+      <img src="gates of cinder proto.gif" width="100%" style="border-radius:15px;"><br><br>
       <b>Project Title</b><br>
       <sub>Short clean description here</sub>
     </td>
