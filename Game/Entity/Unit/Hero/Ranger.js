@@ -37,7 +37,6 @@ export class Ranger extends Hero {
         this.interruptCast();
         this.position = { x: this.spawnPosition.x, y: this.spawnPosition.y };
         this.currentHP = this.maxHP;
-        this.currentMP = this.maxMP;
         this.remainingRespawnCD = 0;
         this.stop();
         this.clearWaypoints();

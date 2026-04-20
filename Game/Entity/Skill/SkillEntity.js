@@ -2,11 +2,12 @@ import Entity from '../Entity.js';
 import Unit from "../Unit/Unit.js";
 
 export class Missile extends Entity {
-    constructor(id, position, speed, hitbox, target, damage, effect) {
+    constructor(id, position, speed, hitbox, target, damage, effect, source = null) {
         super(id, position, speed, hitbox);
         this.setTarget(target);
         this.damage = Number(damage);
         this.effect = effect;
+        this.source = source;
         this.finished = false;
     }
 
@@ -23,7 +24,7 @@ export class Missile extends Entity {
 
     hit() {
         if (this.damage) {
-            this.target.takeDamage(this.damage);
+            this.target.takeDamage(this.damage, this.source);
         }
         if (this.effect && typeof this.effect === 'function') {
             this.effect(this.target);
@@ -51,9 +52,10 @@ export class Missile extends Entity {
 }
 
 export class Area extends Entity {
-    constructor(id, position, speed, hitbox, destination, onHit, duration, effectPeriod = 10, maxDistance = 0) {
+    constructor(id, position, speed, hitbox, destination, onHit, duration, effectPeriod = 10, maxDistance = 0, source = null) {
         super(id, position, speed, hitbox);
         this.onHit = onHit;
+        this.source = source;
         this.finished = false;
         this.duration = Number(duration);
         this.effectPeriod = Number(effectPeriod);
@@ -172,7 +174,7 @@ export class Aura extends Entity {
         }
 
         if (this.damage) {
-            unit.takeDamage(this.damage);
+            unit.takeDamage(this.damage, this.source);
         }
 
         if (this.effect && typeof this.effect === 'function') {
@@ -212,10 +214,11 @@ export class Aura extends Entity {
 }
 
 export class Projectile extends Entity {
-    constructor(id, position, speed, hitbox, destination, damage, effect, maxDistance, piercing = false) {
+    constructor(id, position, speed, hitbox, destination, damage, effect, maxDistance, piercing = false, source = null) {
         super(id, position, speed, hitbox);
         this.damage = Number(damage);
         this.effect = effect;
+        this.source = source;
         this.finished = false;
         this.category = 'Projectile';
         this.origin = { x: position.x, y: position.y };
@@ -278,7 +281,7 @@ export class Projectile extends Entity {
         }
 
         if (this.damage) {
-            unit.takeDamage(this.damage);
+            unit.takeDamage(this.damage, this.source);
         }
         if (this.effect && typeof this.effect === 'function') {
             this.effect(unit);
@@ -344,7 +347,8 @@ export class Guardian extends Unit {
             this.missileHitbox,
             target,
             this.damage,
-            this.onHitEffect
+            this.onHitEffect,
+            this
         );
 
         this.events.emit('skill_entity:created', { entity: missile });
@@ -366,6 +370,82 @@ export class Guardian extends Unit {
             this.attackCooldown -= 1;
         } else if (target) {
             this.attack(target);
+        }
+
+        this.duration -= 1;
+    }
+}
+
+export class Tower extends Unit {
+    constructor(
+        id, position, hitbox, events,
+        duration, attackRange, attackInterval, projectileSpeed, projectileHitbox, damage, source = null,
+        projectileMaxDistance = attackRange, projectilePiercing = false, projectileName = 'arrow'
+    ) {
+        super(id, position, 0, hitbox, 1, 0);
+        this.events = events;
+        this.duration = Number(duration);
+        this.attackRange = Number(attackRange);
+        this.attackInterval = Number(attackInterval);
+        this.attackCooldown = 0;
+        this.projectileSpeed = Number(projectileSpeed);
+        this.projectileHitbox = Number(projectileHitbox);
+        this.damage = Number(damage);
+        this.source = source;
+        this.projectileMaxDistance = Number(projectileMaxDistance);
+        this.projectilePiercing = Boolean(projectilePiercing);
+        this.projectileName = String(projectileName);
+        this.finished = false;
+        this.category = 'Tower';
+    }
+
+    alive() {
+        return !this.finished && this.currentHP > 0;
+    }
+
+    findTarget(enemies) {
+        return this.findNearestEnemy(enemies, this.attackRange);
+    }
+
+    attack(target) {
+        if (!target?.alive || !target.alive()) {
+            return;
+        }
+
+        const projectile = new Projectile(
+            `${this.id}_${this.projectileName}_${this.duration}`,
+            { x: this.position.x, y: this.position.y },
+            this.projectileSpeed,
+            this.projectileHitbox,
+            { x: target.position.x, y: target.position.y },
+            this.damage,
+            null,
+            this.projectileMaxDistance,
+            this.projectilePiercing,
+            this.source
+        );
+
+        this.events.emit('skill_entity:created', { entity: projectile });
+        this.attackCooldown = this.attackInterval;
+    }
+
+    update(_, enemies) {
+        if (this.finished) {
+            return;
+        }
+
+        if (this.duration <= 0) {
+            this.finished = true;
+            return;
+        }
+
+        if (this.attackCooldown > 0) {
+            this.attackCooldown -= 1;
+        } else {
+            const target = this.findTarget(enemies);
+            if (target) {
+                this.attack(target);
+            }
         }
 
         this.duration -= 1;

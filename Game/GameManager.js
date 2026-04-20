@@ -1,5 +1,6 @@
 import Forest from './World/Forest.js';
 import Archmage from './Entity/Unit/Hero/Archmage.js';
+import Warrior from './Entity/Unit/Hero/Warrior.js';
 import Objective from './Entity/Unit/Objective.js';
 import Clock from './Utils/Clock.js';
 import EventEmitter from './Utils/EventEmitter.js';
@@ -30,6 +31,7 @@ export default class GameManager {
         this.enemies = new Map();
         this.skillEntities = new Map();
         this.enemySkillEntities = new Map();
+        this.alliedDecoys = new Map();
 
         this.started = false;
         this.gameOver = false;
@@ -94,6 +96,12 @@ export default class GameManager {
         this.events.on('enemy_skill_entity:created', ({ entity }) => {
             if (entity?.id) {
                 this.enemySkillEntities.set(entity.id, entity);
+            }
+        });
+
+        this.events.on('allied_decoy:created', ({ entity }) => {
+            if (entity?.id) {
+                this.alliedDecoys.set(entity.id, entity);
             }
         });
 
@@ -210,6 +218,7 @@ export default class GameManager {
         this.updateWave();
         this.updateHero();
         this.updateEnemies();
+        this.updateAlliedDecoys();
         this.updateSkillEntities();
         this.updateEnemySkillEntities();
         this.cleanupFinishedEntities();
@@ -243,11 +252,23 @@ export default class GameManager {
         }
     }
 
+    updateAlliedDecoys() {
+        for (const decoy of this.alliedDecoys.values()) {
+            if (typeof decoy?.update === 'function') {
+                decoy.update();
+            }
+        }
+    }
+
     updateEnemySkillEntities() {
         const alliedUnits = new Map([
             [this.hero.id, this.hero],
             [this.objective.id, this.objective]
         ]);
+
+        for (const [id, decoy] of this.alliedDecoys.entries()) {
+            alliedUnits.set(id, decoy);
+        }
 
         for (const entity of this.enemySkillEntities.values()) {
             if (typeof entity.updateMovement === 'function' && entity.category !== 'Aura') {
@@ -267,6 +288,12 @@ export default class GameManager {
         for (const [id, entity] of this.enemySkillEntities.entries()) {
             if (entity?.finished) {
                 this.enemySkillEntities.delete(id);
+            }
+        }
+
+        for (const [id, decoy] of this.alliedDecoys.entries()) {
+            if (decoy?.finished) {
+                this.alliedDecoys.delete(id);
             }
         }
 

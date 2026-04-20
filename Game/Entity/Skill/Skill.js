@@ -1,5 +1,8 @@
 export default class Skill {
-    constructor(name, category, description, cooldown, manaCost, range, events, targetCategory, passive) {
+    constructor(
+        name, category, description, cooldown, manaCost, range,
+        events, targetCategory, passive, upgradeCost = 0
+    ) {
         this.name = String(name);
         this.category = String(category);
         this.description = String(description);
@@ -8,7 +11,7 @@ export default class Skill {
         this.manaCost = Number(manaCost);
         this.range = range;
         this.upgraded = false;
-        this.upgradeGold = 0;
+        this.upgradeCost = upgradeCost || 0;
         this.events = events;
         this.targetCategory = targetCategory;
         this.passive = passive;

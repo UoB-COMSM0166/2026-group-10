@@ -36,6 +36,7 @@ function buildUnitState(unit) {
     return {
         id: unit.id,
         name: unit.name ?? unit.id,
+        category: unit.category ?? null,
         position: clonePosition(unit.position),
         velocity: unit.velocity ? {
             vx: Number(unit.velocity.vx) || 0,
@@ -86,6 +87,7 @@ function buildHeroSkillState(hero) {
             passive: Boolean(skill.passive),
             active: Boolean(skill.active),
             upgraded: Boolean(skill.upgraded),
+            upgradeCost: Number(skill.upgradeCost) || 0,
         } : null;
     }
 
@@ -113,6 +115,7 @@ function buildHeroSkillTreeState(hero) {
                 passive: Boolean(skill.passive),
                 active: Boolean(skill.active),
                 upgraded: Boolean(skill.upgraded),
+                upgradeCost: Number(skill.upgradeCost) || 0,
             } : null)
             : [];
     }
@@ -175,6 +178,8 @@ function buildStateSnapshot() {
                 : false,
             remainingRespawnCD: Number(game.hero.remainingRespawnCD) || 0,
             respawnCD: Number(game.hero.respawnCD) || 0,
+            gold: Number(game.hero.gold) || 0,
+            upgradeCost: Number(game.hero.upgradeCost) || 0,
             selectedSkill: heroTargetingState.skillKey,
             targeting: { ...heroTargetingState },
             casting: game.hero.isCasting(),
@@ -362,11 +367,19 @@ function canUseSkill(key, skill) {
         return { ok: false, code: 400, message: `Skill slot ${key} is passive and cannot be used.` };
     }
 
+    if (game.hero.isCasting()) {
+        return { ok: false, code: 409, message: 'Hero cannot use skills while casting.' };
+    }
+
     if (game.hero.skillCastingDisabled) {
         return { ok: false, code: 409, message: 'Hero cannot cast skills right now.' };
     }
 
-    if (!skill.cooledDown()) {
+    if (key === 'A' && game.hero.sheatheSwordActive) {
+        return { ok: false, code: 409, message: 'Skill slot A is unavailable while Sheathe Sword is active.' };
+    }
+
+    if (!skill.toggleable && !skill.cooledDown()) {
         return { ok: false, code: 409, message: `Skill slot ${key} is cooling down.` };
     }
 
@@ -507,6 +520,11 @@ function handleHeroMove(command, requestId, payload = {}) {
         return;
     }
 
+    if (game.hero.isCasting()) {
+        emitResult(command, requestId, 409, 'Hero cannot move while casting.');
+        return;
+    }
+
     const position = clonePosition(payload.position);
     if (!position) {
         emitResult(command, requestId, 400, 'Position is required.');
@@ -525,6 +543,11 @@ function handleHeroMove(command, requestId, payload = {}) {
 function handleHeroStop(command, requestId) {
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
+        return;
+    }
+
+    if (game.hero.isCasting()) {
+        emitResult(command, requestId, 409, 'Hero cannot stop while casting.');
         return;
     }
 
@@ -554,6 +577,25 @@ function handleHeroPress(command, requestId) {
         clearHeroTargetingState();
         emitState();
         emitResult(command, requestId, 200, `Skill slot ${key} targeting cancelled.`);
+        return;
+    }
+
+    if (skill.toggleable) {
+        const active = skill.toggle(game.hero, game.clock.now());
+        if (active) {
+            skill.casted();
+        } else {
+            skill.currentCooldown = 0;
+        }
+
+        clearHeroTargetingState();
+        emitState();
+        emitResult(command, requestId, 200, `Skill slot ${key} ${active ? 'activated' : 'deactivated'}.`, {
+            phase: 'cast',
+            skillKey: key,
+            targetCategory: null,
+            active,
+        });
         return;
     }
 

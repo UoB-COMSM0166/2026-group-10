@@ -222,7 +222,7 @@ export default class Render {
             promise: null,
         };
 
-        sprite.promise = sketch.loadImage(`FrontEnd/Assert/Image/${name}_Layout.png`)
+        sprite.promise = sketch.loadImage(`FrontEnd/Assert/Image/General/${name}_Layout.png`)
             .then((image) => {
                 sprite.image = image;
                 sprite.loaded = true;

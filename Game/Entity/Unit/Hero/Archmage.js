@@ -9,17 +9,14 @@ export default class Archmage extends Hero {
     constructor(position, events, element, ui, clock) {
         super(
             'Archmage', 'Lyra\'Gotha', position, 1, 15, 180, 220,
-            'Magic damage with crowd control abilities.', 2, 3, 0.1,
-            events, ui, clock
+            'Manipulate magical elements to deal massive damage from a distance.',
+            2, 3, 0.1, events, ui, clock, ['Ice', 'Fire', 'Thunder']
         );
 
         this.baseHpRegen = 1;
         this.baseMpRegen = 1.5;
         this.hpRegen = this.baseHpRegen;
         this.mpRegen = this.baseMpRegen;
-
-        this.mpName = 'Mana';
-        this.mpColor = 'rgb(0, 98, 255)';
 
         const icePick = new IcePick(this.events);
         const stormBlast = new StormBlast(this.events);
@@ -53,33 +50,33 @@ export default class Archmage extends Hero {
         if (element === 'Ice') {
             this.skill.set('A', icePick);
             this.skill.set('Q', stormBlast);
-            this.skill.set('W', frostShield);
-            this.skill.set('E', chakra);
-            this.skill.set('R', blizzard);
+            // this.skill.set('W', frostShield);
+            // this.skill.set('E', chakra);
+            // this.skill.set('R', blizzard);
             this.skill.set('P', manaDrain);
         } 
         else if (element === 'Fire') {
             this.skill.set('A', fireBall);
             this.skill.set('Q', flameWave);
-            this.skill.set('W', burning);
-            this.skill.set('E', viperGuardian);
-            this.skill.set('R', meteorite);
+            // this.skill.set('W', burning);
+            // this.skill.set('E', viperGuardian);
+            // this.skill.set('R', meteorite);
             this.skill.set('P', fierySoul);
         } 
-        else if (element === 'Lightning') {
+        else if (element === 'Thunder') {
             this.skill.set('A', lightning);
             this.skill.set('Q', thunderCloud);
-            this.skill.set('W', chainLightning);
-            this.skill.set('E', ballLightning);
-            this.skill.set('R', staticExplosion);
+            // this.skill.set('W', chainLightning);
+            // this.skill.set('E', ballLightning);
+            // this.skill.set('R', staticExplosion);
             this.skill.set('P', electromagneticField);
         } 
 
         this.applyPassiveSkills();
 
-        // this.skill.set('W', null);
-        // this.skill.set('E', null);
-        // this.skill.set('R', null);
+        this.skill.set('W', null);
+        this.skill.set('E', null);
+        this.skill.set('R', null);
     }
 
     respawn() {

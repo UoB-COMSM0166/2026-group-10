@@ -43,7 +43,7 @@ export default class Enemy extends Unit {
         if (this.diecry) this.diecry();
 
         this.finished = true;
-        this.events.emit('enemy:killed', { id: this.id, gold: this.gold });
+        this.events.emit('enemy:killed', { id: this.id, gold: this.gold, enemy: this });
     }
 
     updateMovement() {

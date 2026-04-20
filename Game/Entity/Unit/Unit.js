@@ -16,18 +16,24 @@ export default class Unit extends Entity {
         this.mpRegen = 0;
         this.invulnerable = false;
         this.skillCastingDisabled = false;
+        this.onIncomingDamage = null;
 
         this.buffs = [];
     }
     
     // HP & MP受到影响
-    takeDamage(amount) {
+    takeDamage(amount, source = null, options = {}) {
+        if (typeof this.onIncomingDamage === 'function' && !options?.ignoreReactive) {
+            this.onIncomingDamage(amount, source, options);
+        }
+
         if (this.invulnerable) {
-            return;
+            return 0;
         }
 
         const effectiveDamage = Math.max(0.01, amount - this.armor);
         this.currentHP = Math.max(0, this.currentHP - effectiveDamage);
+        return effectiveDamage;
     }
 
     heal(amount) {
@@ -149,6 +155,7 @@ export default class Unit extends Entity {
         this.mpRegen = this.baseMpRegen;
         this.invulnerable = false;
         this.skillCastingDisabled = false;
+        this.onIncomingDamage = null;
         this.applyBuffEffect();
         this.buffs = this.buffs.filter((buff) => {
             buff.remaining -= 1;

@@ -267,7 +267,7 @@ const sketch = (p) => {
         ui = new UI(uiLayer);
         sketchUi = ui;
 
-        objectiveSprite.promise = p.loadImage('FrontEnd/Assert/Image/Sprite_Tree.png')
+        objectiveSprite.promise = p.loadImage('FrontEnd/Assert/Image/General/Sprite_Tree.png')
             .then((image) => {
                 objectiveSprite.image = image;
                 objectiveSprite.loaded = true;

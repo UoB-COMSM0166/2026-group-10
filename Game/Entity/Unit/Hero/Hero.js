@@ -6,7 +6,7 @@ export default class Hero extends Unit {
     constructor(
         id, name, position, speed, hitbox, hp, mp,
         description, armor, attackAmp, spellAmp,
-        events, ui, clock
+        events, ui, clock, category
     ) {
         super(id, position, speed, hitbox, hp, mp);
         this.name = String(name);
@@ -25,8 +25,9 @@ export default class Hero extends Unit {
         this.respawnCD = BASE_RESPAWN_CD;
         this.active = false;
         this.remainingRespawnCD = 0;
+        this.spawnPosition = position;
 
-        this.gold = 0;
+        this.gold = 310;
         this.castState = null;
 
         this.speedLevel = 0;
@@ -35,6 +36,7 @@ export default class Hero extends Unit {
         this.spellAmpLevel = 0;
         this.spellSlotLevel = 0;
 
+        this.category = category;
         this.skill = new Map();
         this.skill.set('A', null);
         this.skill.set('Q', null);
@@ -42,11 +44,10 @@ export default class Hero extends Unit {
         this.skill.set('E', null);
         this.skill.set('R', null);
         this.skill.set('P', null);
-        this.renderRange = null;
         this.applyPassiveSkills();
     }
 
-    takeDamage(amount) {
+    takeDamage(amount, source = null, options = {}) {
         super.takeDamage(amount);
         if (!this.alive()) {
             this.die();
@@ -79,6 +80,10 @@ export default class Hero extends Unit {
             return;
         }
 
+        if (typeof this.castState.onTick === 'function') {
+            this.castState.onTick();
+        }
+
         this.castState.remaining -= 1;
         if (this.castState.remaining > 0) {
             return;
@@ -89,6 +94,24 @@ export default class Hero extends Unit {
         if (typeof onComplete === 'function') {
             onComplete();
         }
+    }
+
+    updateBuffs() {
+        this.speed = this.baseSpeed;
+        this.hitbox = this.baseHitbox;
+        this.armor = this.baseArmor;
+        this.hpRegen = this.baseHpRegen;
+        this.mpRegen = this.baseMpRegen;
+        this.attackAmp = this.baseAttackAmp + this.attackAmpLevel;
+        this.spellAmp = this.baseSpellAmp + this.spellAmpLevel;
+        this.invulnerable = false;
+        this.skillCastingDisabled = false;
+        this.onIncomingDamage = null;
+        this.applyBuffEffect();
+        this.buffs = this.buffs.filter((buff) => {
+            buff.remaining -= 1;
+            return buff.remaining > 0;
+        });
     }
 
     updateSkill() {
@@ -138,7 +161,8 @@ export default class Hero extends Unit {
                 if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
                 this.gold -= goldRequired;
                 this.attackAmpLevel += 1;
-                return { success: true, message: `Attack Amplification Upgraded to Lv. ${this.speedLevel}` };
+                this.attackAmp = this.baseAttackAmp + this.attackAmpLevel;
+                return { success: true, message: `Attack Amplification Upgraded to Lv. ${this.attackAmpLevel}` };
             case 'SpellAmp':
                 goldRequired = this.spellAmpLevel * 40 + 20;
                 if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
@@ -166,7 +190,7 @@ export default class Hero extends Unit {
         this.removeTarget();
     }
 
-    startCast(duration, onComplete) {
+    startCast(duration, onComplete, onTick = null) {
         const castDuration = Math.max(0, Number(duration) || 0);
 
         this.stop();
@@ -180,6 +204,7 @@ export default class Hero extends Unit {
         this.castState = {
             remaining: castDuration,
             onComplete,
+            onTick: typeof onTick === 'function' ? onTick : null,
         };
     }
 

@@ -1,6 +1,4 @@
 export default class View {
-    static buttonRegistry = new Map();
-
     LEFT = 0;
     CENTER = 1;
     RIGHT = 2;
@@ -52,8 +50,6 @@ export default class View {
         layer.pop();
     }
 
-    static image(layer, x, y, width, height) {}
-
     static skillIcon(layer, x, y, width, height, skill, highLight, iconImage = null) {
         layer.push();
         layer.stroke('rgba(255,255,255,0.08)');
@@ -69,6 +65,8 @@ export default class View {
             layer.drawingContext.drawImage(iconImage, x + 4, y + 4, width - 8, height - 8);
             layer.drawingContext.restore();
         }
+
+
 
         layer.pop();
     }
@@ -163,5 +161,57 @@ export default class View {
         }
 
         return words.map((word) => word[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    static upgradeButton(layer, x, y, width, height, func, cost, iconImage, currentGold) {
+        layer.push();
+        layer.stroke(255, 28);
+        layer.strokeWeight(2);
+        const sufficientColor = layer.color(203, 166, 0);
+        const insufficientColor = layer.color(6, 10, 18);
+        layer.fill(currentGold >= cost ? sufficientColor : insufficientColor);
+        layer.rect(x, y, width, height, 10);
+
+        const text = `${cost}`;
+        const textSize = 20;
+        const iconLoaded = Boolean(iconImage?.complete);
+        const iconSize = Math.min(30, height - 24);
+        const gap = iconLoaded ? 5 : 0;
+
+        layer.textFont("Arial");
+        layer.textSize(textSize);
+        const textWidth = layer.textWidth(text);
+        const contentWidth = (iconLoaded ? iconSize + gap : 0) + textWidth;
+        const contentX = x + width / 2 - contentWidth / 2;
+
+        if (iconLoaded) {
+            layer.drawingContext.drawImage(
+                iconImage,
+                contentX,
+                y + height / 2 - iconSize / 2,
+                iconSize,
+                iconSize
+            );
+        }
+
+        View.text(
+            layer,
+            contentX + (iconLoaded ? iconSize + gap : 0) + textWidth / 2,
+            y + height / 2,
+            text,
+            textSize,
+            255,
+            true,
+            0,
+            0,
+            "Arial",
+            3
+        );
+
+        layer.pop();
+    }
+
+    static heroStateDetails(layer, x, y, width, height, iconImage, currentGold) {
+
     }
 }
