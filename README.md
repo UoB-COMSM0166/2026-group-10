@@ -418,12 +418,23 @@ The implemented improvements showed clear results during follow-up testing, with
 
 ### Process 
 
-- 15% ~750 words
+**Tools & Methods**
 
-- Teamwork. How did you work together, what tools and methods did you use? Did you define team roles? Reflection on how you worked together. Be honest, we want to hear about what didn't work as well as what did work, and importantly how your team adapted throughout the project.
-- The team used Git for synchronous development, with members writing different functionalities maintaining different branches, which were then merged by Cenarius.
+We used different tools to achieve a variety of purposes.
 
-The game's main architecture was designed and implemented by Cenarius. The main architecture went through three major versions: Entity-Component System, OOP system, and multi-threaded system. The multi-threaded system was ultimately adopted. Cenarius implemented the following functionalities:
+**Code & Test**
+
+We used **JetBrains WebStorm** as the IDE mainly. The main system construction and front-end implementation are all done on this platform. We tested our game on **Safari** and Google Chrome. In terms of team collaboration, we have a **GitHub** repository to store code from various places. We assign different tasks to many people, and different parts of the code are uploaded to different **Git branches**, which are then merged by Cenarius.
+
+For information on the techniques and implementation methods used in writing code please refer to the **Implementation** section.
+
+**Art assets**
+
+Our game is set in a fantasy world similar to ***World of Warcraft***, which is the source of our art style. We first had **Google Gemini** generate a pixelated image as the overall look of the hero and background, and then used **PerfectPixel** to pixelate it completely. Next, we use **Pixelmator Pro** to perform some pixel modifications and overall color adjustments on the image. For example, **Gemini** generated a hero profile for us, which we then fully pixelated using **PerfectPixel** and imported into **Pixelmator Pro** for color grading. Additionally, we need a black-and-white version of the hero profile with closed eyes to represent the hero's dead state, so we use the brush tool in **Pixelmator Pro** to modify the eyes and adjust the overall color.
+
+<img width="1321" height="753" alt="Pixelmator Pro" src="https://github.com/user-attachments/assets/58573667-5dbf-44ca-b65b-995ec642958e" />
+
+
 
 
 ### Conclusion
