@@ -434,6 +434,11 @@ Our game is set in a fantasy world similar to ***World of Warcraft***, which is 
 
 <img width="1321" height="753" alt="Pixelmator Pro" src="https://github.com/user-attachments/assets/58573667-5dbf-44ca-b65b-995ec642958e" />
 
+> Creating Hero Death Profile Using Pixelmator Pro.
+
+For the animation, we manually copied sprite textures from some older games using **Aseprite**. After obtaining some keyframes, we manually modified the textures, such as replacing their clothing or colors. In short, we only obtained the animation and skeleton textures from other games. For example, most of the hero's animations came from ***Persona 2*** because that game used a free-view top-down perspective, which matched our game visual design, so we didn't need to make many changes to the textures.
+
+<img width="1864" height="892" alt="Aseprite" src="https://github.com/user-attachments/assets/43593dde-4c75-4a7a-86d7-5592454c7000" />
 
 
 
