@@ -441,6 +441,35 @@ For the animation, we manually copied sprite textures from some older games usin
 <img width="1864" height="892" alt="Aseprite" src="https://github.com/user-attachments/assets/43593dde-4c75-4a7a-86d7-5592454c7000" />
 
 
+> Using Aseprite to create Animation.
+
+**Sound Asserts
+**
+> To be completed...
+
+## Unfinished Work
+
+**Skill Effects**
+
+We didn't design overly complex skill mechanics. We only implemented most skills that produce skill entity trajectories and skills that affect oneself. Mechanics like Rubick stealing skills or Invoker combining elemental skills were not implemented.
+
+**Create our own art assets**
+
+Since the team members are not good at art, we had to find suitable art assets from multiple sources and modify them.
+
+**Infinite Mode**
+
+Theoretically, this kind of game could be played as a roguelike, but we didn't. The reason is that we didn't design a large number of enemy minions and their skills. Therefore, we didn't design a related random generation algorithm.
+
+**Path Finding**
+
+We didn't include a pathfinding system in the map. The presence of enemy bosses makes it difficult to design obstacles on the map (most action game boss battles take place in open areas, unless the boss has terrain related mechanics. Therefore, a pathfinding system is unnecessary.
+
+**RPG Level system**
+
+Heroes can be upgraded by acquiring and spending gold, rather than through experience points as in traditional RPGs. Because each skill only has two levels, most skill upgrades result in mechanic-based rather than numerical improvements. Therefore, experience points become useless once a hero has maxed out all their skills. That's why we've eliminated the experience point system.
+
+
 
 ### Conclusion
 **Reflecting on the Project as a Whole**
