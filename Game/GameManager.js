@@ -2,6 +2,7 @@ import Forest from './World/Forest.js';
 import Archmage from './Entity/Unit/Hero/Archmage.js';
 import Warrior from './Entity/Unit/Hero/Warrior.js';
 import Objective from './Entity/Unit/Objective.js';
+import Boss from './Entity/Unit/Enemy/Boss.js';
 import Clock from './Utils/Clock.js';
 import EventEmitter from './Utils/EventEmitter.js';
 
@@ -29,6 +30,7 @@ export default class GameManager {
 
         this.units = new Map();
         this.enemies = new Map();
+        this.boss = null;
         this.skillEntities = new Map();
         this.enemySkillEntities = new Map();
         this.alliedDecoys = new Map();
@@ -69,11 +71,15 @@ export default class GameManager {
             this.units.set(newEnemy.id, newEnemy);
         });
 
-        this.events.on('enemy:killed', ({ id }) => {
+        this.events.on('enemy:killed', ({ id, gold }) => {
             if (!id) {
                 return;
             }
 
+            this.hero.collectCoin(gold);
+            if (this.boss?.id === id) {
+                this.boss = null;
+            }
             this.enemies.delete(id);
             this.units.delete(id);
         });
@@ -83,6 +89,9 @@ export default class GameManager {
                 return;
             }
 
+            if (this.boss?.id === enemy.id) {
+                this.boss = null;
+            }
             this.enemies.delete(enemy.id);
             this.units.delete(enemy.id);
         });
@@ -151,13 +160,24 @@ export default class GameManager {
 
         this.spawnCounter += 1;
         const enemyId = `${lane.id}_${lane.name}_${this.spawnCounter}`;
-        const newEnemy = new EnemyClass(
-            enemyId,
-            { x: spawnPoint.x, y: spawnPoint.y },
-            this.events,
-            lane.waypoint,
-            this.spawnCounter
-        );
+        const newEnemy = EnemyClass.prototype instanceof Boss
+            ? new EnemyClass(
+                enemyId,
+                { x: spawnPoint.x, y: spawnPoint.y },
+                this.events,
+                this.hero
+            )
+            : new EnemyClass(
+                enemyId,
+                { x: spawnPoint.x, y: spawnPoint.y },
+                this.events,
+                lane.waypoint,
+                this.spawnCounter
+            );
+
+        if (newEnemy instanceof Boss) {
+            this.boss = newEnemy;
+        }
 
         this.events.emit('enemy:spawned', { newEnemy });
     }
@@ -218,6 +238,7 @@ export default class GameManager {
         this.updateWave();
         this.updateHero();
         this.updateEnemies();
+        this.updateBoss();
         this.updateAlliedDecoys();
         this.updateSkillEntities();
         this.updateEnemySkillEntities();
@@ -239,8 +260,25 @@ export default class GameManager {
 
     updateEnemies() {
         for (const enemy of this.enemies.values()) {
+            if (enemy === this.boss) {
+                continue;
+            }
             enemy.update();
         }
+    }
+
+    updateBoss() {
+        if (!this.boss) {
+            return;
+        }
+
+        if (!this.boss.alive()) {
+            this.boss.die?.();
+            this.boss = null;
+            return;
+        }
+
+        this.boss.update();
     }
 
     updateSkillEntities() {
@@ -299,6 +337,9 @@ export default class GameManager {
 
         for (const [id, enemy] of this.enemies.entries()) {
             if (enemy?.finished) {
+                if (this.boss === enemy) {
+                    this.boss = null;
+                }
                 this.enemies.delete(id);
                 this.units.delete(id);
             }

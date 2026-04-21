@@ -5,7 +5,9 @@ export default class Boss extends Unit {
         super(id, position, speed, hitbox, hp, mp);
         this.name = name;
         this.events = events;
+        this.target = target;
         this.gold = 0;
+        this.finished = false;
 
         this.skills = new Map();
         this.skills.set('Q', null);
@@ -15,6 +17,22 @@ export default class Boss extends Unit {
         this.cooldown = 180;
         this.currentCooldown = this.cooldown;
         this.castState = null;
+    }
+
+    takeDamage(amount, source = null, options = {}) {
+        super.takeDamage(amount, source, options);
+        if (!this.alive()) {
+            this.die();
+        }
+    }
+
+    die() {
+        if (this.finished) {
+            return;
+        }
+
+        this.finished = true;
+        this.events.emit('enemy:killed', { id: this.id, gold: this.gold, enemy: this });
     }
 
     isCasting() {
@@ -165,7 +183,7 @@ export default class Boss extends Unit {
     }
 
     update() {
-        if (!this.alive()) {
+        if (this.finished || !this.alive()) {
             return;
         }
 

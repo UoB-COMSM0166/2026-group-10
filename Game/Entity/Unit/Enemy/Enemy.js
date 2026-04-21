@@ -47,7 +47,7 @@ export default class Enemy extends Unit {
     }
 
     updateMovement() {
-        if (this.speed <= 0) { return; }
+        if (this.getStat('Speed') <= 0) { return; }
         this.moveAlongWaypoint();
         this.calculateMovement();
         this.checkReachedObjective();

@@ -146,7 +146,7 @@ export class BladeSpin extends Skill {
                 'rgba(220, 220, 220, 1)',
                 this.duration,
                 (unit) => {
-                    unit.speed += this.moveSpeedBonus;
+                    unit.addStat('Speed', this.moveSpeedBonus);
                 },
                 true
             ));
@@ -205,7 +205,7 @@ export class Sacrifice extends Skill {
             'rgba(190, 40, 40, 1)',
             this.duration,
             (unit) => {
-                unit.attackAmp += this.attackAmpBonus;
+                unit.strength += this.attackAmpBonus;
             },
             true
         ));
@@ -254,7 +254,7 @@ export class JumpingSlash extends Skill {
             'rgba(180, 180, 180, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * this.slowRatio);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * this.slowRatio));
             },
             false
         ) : null;
@@ -330,7 +330,7 @@ export class EarthquakeSlash extends Skill {
             'rgba(120, 90, 60, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * this.slowRatio);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * this.slowRatio));
             },
             false
         );
@@ -340,7 +340,7 @@ export class EarthquakeSlash extends Skill {
             'rgba(120, 90, 60, 1)',
             this.stunDuration,
             (unit) => {
-                unit.speed = 0;
+                unit.setStat('Speed', 0);
             },
             false
         );
@@ -515,7 +515,7 @@ export class Puncture extends Skill {
             'rgba(160, 160, 160, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * this.slowRatio);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * this.slowRatio));
             },
             false
         ) : null;
@@ -696,7 +696,7 @@ export class Flaw extends Skill {
             'rgba(120, 80, 80, 1)',
             this.duration,
             (unit) => {
-                unit.armor -= this.armorReduction;
+                unit.addStat('Armor', -this.armorReduction);
             },
             false
         );
@@ -707,7 +707,7 @@ export class Flaw extends Skill {
             'rgba(120, 80, 80, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * this.slowRatio);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * this.slowRatio));
             },
             false
         ) : null;
@@ -835,7 +835,7 @@ export class Stick extends Skill {
             'rgba(220, 220, 255, 1)',
             this.duration,
             (unit) => {
-                unit.attackAmp += this.attackAmpBonus;
+                unit.strength += this.attackAmpBonus;
             },
             true
         ));
@@ -875,7 +875,7 @@ export class SwordEnergy extends Skill {
             'rgba(180, 180, 220, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * this.slowRatio);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * this.slowRatio));
             },
             false
         ) : null;
@@ -925,8 +925,8 @@ export class SheatheSword extends Skill {
                 }
 
                 hero.sheatheSwordActive = true;
-                hero.attackAmp -= hero.baseAttackAmp * this.attackAmpPenaltyRatio;
-                hero.speed += hero.baseSpeed * this.moveSpeedBonusRatio;
+                hero.strength -= hero.baseStrength * this.attackAmpPenaltyRatio;
+                hero.addStat('Speed', hero.getBaseStat('Speed') * this.moveSpeedBonusRatio);
             },
             (hero) => {
                 if (!hero) {
@@ -1062,7 +1062,7 @@ export class HelmBreaker extends Skill {
                 'rgba(140, 110, 80, 1)',
                 this.armorReductionDuration,
                 (unit) => {
-                    unit.armor -= this.armorReduction;
+                    unit.addStat('Armor', -this.armorReduction);
                 },
                 false
             );
@@ -1150,7 +1150,7 @@ export class SpiritBlade extends Skill {
             Number.POSITIVE_INFINITY,
             (unit) => {
                 const mana = Math.max(0, Number(unit.currentMP) || 0);
-                unit.attackAmp += this.upgraded ? mana : mana * 0.5;
+                unit.strength += this.upgraded ? mana : mana * 0.5;
             },
             true
         ));

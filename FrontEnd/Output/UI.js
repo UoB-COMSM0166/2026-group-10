@@ -21,6 +21,7 @@ const SKILL_ICON_SLOT_BY_NAME = {
     'Fiery Soul': 'P_2',
     'Electromagnetic Field': 'P_3',
 };
+const SKILL_ORDER = ['Q', 'W', 'E', 'R', 'Max'];
 
 export default class UI {
     constructor(layer) {
@@ -34,8 +35,8 @@ export default class UI {
             upgrade: 'FrontEnd/Assert/Image/General/Button_Upgrade.png',
             statSpeed: 'FrontEnd/Assert/Image/General/Stats_Speed.png',
             statArmor: 'FrontEnd/Assert/Image/General/Stats_Armor.png',
-            statAttack: 'FrontEnd/Assert/Image/General/Stats_Attack.png',
-            statSpell: 'FrontEnd/Assert/Image/General/Stats_Spell.png',
+            statStrength: 'FrontEnd/Assert/Image/General/Stats_Strength.png',
+            statIntelligence: 'FrontEnd/Assert/Image/General/Stats_Intelligence.png',
             statSlot: 'FrontEnd/Assert/Image/General/Stats_Slot.png',
             statGold: 'FrontEnd/Assert/Image/General/Stats_Gold.png',
 
@@ -94,6 +95,7 @@ export default class UI {
         layer.clear();
         this.updateToasts();
         this.drawObjectivePanel(state.objective);
+        this.drawBossStatusPanel(state.boss);
         this.drawHeroProfilePanel(state.hero);
         this.drawHeroSkillsPanel(state.hero);
 
@@ -106,6 +108,77 @@ export default class UI {
         }
         this.drawSkillDetail(state.hero, mouse);
         this.drawToasts();
+    }
+
+    drawBossStatusPanel(boss) {
+        if (!boss || boss.alive === false || boss.finished) {
+            return;
+        }
+
+        const layer = this.layer;
+        const width = 620;
+        const height = 54;
+        const x = (layer.width - width) / 2;
+        const y = 18;
+        const hp = Number(boss.hp) || 0;
+        const maxHP = Number(boss.maxHP) || 0;
+        const hpRatio = maxHP > 0 ? Math.max(0, Math.min(1, hp / maxHP)) : 0;
+        const castState = boss.castState ?? null;
+        const casting = castState?.phase === 'casting' || castState?.casting === true;
+        const castRemaining = Math.max(0, Number(castState?.remaining) || 0);
+        const castDuration = Math.max(castRemaining, Number(castState?.duration) || 0);
+        const castRatio = castDuration > 0 ? Math.max(0, Math.min(1, castRemaining / castDuration)) : 0;
+
+        layer.push();
+        layer.noStroke();
+        layer.fill(8, 12, 18, 225);
+        layer.rect(x, y, width, height, 8);
+
+        layer.fill(32, 10, 16, 240);
+        layer.rect(x + 14, y + 25, width - 28, 16, 4);
+        layer.fill('#c92f45');
+        layer.rect(x + 14, y + 25, (width - 28) * hpRatio, 16, 4);
+
+        View.text(layer, x + width / 2, y + 12, boss.name ?? 'Boss', 18, 255, true, 0, 0, 'Arial', 3);
+        View.text(
+            layer,
+            x + width / 2,
+            y + 33,
+            `${Math.ceil(hp)} / ${Math.ceil(maxHP)}`,
+            15,
+            255,
+            true,
+            0,
+            0,
+            'Arial',
+            2
+        );
+
+        if (casting) {
+            const castWidth = width - 28;
+            const castY = y + height + 6;
+            layer.fill(8, 12, 18, 220);
+            layer.rect(x + 14, castY, castWidth, 18, 4);
+            layer.fill('#8caeff');
+            layer.rect(x + 14, castY, castWidth * castRatio, 18, 4);
+
+            const skillName = castState?.skillName ? ` ${castState.skillName}` : '';
+            View.text(
+                layer,
+                x + width / 2,
+                castY + 9,
+                `Casting${skillName} ${this.formatTickSeconds(castRemaining)}`,
+                14,
+                255,
+                true,
+                0,
+                0,
+                'Arial',
+                2
+            );
+        }
+
+        layer.pop();
     }
 
     handleWorkerMessage(message) {
@@ -320,14 +393,14 @@ export default class UI {
 
         const { skill, hitbox } = hoveredSkill;
         const layer = this.layer;
-        const width = 290;
-        const height = 250;
+        const width = 320;
+        const height = 300;
         const preferredX = hitbox.x + (hitbox.width - width) / 2;
         const preferredY = hitbox.y - height - 12;
         const x = Math.min(Math.max(preferredX, 24), layer.width - width - 24);
         const y = Math.max(preferredY, 24);
         const bodyX = x + 18;
-        let cursorY = y + 60;
+        let cursorY = y + 80;
 
         layer.push();
         layer.noStroke();
@@ -338,32 +411,33 @@ export default class UI {
         layer.rect(x, y, width, 8, 18, 18, 0, 0);
 
         View.text(layer, x + width / 2, y + 18, skill.name ?? 'Skill', 22, 255, true, 0, 0, 'Arial', 3);
-        View.text(layer, x + width / 2, y + 40, `${skill.slot ?? ''} ${skill.category ?? ''}`.trim(), 13, 210, false, 0, 0, 'Arial', 2);
+        View.text(layer, x + width / 2, y + 45, `${skill.slot ?? ''} ${skill.category ?? ''}`.trim(), 15, 210, false, 0, 0, 'Arial', 2);
 
-        cursorY = this.drawSkillDetailRow(bodyX, cursorY, 'Cooldown', this.formatSeconds(skill.currentCooldown, skill.cooldown));
-        cursorY = this.drawSkillDetailRow(bodyX, cursorY, 'Target', this.formatTargetCategory(skill.targetCategory, skill.passive));
-        cursorY = this.drawSkillDetailRow(bodyX, cursorY, 'Mana', this.formatResource(skill.manaCost));
-        cursorY = this.drawSkillDetailRow(bodyX, cursorY, 'Range', this.formatRange(skill.range, skill.targetCategory));
+        cursorY = View.drawSkillDetailRow(this.layer, bodyX, cursorY, 'Cooldown', this.formatSeconds(skill.currentCooldown, skill.cooldown));
+        cursorY = View.drawSkillDetailRow(this.layer, bodyX, cursorY, 'Target', this.formatTargetCategory(skill.targetCategory, skill.passive));
+        cursorY = View.drawSkillDetailRow(this.layer, bodyX, cursorY, 'Mana', this.formatResource(skill.manaCost));
+        cursorY = View.drawSkillDetailRow(this.layer, bodyX, cursorY, 'Range', this.formatRange(skill.range, skill.targetCategory));
 
         if (skill.upgraded) {
-            cursorY = this.drawSkillDetailRow(bodyX, cursorY, 'State', 'Upgraded');
+            cursorY = View.drawSkillDetailRow(this.layer, bodyX, cursorY, 'State', 'Upgraded');
         } else if (skill.active) {
-            cursorY = this.drawSkillDetailRow(bodyX, cursorY, 'State', 'Active');
+            cursorY = View.drawSkillDetailRow(this.layer, bodyX, cursorY, 'State', 'Active');
         }
 
         layer.fill(255, 36);
-        layer.rect(bodyX, cursorY + 6, width - 36, 1);
+        layer.rect(bodyX, cursorY - 10, width - 36, 1);
 
         layer.noStroke();
         layer.fill(225);
         layer.textAlign(layer.LEFT, layer.TOP);
-        layer.textSize(14);
+        layer.textSize(15);
+        layer.textWrap(layer.WORD);
         layer.text(
             skill.description || 'No description available.',
             bodyX,
-            cursorY + 18,
+            cursorY,
             width - 36,
-            height - (cursorY - y) - 30
+            height - (cursorY - y)
         );
         layer.pop();
     }
@@ -425,10 +499,10 @@ export default class UI {
         const y = 630;
         const rows = [
             { icon: this.art.statGold ,value: hero?.gold},
-            { icon: this.art.statSpeed, value: this.formatStatValue(hero?.speed) },
-            { icon: this.art.statArmor, value: this.formatStatValue(hero?.armor) },
-            { icon: this.art.statAttack, value: this.formatStatValue(hero?.attackAmp) },
-            { icon: this.art.statSpell, value: this.formatStatValue(hero?.spellAmp) },
+            { icon: this.art.statSpeed, value: View.formatOutput(hero?.speed) },
+            { icon: this.art.statArmor, value: View.formatOutput(hero?.armor) },
+            { icon: this.art.statStrength, value: View.formatOutput(hero?.strength) },
+            { icon: this.art.statIntelligence, value: View.formatOutput(hero?.intelligence) },
         ];
 
         layer.push();
@@ -475,24 +549,34 @@ export default class UI {
                 const highLight = skill.name === equippedSkill?.name;
                 View.skillIcon(layer, x + deltaX, y + deltaY, 80, 80, skill, highLight, this.getSkillIcon(skill));
                 // layer.rect(x + deltaX + 120, y + deltaY, 120, 80);
-                View.upgradeButton(layer, x + deltaX + 100, y + deltaY + 15, 80, 50,
-                    skill.upgrade, skill.upgradeCost, this.art.statGold, hero.gold)
+                View.upgradeSkillButton(layer, x + deltaX + 100, y + deltaY + 15, 80, 50,
+                    skill.upgrade, skill.upgradeCost, this.art.statGold, hero.gold, skill.upgraded)
                 deltaX += 240;
             }
             deltaY += 96;
         }
 
         View.text(layer, x + 1040, y + 40, 'Hero State', 40, 255, true, 0, 0, 'Arial', 4);
-        const rows = [
-            { icon: this.art.statGold, description: 'Current Gold' ,value: hero?.gold},
-            { icon: this.art.statSpeed, value: this.formatStatValue(hero?.speed) },
-            { icon: this.art.statArmor, value: this.formatStatValue(hero?.armor) },
-            { icon: this.art.statAttack, value: this.formatStatValue(hero?.attackAmp) },
-            { icon: this.art.statSpell, value: this.formatStatValue(hero?.spellAmp) },
-        ];
-        for (const row of rows) {
-
+        const categories = ['Speed', 'Armor', 'Strength', 'Intelligence'];
+        deltaY = 0;
+        for (const category of categories) {
+            View.heroStateDetails(
+                layer, x + 840, y + 120 + deltaY,
+                this.art['stat'+category],
+                this.getMapValue(hero.stats, category),
+            );
+            View.upgradeStatButton(
+                layer, x + 1040, y + 120 + deltaY, this.art.statGold, this.getMapValue(hero.upgradeCost, category), hero.gold,
+                this.getMapValue(hero.statsGrowth, category));
+            deltaY += 120;
         }
+        View.heroStateDetails(
+            layer, x + 840, y + 120 + deltaY, this.art.statSlot, SKILL_ORDER[hero?.spellSlotLevel]
+        );
+        View.upgradeStatButton(
+            layer, x + 1040, y + 120 + deltaY, this.art.statGold, hero?.spellSlotUpgradeCost,
+            hero?.gold, SKILL_ORDER[hero?.spellSlotLevel+1], hero?.spellSlotLevel >= 3
+        );
 
         layer.pop();
     }
@@ -500,6 +584,31 @@ export default class UI {
     handleSkillClick(hero, mouse, postCommand) {
         if (!this.showBook || !hero || !mouse || typeof postCommand !== 'function') {
             return false;
+        }
+
+        const hoveredStatUpgrade = this.getHoveredBookStatUpgrade(mouse);
+        if (hoveredStatUpgrade?.category) {
+            if (hoveredStatUpgrade.category === 'SpellSlot' && hero.spellSlotLevel >= 3) {
+                return true;
+            }
+
+            postCommand('hero:upgrade', {
+                category: hoveredStatUpgrade.category,
+            });
+            return true;
+        }
+
+        const hoveredUpgrade = this.getHoveredBookSkillUpgradeWithSlot(hero, mouse);
+        if (hoveredUpgrade?.skill?.name && hoveredUpgrade?.slot) {
+            if (hoveredUpgrade.skill.upgraded) {
+                return true;
+            }
+
+            postCommand('hero:upgrade:skill', {
+                slot: hoveredUpgrade.slot,
+                name: hoveredUpgrade.skill.name,
+            });
+            return true;
         }
 
         const hoveredSkill = this.getHoveredBookSkillWithSlot(hero, mouse);
@@ -602,18 +711,14 @@ export default class UI {
         return words.map((word) => word[0]).join('').slice(0, 2).toUpperCase();
     }
 
-    formatNumber(value) {
-        return (Number(value) || 0).toFixed(1);
-    }
-
-    formatStatValue(value) {
-        return this.formatNumber(value);
-    }
-
     formatSeconds(currentCooldown, cooldown) {
         const current = (Number(currentCooldown) || 0) / 60;
         const total = (Number(cooldown) || 0) / 60;
         return `${current.toFixed(1)}s / ${total.toFixed(1)}s`;
+    }
+
+    formatTickSeconds(ticks) {
+        return `${((Number(ticks) || 0) / 60).toFixed(1)}s`;
     }
 
     formatTargetCategory(targetCategory, passive = false) {
@@ -640,19 +745,6 @@ export default class UI {
         }
 
         return `${range}`;
-    }
-
-    drawSkillDetailRow(x, y, label, value) {
-        const layer = this.layer;
-        layer.fill(170, 182, 198);
-        layer.textAlign(layer.LEFT, layer.TOP);
-        layer.textSize(12);
-        layer.text(`${label}`, x, y);
-
-        layer.fill(255);
-        layer.textSize(14);
-        layer.text(String(value ?? ''), x + 92, y - 1);
-        return y + 24;
     }
 
     getHoveredSkillDetail(hero, mouse = null) {
@@ -693,6 +785,74 @@ export default class UI {
                     hitbox,
                 };
             }
+        }
+
+        return null;
+    }
+
+    getHoveredBookStatUpgrade(mouse = null) {
+        if (!mouse) {
+            return null;
+        }
+
+        const bookX = 160;
+        const bookY = 90;
+        const buttonX = bookX + 1040;
+        const buttonWidth = 200;
+        const buttonHeight = 80;
+        const categories = ['Speed', 'Armor', 'Strength', 'Intelligence', 'SpellSlot'];
+
+        for (let index = 0; index < categories.length; index += 1) {
+            const hitbox = {
+                x: buttonX,
+                y: bookY + 120 + index * 120,
+                width: buttonWidth,
+                height: buttonHeight,
+            };
+
+            if (this.isPointInRect(mouse, hitbox)) {
+                return { category: categories[index], hitbox };
+            }
+        }
+
+        return null;
+    }
+
+    getHoveredBookSkillUpgradeWithSlot(hero, mouse = null) {
+        if (!mouse) {
+            return null;
+        }
+
+        const bookX = 160;
+        const bookY = 90;
+        const slotOrder = this.skillOrder;
+        let deltaY = 120;
+
+        for (const slot of slotOrder) {
+            let deltaX = 120;
+            const skills = this.getSkillTreeSlot(hero, slot);
+
+            for (const skill of skills) {
+                if (!skill) {
+                    deltaX += 240;
+                    continue;
+                }
+
+                const hitbox = {
+                    x: bookX + deltaX + 100,
+                    y: bookY + deltaY + 15,
+                    width: 80,
+                    height: 50,
+                };
+
+                if (this.isPointInRect(mouse, hitbox)) {
+                    return { slot, skill, hitbox };
+                }
+
+                deltaX += 240;
+            }
+
+            deltaY += 96;
         }
 
         return null;
@@ -890,5 +1050,13 @@ export default class UI {
         // layer.rect(x, y, width, height, 12);
         this.drawPanelArtwork(icon, iconX, iconY, iconSize, iconSize, 0);
         View.text(layer, valueX + (width - iconSize - 12) / 2, y + height / 2, value, 18, 255, true, 0, 0, 'Arial', 3);
+    }
+
+    getMapValue(mapLike, key) {
+        if (mapLike instanceof Map) {
+            return mapLike.get(key);
+        }
+
+        return mapLike?.[key];
     }
 }

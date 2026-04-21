@@ -50,6 +50,7 @@ export default class Warrior extends Hero {
         this.skillTree.set('E', [bladeSpin, stride, foreSight]);
         this.skillTree.set('R', [earthquakeSlash, flaw, helmBreaker]);
         this.skillTree.set('P', [sanguivore, focus, spiritBlade]);
+        this.initializeSkillSlots();
 
         if (weapon === 'Axe') {
             this.skill.set('A', slash);
@@ -135,6 +136,7 @@ export default class Warrior extends Hero {
         this.currentWeapon = nextWeapon;
 
         for (const [slot, skill] of nextSkills.entries()) {
+            skill.slot = slot;
             this.skill.set(slot, skill);
         }
 

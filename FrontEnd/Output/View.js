@@ -66,8 +66,6 @@ export default class View {
             layer.drawingContext.restore();
         }
 
-
-
         layer.pop();
     }
 
@@ -163,18 +161,18 @@ export default class View {
         return words.map((word) => word[0]).join('').slice(0, 2).toUpperCase();
     }
 
-    static upgradeButton(layer, x, y, width, height, func, cost, iconImage, currentGold) {
+    static upgradeSkillButton(layer, x, y, width, height, func, cost, iconImage, currentGold, upgraded = false) {
         layer.push();
         layer.stroke(255, 28);
         layer.strokeWeight(2);
         const sufficientColor = layer.color(203, 166, 0);
         const insufficientColor = layer.color(6, 10, 18);
-        layer.fill(currentGold >= cost ? sufficientColor : insufficientColor);
+        layer.fill(upgraded ? insufficientColor : (currentGold >= cost ? sufficientColor : insufficientColor));
         layer.rect(x, y, width, height, 10);
 
-        const text = `${cost}`;
+        const text = upgraded ? 'Max' : `${cost}`;
         const textSize = 20;
-        const iconLoaded = Boolean(iconImage?.complete);
+        const iconLoaded = !upgraded && Boolean(iconImage?.complete);
         const iconSize = Math.min(30, height - 24);
         const gap = iconLoaded ? 5 : 0;
 
@@ -204,14 +202,63 @@ export default class View {
             true,
             0,
             0,
-            "Arial",
+            'Arial',
             3
         );
 
         layer.pop();
     }
 
-    static heroStateDetails(layer, x, y, width, height, iconImage, currentGold) {
+    static heroStateDetails(layer, x, y, iconImage, value) {
+        layer.push();
+        const iconLoaded = Boolean(iconImage?.complete);
+        if (iconLoaded) {
+            layer.drawingContext.drawImage(iconImage, x, y, 80, 80);
+        }
+        View.text(layer, x + 140, y + 40, View.formatOutput(value), 30, 255, true, 0, 0, 'Arial', 3);
+        layer.pop();
+    }
 
+    static upgradeStatButton(layer, x, y, iconImage, cost, currentGold, growth, maxed = false) {
+        layer.push();
+        const sufficientColor = layer.color(203, 166, 0);
+        const insufficientColor = layer.color(6, 10, 18);
+        const maxedColor = layer.color(72, 76, 84);
+        layer.fill(maxed ? maxedColor : (currentGold >= cost ? sufficientColor : insufficientColor));
+        layer.rect(x, y, 200, 80, 10);
+
+        if (maxed) {
+            View.text(layer, x + 100, y + 40, 'Max', 30, 255, true, 0, 0, 'Arial', 3);
+            layer.pop();
+            return;
+        }
+
+        View.text(layer, x + 40, y + 40, '+' + View.formatOutput(growth), 20, 175, true, 0, 0, 'Arial', 3);
+        if (Boolean(iconImage?.complete)) {
+            layer.drawingContext.drawImage(iconImage, x + 100, y + 25, 30, 30);
+        }
+        View.text(layer, x + 160, y + 40, cost, 30, 255, true, 0, 0, 'Arial', 3)
+        layer.pop();
+    }
+
+    static formatOutput(value, decimals = 2) {
+        const number = Number(value);
+        if (!Number.isFinite(number)) {
+            return String(value ?? '');
+        }
+
+        return number.toFixed(decimals);
+    }
+
+    static drawSkillDetailRow(layer, x, y, label, value) {
+        layer.fill(170, 182, 198);
+        layer.textAlign(layer.LEFT, layer.TOP);
+        layer.textSize(15);
+        layer.text(`${label}`, x, y);
+
+        layer.fill(255);
+        layer.textSize(15);
+        layer.text(String(value ?? ''), x + 92, y - 1);
+        return y + 24;
     }
 }

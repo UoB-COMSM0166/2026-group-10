@@ -20,7 +20,7 @@ export class IcePick extends Skill {
         super.casted();
 
         const buffEffect = (unit) => {
-            unit.speed = Math.max(0, unit.baseSpeed - 0.5);
+            unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - 0.5));
         }
 
         const buff = new Buff(
@@ -71,7 +71,7 @@ export class StormBlast extends Skill {
         const totalDamage = this.getSpellDamage(5, caster);
 
         const buffEffect = (unit) => {
-            unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * 0.7);
+            unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * 0.7));
         }
 
         const buff = new Buff(
@@ -132,7 +132,7 @@ export class FrostShield extends Skill {
         }
 
         const slowBuffEffect = (unit) => {
-            unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * 0.7);
+            unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * 0.7));
         };
 
         const shieldBuff = new Buff(
@@ -141,7 +141,7 @@ export class FrostShield extends Skill {
             'rgba(120, 180, 255, 1)',
             this.duration,
             (unit) => {
-                unit.armor += this.armor;
+                unit.addStat('Armor', this.armor);
             },
             true
         );
@@ -239,7 +239,7 @@ export class Blizzard extends Skill {
         }
 
         const buffEffect = (unit) => {
-            unit.speed = 0;
+            unit.setStat('Speed', 0);
         }
 
         caster.startCast(this.castDuration, () => {
@@ -416,9 +416,9 @@ export class FlameWave extends Skill {
             'rgba(255, 100, 0, 1)',
             this.igniteDuration,
             (unit) => {
-                unit.takeDamage(this.igniteDamage);
+                unit.takeDamage(this.getSpellDamage(this.igniteDamage, caster));
                 if (this.upgraded) {
-                    unit.speed = Math.max(0, unit.speed - unit.baseSpeed * this.slowAmount);
+                    unit.setStat('Speed', Math.max(0, unit.getStat('Speed') - unit.getBaseStat('Speed') * this.slowAmount));
                 }
             },
             false,
@@ -487,7 +487,7 @@ export class Burning extends Skill {
             'rgba(255, 120, 0, 1)',
             this.duration,
             (unit) => {
-                unit.speed += this.moveSpeedBonus;
+                unit.addStat('Speed', this.moveSpeedBonus);
             },
             true
         );
@@ -542,7 +542,7 @@ export class ViperGuardian extends Skill {
             'rgba(255, 110, 0, 1)',
             45,
             (unit) => {
-                unit.takeDamage(3);
+                unit.takeDamage(this.getSpellDamage(3, caster));
             },
             false,
             10,
@@ -605,7 +605,7 @@ export class Meteorite extends Skill {
             'rgba(255, 170, 80, 1)',
             this.stunDuration,
             (unit) => {
-                unit.speed = 0;
+                unit.setStat('Speed', 0);
             },
             false
         );
@@ -804,7 +804,7 @@ export class FierySoul extends Skill {
                 }
 
                 if (this.upgraded && ignitedCount > 0) {
-                    unit.speed += ignitedCount * this.moveSpeedPerIgnited;
+                    unit.addStat('Speed', ignitedCount * this.moveSpeedPerIgnited);
                 }
             },
             true
@@ -1056,7 +1056,7 @@ export class BallLightning extends Skill {
             'rgba(180, 220, 255, 1)',
             this.duration,
             (unit) => {
-                unit.speed += this.moveSpeedBonus;
+                unit.addStat('Speed', this.moveSpeedBonus);
                 unit.hitbox = this.hitbox;
                 unit.invulnerable = true;
                 unit.skillCastingDisabled = true;
@@ -1064,7 +1064,7 @@ export class BallLightning extends Skill {
             true
         );
 
-        caster.speed += this.moveSpeedBonus;
+        caster.addStat('Speed', this.moveSpeedBonus);
         caster.hitbox = this.hitbox;
         caster.invulnerable = true;
         caster.skillCastingDisabled = true;
@@ -1139,7 +1139,7 @@ export class StaticExplosion extends Skill {
             'rgba(255, 255, 180, 1)',
             this.stunDuration,
             (unit) => {
-                unit.speed = 0;
+                unit.setStat('Speed', 0);
             },
             false
         );
@@ -1194,7 +1194,7 @@ export class ElectromagneticField extends Skill {
             'rgba(180, 220, 255, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * this.slowRatio);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * this.slowRatio));
             },
             false
         );

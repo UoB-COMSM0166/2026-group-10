@@ -16,15 +16,11 @@ export class Architect extends Hero {
         const rockTower = new RockTower(this.events);
         this.skillTree = new Map();
         this.skillTree.set('A', [arrowTower, rockTower]);
+        this.initializeSkillSlots();
         this.skill.set('A', arrowTower);
     }
 
     changeSkill(slot, skill) {
-        if (!skill) {
-            return null;
-        }
-
-        this.skill.set(slot, skill);
-        return skill;
+        return super.changeSkill(slot, skill);
     }
 }

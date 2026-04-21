@@ -8,8 +8,8 @@ export default class Unit extends Entity {
         this.currentHP = Number(hp);
         this.currentMP = Number(mp);
 
-        this.baseArmor = 0;
-        this.armor = this.baseArmor;
+        this.baseStats.set('Armor', 0);
+        this.stats.set('Armor', 0);
         this.baseHpRegen = 0;
         this.baseMpRegen = 0;
         this.hpRegen = 0;
@@ -31,7 +31,7 @@ export default class Unit extends Entity {
             return 0;
         }
 
-        const effectiveDamage = Math.max(0.01, amount - this.armor);
+        const effectiveDamage = Math.max(0.01, amount - this.stats.get('Armor'));
         this.currentHP = Math.max(0, this.currentHP - effectiveDamage);
         return effectiveDamage;
     }
@@ -54,6 +54,22 @@ export default class Unit extends Entity {
 
     alive() {
         return this.currentHP > 0;
+    }
+
+    getStat(name) {
+        return Number(this.stats.get(name)) || 0;
+    }
+
+    setStat(name, value) {
+        this.stats.set(name, Number(value) || 0);
+    }
+
+    addStat(name, value) {
+        this.setStat(name, this.getStat(name) + (Number(value) || 0));
+    }
+
+    getBaseStat(name) {
+        return Number(this.baseStats.get(name)) || 0;
     }
 
     findNearestEnemy(enemies, range) {
@@ -148,9 +164,9 @@ export default class Unit extends Entity {
     }
 
     updateBuffs() {
-        this.speed = this.baseSpeed;
+        this.stats.set('Speed', this.baseStats.get('Speed'));
+        this.stats.set('Armor', this.baseStats.get('Armor'));
         this.hitbox = this.baseHitbox;
-        this.armor = this.baseArmor;
         this.hpRegen = this.baseHpRegen;
         this.mpRegen = this.baseMpRegen;
         this.invulnerable = false;

@@ -28,6 +28,28 @@ function clonePosition(position) {
     };
 }
 
+function buildCastState(unit) {
+    const castState = unit?.castState;
+    if (!castState) {
+        return null;
+    }
+
+    const skill = castState.skill ?? null;
+    const phase = castState.phase ?? null;
+    const remaining = Math.max(0, Number(castState.remaining) || 0);
+    const duration = phase === 'backswing'
+        ? Math.max(0, Number(skill?.backswingDuration) || Number(skill?.backswingRemaining) || remaining)
+        : Math.max(0, Number(skill?.castDuration) || remaining);
+
+    return {
+        phase,
+        remaining,
+        duration,
+        casting: phase === 'casting',
+        skillName: skill?.name ?? null,
+    };
+}
+
 function buildUnitState(unit) {
     if (!unit) {
         return null;
@@ -48,15 +70,16 @@ function buildUnitState(unit) {
         maxMP: Number(unit.maxMP) || 0,
         hpRegen: Number(unit.hpRegen) || 0,
         mpRegen: Number(unit.mpRegen) || 0,
-        speed: Number(unit.speed) || 0,
-        baseSpeed: Number(unit.baseSpeed) || 0,
-        armor: Number(unit.armor) || 0,
-        attackAmp: Number(unit.attackAmp) || 0,
-        spellAmp: Number(unit.spellAmp) || 0,
+        speed: typeof unit.getStat === 'function' ? unit.getStat('Speed') : Number(unit.speed) || 0,
+        baseSpeed: typeof unit.getBaseStat === 'function' ? unit.getBaseStat('Speed') : Number(unit.baseSpeed) || 0,
+        armor: typeof unit.getStat === 'function' ? unit.getStat('Armor') : Number(unit.armor) || 0,
+        strength: Number(unit.strength) || 0,
+        intelligence: Number(unit.intelligence) || 0,
         hitbox: Number(unit.hitbox) || 0,
         inFountain: false,
         alive: typeof unit.alive === 'function' ? unit.alive() : true,
         finished: Boolean(unit.finished),
+        castState: buildCastState(unit),
         buffs: Array.isArray(unit.buffs) ? unit.buffs.map((buff) => ({
             name: buff.name,
             description: buff.description,
@@ -74,6 +97,9 @@ function buildHeroSkillState(hero) {
     const skills = {};
 
     for (const [slot, skill] of hero.skill.entries()) {
+        const unlocked = typeof hero.isSkillSlotUnlocked === 'function'
+            ? hero.isSkillSlotUnlocked(slot)
+            : true;
         skills[slot] = skill ? {
             slot,
             name: skill.name,
@@ -88,6 +114,7 @@ function buildHeroSkillState(hero) {
             active: Boolean(skill.active),
             upgraded: Boolean(skill.upgraded),
             upgradeCost: Number(skill.upgradeCost) || 0,
+            unlocked,
         } : null;
     }
 
@@ -101,6 +128,9 @@ function buildHeroSkillTreeState(hero) {
     }
 
     for (const [slot, skills] of hero.skillTree.entries()) {
+        const unlocked = typeof hero.isSkillSlotUnlocked === 'function'
+            ? hero.isSkillSlotUnlocked(slot)
+            : true;
         skillTree[slot] = Array.isArray(skills)
             ? skills.map((skill) => skill ? {
                 slot,
@@ -116,11 +146,20 @@ function buildHeroSkillTreeState(hero) {
                 active: Boolean(skill.active),
                 upgraded: Boolean(skill.upgraded),
                 upgradeCost: Number(skill.upgradeCost) || 0,
+                unlocked,
             } : null)
             : [];
     }
 
     return skillTree;
+}
+
+function buildMapState(map) {
+    if (!(map instanceof Map)) {
+        return {};
+    }
+
+    return Object.fromEntries(map.entries());
 }
 
 function buildEntityState(entity) {
@@ -179,7 +218,13 @@ function buildStateSnapshot() {
             remainingRespawnCD: Number(game.hero.remainingRespawnCD) || 0,
             respawnCD: Number(game.hero.respawnCD) || 0,
             gold: Number(game.hero.gold) || 0,
-            upgradeCost: Number(game.hero.upgradeCost) || 0,
+            stats: buildMapState(game.hero.stats),
+            statsGrowth: buildMapState(game.hero.statsGrowth),
+            upgradeCost: buildMapState(game.hero.upgradeCost),
+            spellSlotLevel: Number(game.hero.spellSlotLevel) || 0,
+            spellSlotUpgradeCost: Number(game.hero.spellSlotUpgradeCost) || 0,
+            skillSlotUnlocked: buildMapState(game.hero.skillSlotUnlocked),
+            nextSkillSlotToUnlock: game.hero.nextSkillSlotToUnlock ?? null,
             selectedSkill: heroTargetingState.skillKey,
             targeting: { ...heroTargetingState },
             casting: game.hero.isCasting(),
@@ -187,6 +232,7 @@ function buildStateSnapshot() {
             skillTree: buildHeroSkillTreeState(game.hero),
         },
         objective: buildUnitState(game.objective),
+        boss: buildUnitState(game.boss),
         enemies: [...game.enemies.values()].map((enemy) => buildUnitState(enemy)),
         skillEntities: [...game.skillEntities.values()].map((entity) => buildEntityState(entity)),
         enemySkillEntities: [...game.enemySkillEntities.values()].map((entity) => buildEntityState(entity)),
@@ -346,6 +392,11 @@ function isHeroControllable() {
     return { ok: true };
 }
 
+function isHeroInFountain() {
+    return typeof game.hero.inFountain === 'function'
+        && game.hero.inFountain(game.objective.position);
+}
+
 function getHeroSkill(key) {
     const normalizedKey = normalizeKey(key);
     if (!normalizedKey) {
@@ -359,6 +410,10 @@ function getHeroSkill(key) {
 }
 
 function canUseSkill(key, skill) {
+    if (typeof game.hero.isSkillSlotUnlocked === 'function' && !game.hero.isSkillSlotUnlocked(key)) {
+        return { ok: false, code: 409, message: `Skill slot ${key} is locked.` };
+    }
+
     if (!skill) {
         return { ok: false, code: 404, message: `Skill slot ${key} not found.` };
     }
@@ -678,9 +733,19 @@ function handleHeroUpgradeSkill(command, requestId, payload = {}) {
         return;
     }
 
+    if (!isHeroInFountain()) {
+        emitResult(command, requestId, 409, 'Hero upgrades can only be used in the fountain.');
+        return;
+    }
+
     const key = normalizeKey(payload.slot ?? payload.key);
     if (!key) {
         emitResult(command, requestId, 400, 'Skill slot is required.');
+        return;
+    }
+
+    if (typeof game.hero.isSkillSlotUnlocked === 'function' && !game.hero.isSkillSlotUnlocked(key)) {
+        emitResult(command, requestId, 409, `Skill slot ${key} is locked.`);
         return;
     }
 
@@ -716,6 +781,11 @@ function handleHeroUpgrade(command, requestId, payload = {}) {
         return;
     }
 
+    if (!isHeroInFountain()) {
+        emitResult(command, requestId, 409, 'Hero upgrades can only be used in the fountain.');
+        return;
+    }
+
     const category = String(payload.category ?? payload.type ?? '').trim();
     if (!category) {
         emitResult(command, requestId, 400, 'Upgrade category is required.');
@@ -747,7 +817,7 @@ function handleHeroSkillChange(command, requestId, payload = {}) {
         return;
     }
 
-    if (typeof game.hero.inFountain !== 'function' || !game.hero.inFountain(game.objective.position)) {
+    if (!isHeroInFountain()) {
         emitResult(command, requestId, 409, 'Skills can only be changed in the fountain.');
         return;
     }
@@ -756,6 +826,11 @@ function handleHeroSkillChange(command, requestId, payload = {}) {
     const name = String(payload.name ?? '').trim();
     if (!slot || !name) {
         emitResult(command, requestId, 400, 'Skill slot and name are required.');
+        return;
+    }
+
+    if (typeof game.hero.isSkillSlotUnlocked === 'function' && !game.hero.isSkillSlotUnlocked(slot)) {
+        emitResult(command, requestId, 409, `Skill slot ${slot} is locked.`);
         return;
     }
 
@@ -770,8 +845,7 @@ function handleHeroSkillChange(command, requestId, payload = {}) {
         return;
     }
 
-    game.hero.changeSkill(slot, nextSkill);
-    const changedSkill = game.hero.skill.get(slot) ?? null;
+    const changedSkill = game.hero.changeSkill(slot, nextSkill);
     if (!changedSkill || changedSkill.name !== name) {
         emitResult(command, requestId, 404, `Unable to equip ${name} in slot ${slot}.`);
         return;

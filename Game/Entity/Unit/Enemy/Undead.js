@@ -17,7 +17,7 @@ export class Zombie extends Enemy {
             'rgba(0, 100, 0, 0.5)',
             30,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * 0.1);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * 0.1));
             },
             false
         )
@@ -146,7 +146,7 @@ class IceBolt extends BossSkill {
             'rgba(0, 153, 255, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed * (1 - this.slowRatio));
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') * (1 - this.slowRatio)));
             },
             false
         );
@@ -235,7 +235,7 @@ class FrostBlast extends BossSkill {
             'rgba(0, 153, 255, 1)',
             this.freezeDuration,
             (unit) => {
-                unit.speed = 0;
+                unit.setStat('Speed', 0);
             },
             false
         );
@@ -245,7 +245,7 @@ class FrostBlast extends BossSkill {
             'rgba(120, 220, 255, 1)',
             this.armorReductionDuration,
             (unit) => {
-                unit.armor -= this.armorReduction;
+                unit.addStat('Armor', -this.armorReduction);
             },
             false
         );

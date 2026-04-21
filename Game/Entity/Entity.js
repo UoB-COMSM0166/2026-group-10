@@ -3,8 +3,10 @@ export default class Entity {
         this.id = String(id);
         this.position = { x: position.x, y: position.y };
         this.velocity = { vx: 0, vy: 0 };
-        this.baseSpeed = Number(speed);
-        this.speed = this.baseSpeed;
+        this.baseStats = new Map();
+        this.stats = new Map();
+        this.baseStats.set('Speed', Number(speed));
+        this.stats.set('Speed', Number(speed));
         this.baseHitbox = Number(hitbox);
         this.hitbox = this.baseHitbox;
 
@@ -34,7 +36,7 @@ export default class Entity {
     navigateToPoint(targetSpot) {
         const dist = this.getDistance(targetSpot);
 
-        if (dist <= this.speed) {
+        if (dist <= this.stats.get('Speed')) {
             // Snap to target to avoid overshooting and velocity sign flipping.
             this.position.x = targetSpot.x;
             this.position.y = targetSpot.y;
@@ -45,7 +47,7 @@ export default class Entity {
 
         const dx = targetSpot.x - this.position.x;
         const dy = targetSpot.y - this.position.y;
-        const scale = this.speed / dist;
+        const scale = this.stats.get('Speed') / dist;
         this.velocity.vx = dx * scale;
         this.velocity.vy = dy * scale;
     }
@@ -99,7 +101,7 @@ export default class Entity {
     }
 
     updateMovement() {
-        if (this.speed <= 0) { return; }
+        if (this.stats.get('Speed') <= 0) { return; }
         if (this.target) {
             this.navigateToUnit(this.target);
             this.calculateMovement();
