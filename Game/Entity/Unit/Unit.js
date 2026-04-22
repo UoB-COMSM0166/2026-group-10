@@ -48,10 +48,6 @@ export default class Unit extends Entity {
         this.currentMP = Math.min(this.maxMP, this.currentMP + amount);
     }
 
-    immediateDeath() {
-        this.currentHP = 0;
-    }
-
     alive() {
         return this.currentHP > 0;
     }

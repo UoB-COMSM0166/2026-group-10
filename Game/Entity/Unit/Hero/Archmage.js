@@ -9,11 +9,11 @@ const MP_PER_INTELLIGENCE = 30;
 const MP_REGEN_PER_INTELLIGENCE = 0.05;
 
 export default class Archmage extends Hero {
-    constructor(position, events, element, ui, clock) {
+    constructor(position, events, element, clock) {
         super(
             'Archmage', 'Lyra\'Gotha', position, 1, 15, 180, 220,
             'Manipulate magical elements to deal massive damage from a distance.',
-            2, 3, 4, events, ui, clock, ['Ice', 'Fire', 'Lightning']
+            2, 3, 4, events, clock, ['Ice', 'Fire', 'Lightning']
         );
         this.baseMaxMP = this.maxMP;
 
@@ -90,15 +90,8 @@ export default class Archmage extends Hero {
     }
 
     respawn() {
-        this.interruptCast();
-        this.position = { x: this.spawnPosition.x, y: this.spawnPosition.y };
-        this.currentHP = this.maxHP;
+        super.respawn();
         this.currentMP = this.maxMP;
-        this.remainingRespawnCD = 0;
-        this.stop();
-        this.clearWaypoints();
-        this.events.emit('hero:respawn', { hero: this });
-        this.ui.emit('hero:respawn', { hero: this });
     }
 
     updateRespawn() {

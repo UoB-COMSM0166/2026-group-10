@@ -4,7 +4,6 @@ export default class Clock {
         maxDelta = 250,     // 防止切后台导致delta过大（ms）
         maxSteps = 5        // 每帧最多补多少tick，防止卡死
     } = {}) {
-        this.tickRate = tickRate;
         this.dt = 1000 / tickRate;
 
         this.maxDelta = maxDelta;

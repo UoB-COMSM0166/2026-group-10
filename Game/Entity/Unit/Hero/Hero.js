@@ -9,12 +9,12 @@ export default class Hero extends Unit {
     constructor(
         id, name, position, speed, hitbox, hp, mp,
         description, armor, strength, intelligence,
-        events, ui, clock, category
+        events, clock, category
     ) {
         super(id, position, speed, hitbox, hp, mp);
         this.name = String(name);
         this.events = events;
-        this.ui = ui;
+        // this.ui = ui;
         this.clock = clock;
         this.description = String(description);
         this.baseMaxHP = this.maxHP;
@@ -90,7 +90,28 @@ export default class Hero extends Unit {
         this.currentHP = 0;
         this.remainingRespawnCD = this.respawnCD;
         this.events.emit('hero:death', { hero: this, respawnTick: this.remainingRespawnCD });
-        this.ui.emit('hero:death', { hero: this, respawnTick: this.remainingRespawnCD });
+        // this.ui.emit('hero:death', { hero: this, respawnTick: this.remainingRespawnCD });
+    }
+
+    respawn() {
+        this.interruptCast();
+        this.position = { x: this.spawnPosition.x, y: this.spawnPosition.y };
+        this.currentHP = this.maxHP;
+        this.remainingRespawnCD = 0;
+        this.stop();
+        this.clearWaypoints();
+        this.events.emit('hero:respawn', { hero: this });
+    }
+
+    updateRespawn() {
+        if (this.alive() || this.remainingRespawnCD <= 0) {
+            return;
+        }
+
+        this.remainingRespawnCD -= 1;
+        if (this.remainingRespawnCD <= 0) {
+            this.respawn();
+        }
     }
 
     updateMovement() {
@@ -249,14 +270,6 @@ export default class Hero extends Unit {
 
     isCasting() {
         return this.castState !== null;
-    }
-
-    setRenderRange(skill) {
-        this.renderRange = Number(skill.range);
-    }
-
-    clearRenderRange() {
-        this.renderRange = null;
     }
 
     applyPassiveSkills() {

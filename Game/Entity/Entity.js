@@ -20,15 +20,6 @@ export default class Entity {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    checkInside(position) {
-        return this.getDistance(position) <= this.hitbox;
-    }
-
-    checkCollision(entity) {
-        const distance = this.getDistance(entity.position);
-        return distance <= (this.hitbox + entity.hitbox);
-    }
-
     navigateToUnit(targetUnit) {
         this.navigateToPoint(targetUnit.position);
     }

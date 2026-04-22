@@ -122,7 +122,7 @@ function drawTargetingOverlay(sketch, state, vectorTargetStart = null) {
             if (hero?.position) {
                 sketch.line(hero.position.x, hero.position.y, mouse.x, mouse.y);
             }
-        } else if (targeting.targetCategory === 'Unit') {
+        } else if (targeting.targetCategory === 'Unit' || targeting.targetCategory === 'Tower') {
             sketch.circle(mouse.x, mouse.y, 34);
         } else if (targeting.targetCategory === 'Vector') {
             const start = vectorTargetStart ?? hero?.position ?? mouse;

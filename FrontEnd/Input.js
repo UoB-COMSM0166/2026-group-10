@@ -69,6 +69,14 @@ export default class Input {
             this.postCommand(command, {
                 targetId: nearestEnemy?.id ?? null,
             });
+            return;
+        }
+
+        if (targeting.targetCategory === 'Tower') {
+            const nearestTower = this.findNearestTower(state.skillEntities, this.getMouseWorldPosition(sketch));
+            this.postCommand(command, {
+                targetId: nearestTower?.id ?? null,
+            });
         }
     }
 
@@ -102,6 +110,11 @@ export default class Input {
 
     handleKeyPressed(sketch) {
         if (String(sketch.key ?? '').toUpperCase() === 'B') {
+            const hero = this.getState()?.hero;
+            if (hero?.id === 'Architect' || hero?.name === 'Architect') {
+                return;
+            }
+
             if (typeof this.toggleBook === 'function') {
                 this.toggleBook();
             }
@@ -171,5 +184,32 @@ export default class Input {
         }
 
         return nearestEnemy;
+    }
+
+    findNearestTower(entities = [], position) {
+        if (!position) {
+            return null;
+        }
+
+        let nearestTower = null;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        for (const entity of entities) {
+            if (entity?.category !== 'Tower' || !entity?.position || entity.finished) {
+                continue;
+            }
+
+            const dx = entity.position.x - position.x;
+            const dy = entity.position.y - position.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance >= nearestDistance) {
+                continue;
+            }
+
+            nearestTower = entity;
+            nearestDistance = distance;
+        }
+
+        return nearestTower;
     }
 }

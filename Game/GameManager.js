@@ -1,5 +1,6 @@
 import Forest from './World/Forest.js';
 import Archmage from './Entity/Unit/Hero/Archmage.js';
+import Architect from "./Entity/Unit/Hero/Architect.js";
 import Warrior from './Entity/Unit/Hero/Warrior.js';
 import Objective from './Entity/Unit/Objective.js';
 import Boss from './Entity/Unit/Enemy/Boss.js';
@@ -14,11 +15,10 @@ export default class GameManager {
         this.world = new Forest();
         const heroSpawn = this.world.getHeroSpawn();
         const objectiveConfig = this.world.buildObjectiveConfig();
-        this.hero = new Archmage(
+        this.hero = new Warrior(
             heroSpawn,
             this.events,
-            'Ice',
-            this.events,
+            'Long Sword',
             this.clock
         );
         this.objective = new Objective(

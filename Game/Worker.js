@@ -457,6 +457,41 @@ function resolveUnitTarget(payload = {}, skill) {
     return game.hero.findNearestEnemy(game.enemies, skill.range);
 }
 
+function resolveTowerTarget(payload = {}) {
+    const targetId = payload.targetId ?? payload.target?.id ?? null;
+    if (targetId) {
+        const explicitTarget = game.skillEntities.get(targetId) ?? null;
+        if (explicitTarget?.category === 'Tower' && !explicitTarget.finished) {
+            return explicitTarget;
+        }
+    }
+
+    const targetPosition = clonePosition(payload.position ?? payload.target);
+    if (!targetPosition) {
+        return null;
+    }
+
+    let nearestTower = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+    for (const entity of game.skillEntities.values()) {
+        if (entity?.category !== 'Tower' || entity.finished || !entity.position) {
+            continue;
+        }
+
+        const dx = entity.position.x - targetPosition.x;
+        const dy = entity.position.y - targetPosition.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance >= nearestDistance) {
+            continue;
+        }
+
+        nearestTower = entity;
+        nearestDistance = distance;
+    }
+
+    return nearestTower;
+}
+
 function isTargetInRange(targetPosition, skill) {
     if (!targetPosition || !skill) {
         return false;
@@ -518,6 +553,20 @@ function castHeroSkill(skill, payload = {}) {
         return { ok: true };
     }
 
+    if (category === 'Tower') {
+        const target = resolveTowerTarget(payload);
+        if (!target) {
+            return { ok: false, code: 404, message: 'No valid tower target found.' };
+        }
+
+        if (!isTargetInRange(target.position, skill)) {
+            return { ok: false, code: 409, message: 'Tower target is out of range.' };
+        }
+
+        skill.casted(target, game.hero, source, tickNow);
+        return { ok: true };
+    }
+
     return { ok: false, code: 400, message: `Unsupported target category: ${category}` };
 }
 
@@ -564,7 +613,6 @@ function handleGameCommand(command, requestId) {
         startLoop();
         emitState();
         emitResult(command, requestId, 200, 'Game resumed.');
-        return;
     }
 }
 
@@ -863,7 +911,7 @@ function handleShopCommand(command, requestId) {
     emitResult(command, requestId, 501, 'Shop command is not implemented yet.');
 }
 
-function handleLegacyCommand(type, requestId, payload) {
+function handleLegacyCommand(type, requestId) {
     if (type === 'tick') {
         tick();
         emitResult(type, requestId, 200, 'Tick completed.');

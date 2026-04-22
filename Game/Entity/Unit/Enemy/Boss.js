@@ -35,10 +35,6 @@ export default class Boss extends Unit {
         this.events.emit('enemy:killed', { id: this.id, gold: this.gold, enemy: this });
     }
 
-    isCasting() {
-        return this.castState?.phase === 'casting';
-    }
-
     isBackswing() {
         return this.castState?.phase === 'backswing';
     }

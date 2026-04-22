@@ -9,6 +9,7 @@ export class Missile extends Entity {
         this.effect = effect;
         this.source = source;
         this.finished = false;
+        this.category = 'Missile';
     }
 
     available(size) {
@@ -230,9 +231,10 @@ export class Projectile extends Entity {
         const dx = destination.x - position.x;
         const dy = destination.y - position.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
+        const projectileSpeed = Number(this.stats.get('Speed')) || 0;
 
-        if (distance > 0 && this.speed > 0) {
-            const scale = this.speed / distance;
+        if (distance > 0 && projectileSpeed > 0) {
+            const scale = projectileSpeed / distance;
             this.velocity.vx = dx * scale;
             this.velocity.vy = dy * scale;
         }
@@ -246,7 +248,7 @@ export class Projectile extends Entity {
     }
 
     updateMovement() {
-        if (this.finished || this.speed <= 0) {
+        if (this.finished || this.stats.get('Speed') <= 0) {
             return;
         }
 
@@ -380,7 +382,8 @@ export class Tower extends Unit {
     constructor(
         id, position, hitbox, events,
         duration, attackRange, attackInterval, projectileSpeed, projectileHitbox, damage, source = null,
-        projectileMaxDistance = attackRange, projectilePiercing = false, projectileName = 'arrow'
+        projectileMaxDistance = attackRange, projectilePiercing = false, projectileName = 'arrow',
+        projectileTracksTarget = false
     ) {
         super(id, position, 0, hitbox, 1, 0);
         this.events = events;
@@ -395,6 +398,7 @@ export class Tower extends Unit {
         this.projectileMaxDistance = Number(projectileMaxDistance);
         this.projectilePiercing = Boolean(projectilePiercing);
         this.projectileName = String(projectileName);
+        this.projectileTracksTarget = Boolean(projectileTracksTarget);
         this.finished = false;
         this.category = 'Tower';
     }
@@ -412,18 +416,29 @@ export class Tower extends Unit {
             return;
         }
 
-        const projectile = new Projectile(
-            `${this.id}_${this.projectileName}_${this.duration}`,
-            { x: this.position.x, y: this.position.y },
-            this.projectileSpeed,
-            this.projectileHitbox,
-            { x: target.position.x, y: target.position.y },
-            this.damage,
-            null,
-            this.projectileMaxDistance,
-            this.projectilePiercing,
-            this.source
-        );
+        const projectile = this.projectileTracksTarget
+            ? new Missile(
+                `${this.id}_${this.projectileName}_${this.duration}`,
+                { x: this.position.x, y: this.position.y },
+                this.projectileSpeed,
+                this.projectileHitbox,
+                target,
+                this.damage,
+                null,
+                this.source
+            )
+            : new Projectile(
+                `${this.id}_${this.projectileName}_${this.duration}`,
+                { x: this.position.x, y: this.position.y },
+                this.projectileSpeed,
+                this.projectileHitbox,
+                { x: target.position.x, y: target.position.y },
+                this.damage,
+                null,
+                this.projectileMaxDistance,
+                this.projectilePiercing,
+                this.source
+            );
 
         this.events.emit('skill_entity:created', { entity: projectile });
         this.attackCooldown = this.attackInterval;

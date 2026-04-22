@@ -6,11 +6,11 @@ import {
 } from "../../Skill/Warrior.js";
 
 export default class Warrior extends Hero {
-    constructor(position, events, weapon, ui, clock) {
+    constructor(position, events, category, clock) {
         super(
             'Warrior', 'Hugo Fortis', position, 2, 15, 300, 100,
-            'A master who can skillfully use a variety of melee weapons.',
-            5, 2, 0.1, events, ui, clock
+            'A master who can skillfully use a variety of melee categorys.',
+            5, 2, 0.1, events, clock, ['Axe', 'Rapier', 'Long Sword']
         );
 
         this.baseHpRegen = 1;
@@ -19,8 +19,6 @@ export default class Warrior extends Hero {
         this.mpRegen = this.baseMpRegen;
 
         this.currentMP = 0;
-
-        this.currentWeapon = weapon;
 
         const slash = new Slash(this.events);
         const bladeSpin = new BladeSpin(this.events);
@@ -52,21 +50,21 @@ export default class Warrior extends Hero {
         this.skillTree.set('P', [sanguivore, focus, spiritBlade]);
         this.initializeSkillSlots();
 
-        if (weapon === 'Axe') {
+        if (category === 'Axe') {
             this.skill.set('A', slash);
             this.skill.set('Q', bladeSpin);
             this.skill.set('W', jumpingSlash);
             this.skill.set('E', sacrifice);
             this.skill.set('R', earthquakeSlash)
             this.skill.set('P', sanguivore);
-        } else if (weapon === 'Rapier') {
+        } else if (category === 'Rapier') {
             this.skill.set('A', stab);
             this.skill.set('Q', puncture);
             this.skill.set('W', parry);
             this.skill.set('E', stride);
             this.skill.set('R', flaw);
             this.skill.set('P', focus);
-        } else if (weapon === 'Long Sword') {
+        } else if (category === 'Long Sword') {
             this.skill.set('A', stick);
             this.skill.set('Q', swordEnergy);
             this.skill.set('W', sheatheSword);
@@ -82,15 +80,8 @@ export default class Warrior extends Hero {
     }
 
     respawn() {
-        this.interruptCast();
-        this.position = { x: this.spawnPosition.x, y: this.spawnPosition.y };
-        this.currentHP = this.maxHP;
+        super.respawn();
         this.currentMP = 0;
-        this.remainingRespawnCD = 0;
-        this.stop();
-        this.clearWaypoints();
-        this.events.emit('hero:respawn', { hero: this });
-        this.ui.emit('hero:respawn', { hero: this });
     }
 
     updateRespawn() {
@@ -112,40 +103,38 @@ export default class Warrior extends Hero {
         }
     }
 
-    changeWeapon(weapon) {
-        const nextWeapon = String(weapon ?? '').trim();
-        const nextSkills = new Map();
+    changeSkill(slot, skill) {
+        const normalizedSlot = this.normalizeSkillSlot(slot);
+        const nextCategory = skill?.category ?? null;
+        if (!normalizedSlot || !nextCategory || !this.isSkillSlotUnlocked(normalizedSlot)) {
+            return null;
+        }
 
-        for (const [slot, skills] of this.skillTree.entries()) {
-            const nextSkill = skills.find((skill) => skill?.category === nextWeapon) ?? null;
+        const nextSkills = new Map();
+        for (const [skillSlot, skills] of this.skillTree.entries()) {
+            const nextSkill = Array.isArray(skills)
+                ? skills.find((candidate) => candidate?.category === nextCategory)
+                : null;
             if (!nextSkill) {
                 return null;
             }
 
-            nextSkills.set(slot, nextSkill);
+            nextSkills.set(skillSlot, nextSkill);
         }
 
-        for (const skill of this.skill.values()) {
-            if (skill?.toggleable && skill.active) {
-                skill.toggle(this, this.clock.now());
+        for (const currentSkill of this.skill.values()) {
+            if (currentSkill?.toggleable && currentSkill.active) {
+                currentSkill.toggle(this, this.clock?.now?.() ?? 0);
             }
         }
 
-        this.interruptCast();
-        this.clearRenderRange();
-        this.currentWeapon = nextWeapon;
-
-        for (const [slot, skill] of nextSkills.entries()) {
-            skill.slot = slot;
-            this.skill.set(slot, skill);
+        for (const [skillSlot, nextSkill] of nextSkills.entries()) {
+            nextSkill.slot = skillSlot;
+            this.skill.set(skillSlot, nextSkill);
         }
 
-        for (const buffName of ['Sanguivore', 'Focus Passive', 'Focus', 'Spirit Blade']) {
-            this.removeBuff(buffName);
-        }
-
+        this.currentCategory = nextCategory;
         this.applyPassiveSkills();
-
-        return this.currentWeapon;
+        return this.skill.get(normalizedSlot) ?? null;
     }
 }

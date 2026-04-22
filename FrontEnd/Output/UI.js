@@ -28,9 +28,9 @@ export default class UI {
         this.layer = layer;
         this.art = this.loadImageAssets({
             objectiveProfile: 'FrontEnd/Assert/Image/General/Profile_Tree.png',
-            heroProfile: `FrontEnd/Assert/Image/${HERO}/Profile_Archmage.png`,
-            heroProfileDead: `FrontEnd/Assert/Image/${HERO}/Profile_Archmage_Dead.png`,
-            heroSpellBookBackground: `FrontEnd/Assert/Image/${HERO}/Book_Background_Archmage.png`,
+            heroProfile: `FrontEnd/Assert/Image/${HERO}/Profile.png`,
+            heroProfileDead: `FrontEnd/Assert/Image/${HERO}/Profile_Dead.png`,
+            heroSpellBookBackground: `FrontEnd/Assert/Image/${HERO}/Book_Background.png`,
             skill_skillBook: `FrontEnd/Assert/Image/${HERO}/Skill_SkillBook.png`,
             upgrade: 'FrontEnd/Assert/Image/General/Button_Upgrade.png',
             statSpeed: 'FrontEnd/Assert/Image/General/Stats_Speed.png',
@@ -451,6 +451,21 @@ export default class UI {
         const y = 630;
 
         layer.push();
+
+        for (const buff of buffs) {
+            const positive = buff.positive === true;
+            const timeLeft = Number(buff.timeLeft) || 0;
+            const maxTime = Number(buff.maxTime) || 0;
+            const icon = buff.icon ? layer.color(buff.icon) : this.buffFallbackColor;
+            const index = buffs.indexOf(buff);
+            const gap = 12;
+            const size = 40;
+            const startX = x + 20;
+            const startY = y + height - size - 5;
+
+            View.buffIcon(layer, startX + index * (size + gap), startY, size, buff, positive, timeLeft, maxTime);
+        }
+
         layer.noStroke();
         layer.fill(12, 18, 28, 210);
         layer.rect(x, y, width, height, 18);
@@ -482,7 +497,8 @@ export default class UI {
         }
 
         View.text(layer, x + width / 2, y + 40, 'Wave', 30, 255, true);
-        View.text(layer, x + width / 2, y + 80, String(wave.index + 1) + ' : ' + String(wave.total), 40, 255, true);
+        const waves = wave.index + 1 === wave.total ? 'Boss' : String(wave.index + 1) + ' : ' + String(wave.total);
+        View.text(layer, x + width / 2, y + 80, waves, 40, 255, true);
 
         View.text(layer, x + width / 2, y + 150, statusText, 40, 255, false);
 
