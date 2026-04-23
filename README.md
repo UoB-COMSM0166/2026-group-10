@@ -11,7 +11,7 @@
 
 <div align="center">
   <a href="https://uob-comsm0166.github.io/2026-group-10/">
-    <img src="images/GatesOfCinderStart.png" alt="Gates of Cinder Banner" width="900" height="800"/>
+    <img src="images/GatesOfCinderStart.png" alt="Gates of Cinder Banner" width="700" height="600"/>
   </a>
 </div>
 
