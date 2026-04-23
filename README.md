@@ -396,20 +396,86 @@ A group of 6 participants (**N = 6**), made up of friends and classmates with di
 | Focus Area | Issue Identified | Solution |
 |---|---|---|
 | **Player Control** | 1. Lack of health and mana indicators. <br> 2. Current status of each skill, including remaining cooldown times, is unclear.  | 1. Health and mana bars added to the bottom of the screen. <br> 2. Cooldown indicators made more prominent and easier to read. <br> 3. Enemy health now displayed above each enemy. |
-| **Game Instructions & Clarity** | 1. The absence of an instruction page makes it challenging for players to familiarise themselves with the game's controls, spells, hero mechanics, and other core elements. <br> 2. Players feel buttons are not responsive <br> 3. Lack of information on the objective/goal <br> 4. Unaware of how skill works| 1. Add an instruction page accessible by pressing "Esc". <br> 2. Introduced a tutorial screen that players must read through before proceeding, ensuring that they have a thorough understanding of the game's core mechanics and objectives prior to gameplay. <br> 3. Add a clearer skill-cooldown indicator in the bottom-right corner. <br> 4. Real-time feedback to clarify objectives. <br> 5. Enabled tooltip-on-hover in the skill shop.|
-| **Difficulty** | 1. Game offers no difficulty settings. <br> 2. Enemy waves progress at a pace that many players found overwhelming. | 1. Add difficulty options, giving players the ability to choose between Easy, Medium, and Hard before beginning the game. |
-| **Player Movement & Sounds** | 1. Movement felt sluggish <br> 2. Add music to the main game not just the Front-end| 1. Adjusted the hero's movement speed values. <br> 2. Added music|
+| **Game Instructions & Clarity** | 1. The absence of an instruction page makes it challenging for players to familiarise themselves with the game's controls, spells, hero mechanics, and other core elements. <br> 2. Players feel buttons are not responsive <br> 3. Lack of information on the objective/goal <br> 4. Unaware of how skill works| 1. Add an instruction page accessible by pressing "Esc". <br> 2. Introduced a tutorial screen that players must read through before proceeding, ensuring that they have a thorough understanding of the game's core mechanics and objectives prior to gameplay. <br> 3. Add a clearer objective health indicator in the bottom-left corner. <br> 4. Real-time feedback to clarify objectives. <br> 5. Enable tooltip box on-hover in the game action bar and skill shop.|
+| **Difficulty** | 1. Game offers no difficulty settings. <br> 2. Enemy waves progress at a pace that many players found overwhelming. | 1. Add difficulty options, giving players the ability to choose between Easy, Medium, and Hard before beginning the game. <br> 2. Wave speed adjusted in-line with difficulty.|
+| **Player Movement & Sounds** | 1. Movement felt sluggish <br> 2. Add music to the main game not just the Front-end| 1. Adjusted the hero's movement speed values. <br> 2. Added music.|
+
+<table>
+  	<tr>
+    <td align="center" width="33%">
+      <img src="images/statusbar_tooltip.jpg" width="100%">
+    </td>
+
+   <td align="center" width="33%">
+      <img src="images/store_tooltip.jpg" width="100%">
+    </td>
+</table>
+<div align="center">
+
+*Figure 1*  
+Added game action bar and store tooltips to provide clear, concise information on skills and abilities, including cooldown, target type, mana cost, range, and a brief description.
+</div>
 
 **Outcome:**
 
 The implemented improvements showed clear results during follow-up testing, with players demonstrating greater confidence and notably less confusion while navigating the game. Usability and overall gameplay experience were meaningfully enhanced as a result. The use of Think-Aloud provided deeper insights into player concerns, helping the team address issues more effectively. However, we remain mindful that social desirability bias may have influenced some participants responses.
 
 
-### 5b. Quantitative Evaluation
-**NASA Task Load Index (NASA-TLX) and System Usability Survey (SUS)**
-- One quantitative evaluation (of your choice) 
+### 5b. Quantitative Evaluations
 
-- Description of how code was tested. 
+To provide a quantitative counterpoint to our qualitative findings, we tasked ten participants (**N=10**) to play under both Easy and Hard conditions within a within-subjects framework. This allowed for an immediate assessment of workload via the **NASA Task Load Index (NASA-TLX)** and usability via the **System Usability Scale (SUS)** at the end of each session. We specifically tracked fluctuations in six specific dimensions of exertion: Mental, Physical and Temporal Demand, alongside Performance, Effort, and Frustration using the NASA-TLX. The resulting SUS scores were then compared to the established industry benchmark of 68, which serves as the baseline for acceptable functional usability. Any performance variations between the two modes were then analysed for statistical significance using the Wilcoxon signed-rank test (**α=0.05**).
+
+**NASA-TLX: Workload Comparison**
+
+**Individual Scores by Difficulty Level**
+
+![NASA-TLX EasyMode](images/NASA-TLX-EasyMode.png)
+<p align="center">
+  Figure 1. NASA-TLX participants' scores (Easy Mode).
+</p>
+
+![NASA-TLX EasyMode](images/NASA-TLX-HardMode.png)
+<p align="center">
+  Figure 2. NASA-TLX participants' scores (Hard Mode).
+</p>
+
+
+**Observation:**
+The data clearly highlights that **Easy Mode** resulted in a **lower overall workload** and **reduced frustration** for the players. The most notable observation, however, was that **Hard Mode** involved **heightened mental demand** and **effort**, which players felt more acutely during boss fights.
+
+**Average Scores Comparison**
+
+![NASA-TLX Graph](images/NASA-TLX-Graph.png)
+<p align="center">
+  Figure 3. Mean NASA-TLX scores (N=10) by workload factor for Easy and Hard settings.
+</p>
+
+As shown in the bar chart, players experienced a significant surge in mental strain and effort when playing in Hard Mode. Interestingly, this increase in demand was accompanied by a slight decline in performance scores, indicating that participants perceived themselves as less effective.
+
+**Radar Profile**
+
+![NASA-TLX Radar Graph](images/NASA-TLX-RadarGraph.jpg)
+<p align="center">
+
+<p align="center">
+  Figure 4. NASA TLX - Multi-dimensional Workload Comparison: Easy vs. Hard Mode Workload profile
+</p>
+
+
+**Interpretation:**
+The cognitively demanding experience characterised by Mental Demand and Effort reaching 73.0 and 74.0 respectively, aligns with our intention to scale the game’s difficulty. However, Frustration surged by over 22 points to a peak of 78.5, an important consideration for future iterations is balancing this high-pressure gameplay and rising frustration. 
+
+**SUS: System Usability Scores**
+
+**Easy Mode**
+
+Table 1.
+
+**Hard Mode**
+
+Table 2.
+
+Figure 1.
 
 ### Process 
 
