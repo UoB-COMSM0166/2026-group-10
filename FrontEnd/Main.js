@@ -1,6 +1,7 @@
 import Input from './Input.js';
 import UI from './Output/UI.js';
 import Render from './Output/Render.js';
+import { BackgroundMusic } from './Output/Sound.js';
 
 const p5Ctor = window.p5;
 if (!p5Ctor) {
@@ -10,6 +11,12 @@ if (!p5Ctor) {
 const GAME_WIDTH = 1600;
 const GAME_HEIGHT = 900;
 const worker = new Worker(new URL('../Game/Worker.js', import.meta.url), { type: 'module' });
+const MUSIC_TRACKS = [
+    { id: 'normal', label: 'Normal', url: 'FrontEnd/Assert/Sound/Normal.mid', loop: true },
+    { id: 'death', label: 'Death', url: 'FrontEnd/Assert/Sound/Death.mid', loop: false },
+    { id: 'dead', label: 'Dead', url: 'FrontEnd/Assert/Sound/Dead.mid', loop: true },
+    { id: 'boss', label: 'Boss', url: 'FrontEnd/Assert/Sound/Boss.mid', loop: true },
+];
 window.addEventListener('contextmenu', (event) => {
     event.preventDefault();
 });
@@ -25,6 +32,119 @@ const objectiveSprite = {
     failed: false,
     promise: null,
 };
+const music = new BackgroundMusic(MUSIC_TRACKS);
+const musicState = {
+    desiredTrackId: null,
+    currentTrackId: null,
+    heroAlive: true,
+    bossAlive: false,
+    previousStarted: false,
+    previousHeroAlive: null,
+    previousBossId: null,
+    requestId: 0,
+};
+
+function getTrackIndexById(id) {
+    return MUSIC_TRACKS.findIndex((track) => track.id === id);
+}
+
+async function playMusicTrack(id, options = {}) {
+    if (!id) {
+        return;
+    }
+
+    const index = getTrackIndexById(id);
+    if (index < 0) {
+        console.warn(`Unknown music track: ${id}`);
+        return;
+    }
+
+    const shouldRestart = options.restart === true;
+    if (!shouldRestart && musicState.currentTrackId === id && music.isPlaying) {
+        musicState.desiredTrackId = id;
+        return;
+    }
+
+    musicState.desiredTrackId = id;
+    const requestId = musicState.requestId + 1;
+    musicState.requestId = requestId;
+
+    if (!shouldRestart && music.currentTrack?.id === id && music.isReady) {
+        await music.play();
+        if (requestId === musicState.requestId) {
+            musicState.currentTrackId = id;
+        }
+        return;
+    }
+
+    const changed = await music.switchTrack(index);
+    if (changed && requestId === musicState.requestId) {
+        musicState.currentTrackId = id;
+    }
+}
+
+async function syncMusicToDesiredTrack() {
+    if (!musicState.desiredTrackId) {
+        return;
+    }
+
+    if (musicState.currentTrackId === musicState.desiredTrackId && music.isPlaying) {
+        return;
+    }
+
+    await playMusicTrack(musicState.desiredTrackId, {
+        restart: musicState.currentTrackId !== musicState.desiredTrackId,
+    });
+}
+
+function handleMusicState(state) {
+    if (!state) {
+        return;
+    }
+
+    const started = Boolean(state.flags?.started);
+    const heroAlive = state.hero?.alive !== false;
+    const bossId = state.boss?.id ?? null;
+    const bossAlive = Boolean(bossId && state.boss?.alive !== false && !state.boss?.finished);
+
+    musicState.heroAlive = heroAlive;
+    musicState.bossAlive = bossAlive;
+
+    if (!musicState.previousStarted && started && heroAlive) {
+        void playMusicTrack('normal');
+    }
+
+    if (musicState.previousHeroAlive === true && !heroAlive) {
+        void playMusicTrack('death', { restart: true });
+    } else if (musicState.previousHeroAlive === false && heroAlive) {
+        void playMusicTrack(bossAlive ? 'boss' : 'normal', { restart: true });
+    } else if (!musicState.previousBossId && bossId && heroAlive) {
+        void playMusicTrack('boss', { restart: true });
+    } else if (musicState.previousBossId && !bossId && heroAlive && musicState.currentTrackId === 'boss') {
+        void playMusicTrack('normal', { restart: true });
+    }
+
+    musicState.previousStarted = started;
+    musicState.previousHeroAlive = heroAlive;
+    musicState.previousBossId = bossId;
+}
+
+async function unlockAudioAndSync() {
+    await syncMusicToDesiredTrack();
+}
+
+music.onTrackEnded = (track) => {
+    if (track?.id === 'death' && !musicState.heroAlive) {
+        void playMusicTrack('dead', { restart: true });
+    }
+};
+
+window.addEventListener('pointerdown', () => {
+    void unlockAudioAndSync();
+}, { passive: true });
+window.addEventListener('keydown', () => {
+    void unlockAudioAndSync();
+});
 
 function postCommand(command, payload = null) {
     const requestId = `${command}:${Date.now()}:${Math.random().toString(36).slice(2, 8)}`;
@@ -197,6 +317,7 @@ worker.onmessage = (event) => {
 
     if (type === 'state') {
         latestState = payload;
+        handleMusicState(payload);
     } else if (type === 'event') {
         latestEvents.push({
             label: `${name}${payload?.wave ? ` ${payload.wave}` : ''}`,
@@ -283,6 +404,7 @@ const sketch = (p) => {
 
         postCommand('game:start');
         postCommand('snapshot');
+        void unlockAudioAndSync();
     };
 
     p.draw = () => {
