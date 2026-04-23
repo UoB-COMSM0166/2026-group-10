@@ -75,18 +75,6 @@ For those looking to modify the code or play offline, you can host Gates of Cind
 
 </div>
 
-<div align="center">
-  
-  | Name                  | Role                                          | Contribution                                                                                                                             | % |
-| --------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| Jinhao Han            | Co-developer                   | Designed tower defence aspects, including enemy design, and contributed to system design.                                                | 1.0     |
-| Cenarius Lu           | Lead Developer & System Architect| Designed core mechanics and system architecture. Developed heroes, their abilities, and implemented health bar and RPG elements.         | 1.0     |
-| Dhanitha Rajapaksa    | Co-developer| Integrated front end and back end components, ensuring system cohesion. Contributed to development and assisted with the project report. | 1.0     |
-| James Crossley        | Co-developer | Developed the frontend interface and handled audio design, and assisted with the project report.                                         | 1.0     |
-| Rajmugundhan Nagappan | Game Lore & Documentation                        | Contributed to report writing, asset creation, and game lore                                                                 | 1.0   |
-| Ayush Raizada         | Scrum Master & Co-developer| Coordinated the team, managed communication and workflow, and contributed to the project report.                                         | 1.0     |
-
-</div>
 
 
 <h2 align="center">File Structure</h2>
@@ -379,6 +367,13 @@ In the game logic section, GameManager creates an event emitter to implement an 
 This week, we invited other team members to try out the newly released version of our game. The overall gameplay response was largely positive, though a few issues were flagged along with a number of helpful suggestions and ideas shared throughout the session. The feedback gathered proved to be invaluable in helping us to better understand how players interact with the game and where improvements can be made. To obtain a well-rounded understanding of our game, we conducted several evaluation methods, including **Think Aloud Evaluation**, **NASA-TLX for workload assessment**, and the **System Usability Scale (SUS)**. These methods allowed us to assess different dimensions of the player experience, from usability and cognitive workload to overall satisfaction and interface design. 
 
 ### 5a. Qualitative Evaluation
+
+<p align="center">
+  <img src="images/IMG_7880.jpg" alt="ParticipantThinkAloud" width="300" height="400">
+  <br>
+  <em>Figure 1</em><br>
+  One of our participants evaluating the game
+</p>
 
 **Think Aloud**
 
