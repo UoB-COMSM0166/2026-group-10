@@ -272,13 +272,10 @@ By considering the plethora of stakeholders around our game, we gained a better 
 | EPIC 10 – Technical Architecture & Scalability | The system is modular and maintainable for future expansion. | As a developer, I want modular systems, so that features are easy to maintain. <br> As a developer, I want class systems separated, so that balancing is easier. <br> As a developer, I want scalable enemy and wave systems, so that new content can be added easily. | Systems separated (Combat, AI, Resources, UI, Classes). <br> Clear update loop and system interactions. <br> Data-driven configs for enemies, waves, and abilities. <br> New classes or enemies can be added without rewriting core systems.|
 
 ---
-### USECASE DIAGRAM
+### Usecase Diagram
 <img width="1200" height="896" alt="chart" src="images/Use case.png" />
-<div align="center">
 
 ---
-
-
 
 ### **Prototyping** 
 
@@ -338,10 +335,6 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 
 `activeScene` then iterates through all of its buttons, calling the `wasIClicked()` function for each one. If the `wasIClicked()` function verifies that this button was indeed the one the user clicked, it will invoke its `onClick()` callback function that was passed to the button during the button's creation. Since the `onClick()` method is stored within the button that invokes it, it is represented in the sequence diagram by an arrow from the button pointing back to itself (a self-call).
 
-#### Spatial Mapping and Rendering Logic
-![2D visual projection](images/2D_visual_projection.jpg)
-To bridge the gap between 3D logic and 2D rendering, we implemented a 45 degree projection system that translates spatial coordinates into a visual perspective. We defined the game world using a standard $x, y, z$ coordinate system for logic and collisions, but applied a scaling factor between 0.5 and 0.7 to the $y$ axis to create the rendered $y'$ depth. This compression ensures that circular hitboxes appear as ellipses on screen, providing the player with a clear sense of depth and grounding. To handle verticality, we treated the $z$ axis as a direct vertical offset. This separation of logic and render allowed us to maintain simplified circular collision detection while visually representing complex height changes, such as a character jumping or holding an item aloft. The result is a cohesive 2.5D environment where the character sprites and their shadows remain mathematically aligned with the underlying physics grid.
-
 ### Implementation
 
 **Base System**
@@ -359,6 +352,12 @@ The game frontend handles UI, sound effects, rendering, and hardware input. UI, 
 **Challenge 2: Skills and Buffs**
 
 Each hero possesses multiple skills, which players can change using the skill book system. Based on hotkey bindings, skill types include A, Q, W, E, R, and passive skills. Each skill is a subclass of the Skill class and has mana cost and cooldown time, among other things. Most skills generate skill entities that can move and trigger hit detection. When a hit is detected, a callback function within the skill is executed, which may deal damage or apply debuffs.
+
+#### Other Challenges:
+
+#### Spatial Mapping and Rendering Logic
+![2D visual projection](images/2D_visual_projection.jpg)
+To bridge the gap between 3D logic and 2D rendering, we implemented a 45 degree projection system that translates spatial coordinates into a visual perspective. We defined the game world using a standard $x, y, z$ coordinate system for logic and collisions, but applied a scaling factor between 0.5 and 0.7 to the $y$ axis to create the rendered $y'$ depth. This compression ensures that circular hitboxes appear as ellipses on screen, providing the player with a clear sense of depth and grounding. To handle verticality, we treated the $z$ axis as a direct vertical offset. This separation of logic and render allowed us to maintain simplified circular collision detection while visually representing complex height changes, such as a character jumping or holding an item aloft. The result is a cohesive 2.5D environment where the character sprites and their shadows remain mathematically aligned with the underlying physics grid.
 
 **UI**
 
