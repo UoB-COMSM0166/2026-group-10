@@ -281,6 +281,8 @@ By considering the plethora of stakeholders around our game, we gained a better 
 <img width="1200" height="896" alt="chart" src="images/Use case.png" />
 <div align="center">
 
+---
+
 
 
 ### **Prototyping** 
