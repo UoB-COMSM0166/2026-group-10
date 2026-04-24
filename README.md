@@ -474,16 +474,50 @@ As shown in the bar chart, players experienced a significant surge in mental str
 The cognitively demanding experience characterised by Mental Demand and Effort reaching 73.0 and 74.0 respectively, aligns with our intention to scale the game’s difficulty. However, Frustration surged by over 22 points to a peak of 78.5, an important consideration for future iterations is balancing this high-pressure gameplay and rising frustration. 
 
 **SUS: System Usability Scores**
+The System Usability Scale (SUS) is a quick and robust tool for assessing the perceived usability of a system. It provides a reliable benchmark that allows for meaningful comparison against established industry standards.
+
+The final SUS scores were calculated using the following standardised process:
+
+For each question, the raw rating (1–5) on the Likert scale was first converted into a score ranging from 0 to 4:
+- Odd-numbered questions: Rating – 1
+- Even-numbered questions: 5 – Rating
+
+The ten contribution scores were then summed (resulting in a total between 0 and 40). This sum was finally multiplied by 2.5 to produce the SUS score on a scale of 0 to 100.
 
 **Easy Mode**
 
-Table 1.
+![SUS Easy Mode Table](images/SUS-EasyMode.png)
+<p align="center">
+
+<p align="center">
+  Table 1. SUS responses (Easy Mode)
+</p>
 
 **Hard Mode**
 
-Table 2.
+![SUS Hard Mode Table](images/SUS-HardMode.png)
+<p align="center">
 
-Figure 1.
+<p align="center">
+  Table 2. SUS responses (Hard Mode)
+</p>
+
+**Graphical Representation**
+
+![SUS Graph](images/SUS-Graph.jpg)
+<p align="center">
+
+<p align="center">
+  Figure 1. Comparison of SUS scores (Easy vs Hard Mode)
+</p>
+
+**Chart:**
+
+An SUS score of around 68 is widely regarded as average usability. In this study, Easy Mode achieved a mean score of 73.25, while Hard Mode scored 67.5. This places the overall usability of the game at an average level, with Easy Mode approaching good usability. Participants found Easy Mode straightforward to learn, intuitive to use, and generally user-friendly. Importantly, the increase in difficulty had only a modest impact on perceived usability. Players remained able to understand and engage with the core mechanics effectively in both versions. Although Hard Mode fell slightly below the average benchmark, this was anticipated given the greater complexity and cognitive demands.
+
+
+
+
 
 ### Process 
 
