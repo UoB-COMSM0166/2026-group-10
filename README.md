@@ -65,6 +65,13 @@ The gates of cinder is combines the tower defense and RPG aspects to bring the g
 
 <h2 align="center">GAME MECHANICS</h2>
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively .The game is in a pixalted art style and the story takes place in a forest the defeat the final boss.
+<p align="center">
+
+| Diablo | Warcraft | Icons |
+|--------|----------|-------|
+| <img src="diablo.png" width="300"/> | <img src="warcraft.png" width="300"/> | <img src="icons.png" width="300"/> |
+
+</p>
 
 <table width="100%">
   <tr>
