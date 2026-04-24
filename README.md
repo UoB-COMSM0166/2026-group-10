@@ -202,7 +202,7 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
 
 | Diablo | Warcraft | Icons |
 |--------|----------|-------|
-| <img src="diablo.png" width="300"/> | <img src="warcraft.png" width="300"/> | <img src="icons.png" width="300"/> |
+| <img src="images/diablo start menu.jpg" width="300"/> | <img src="warcraft.png" width="300"/> | <img src="icons.png" width="300"/> |
 
 </p>
 
