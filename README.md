@@ -16,7 +16,13 @@
     <img src="images/GatesOfCinderStart.png" alt="Gates of Cinder Banner" width="715" height="800"/>
   </a>
 </div>
+<p align="center">
 
+| Diablo | Warcraft | Icons |
+|--------|----------|-------|
+| <img src="diablo.png" width="300"/> | <img src="warcraft.png" width="300"/> | <img src="icons.png" width="300"/> |
+
+</p>
 ---
 
 <p align="center">
@@ -37,7 +43,13 @@ Gates of Cinder is hosted on GitHub Pages, so you can jump straight into the act
 
 ### Run locally (for Development or Offline Play)
 For those looking to modify the code or play offline, you can host Gates of Cinder locally:
-1. Clone the repository:
+1. Clone the repository:<p align="center">
+
+| Diablo | Warcraft | Icons |
+|--------|----------|-------|
+| <img src="diablo.png" width="300"/> | <img src="warcraft.png" width="300"/> | <img src="icons.png" width="300"/> |
+
+</p>
    ```bash
    git clone https://github.com/UoB-COMSM0166/2026-group-10.git
    cd 2026-group-10/docs
@@ -84,7 +96,13 @@ For those looking to modify the code or play offline, you can host Gates of Cind
 </div>
 
 
+<p align="center">
 
+| Diablo | Warcraft | Icons |
+|--------|----------|-------|
+| <img src="diablo.png" width="300"/> | <img src="warcraft.png" width="300"/> | <img src="icons.png" width="300"/> |
+
+</p>
 <h2 align="center">File Structure</h2>
 
 ```
@@ -195,25 +213,13 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 ###  3.3. UI/UX inspiration
 Our game UI is deeply inspired by diablo game which suits our game title and overall game.The hero's design is inspired by World of Warcraft. The skill icons are taken  from a fantasy RPG icon asserts pack from Unreal Engine Market
 
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <b>Diablo</b><br>
-      <img src="images/diablo start menu.jpg" width="100%">
-    </td>
+<p align="center">
 
-   <td align="center" width="33%">
-      <b>Warcraft</b><br>
-      <img src="images/warcraft.jpg" width="100%">
-    </td>
+| Diablo | Warcraft | Icons |
+|--------|----------|-------|
+| <img src="images/diablo start menu.jpg" width="300"/> | <img src="images/warcraft.jpg" width="300"/> | <img src="images/icons.jpg" width="300"/> |
 
-  <td align="center" width="33%">
-      <b>Icons</b><br>
-      <img src="images/icons.jpg" width="100%">
-    </td>
-  </tr>
-</table>
-
+</p>
 ---
 
 ### Stakeholders - Onion Model
