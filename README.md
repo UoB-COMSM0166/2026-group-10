@@ -18,12 +18,7 @@
 </div>
 <p align="center">
 
-| Diablo | Warcraft | Icons |
-|--------|----------|-------|
-| <img src="diablo.png" width="300"/> | <img src="warcraft.png" width="300"/> | <img src="icons.png" width="300"/> |
 
-</p>
----
 
 <p align="center">
   <a href="https://uob-comsm0166.github.io/2026-group-10/"><img src="https://img.shields.io/badge/🎮%20PLAY%20GAME-4CAF50?style=for-the-badge"></a>
