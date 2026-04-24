@@ -262,6 +262,74 @@ Systems separated (Combat, AI, Resources, UI, Classes).
 Clear update loop and system interactions.
 Data-driven configs for enemies, waves, and abilities.
 New classes or enemies can be added without rewriting core systems.
+flowchart LR
+    p((Player))
+    a((Admin))
+
+    subgraph Ancient_Tree_Defense_Game [System Boundary]
+
+        %% Core Flow
+        A[Start Game]
+        B[View Story]
+        C[Select Hero Class]
+        D[Select Difficulty]
+        E[Play Game]
+
+        %% Gameplay
+        E1[Kill Enemies]
+        E2[Defend Ancient Tree]
+        E3[Build Towers (Engineer)]
+        E4[Use Hero Abilities]
+        E5[Earn XP & Level Up]
+        E6[Earn Gold]
+        E7[Upgrade Skills / Equipment]
+        E8[Repair Ancient Tree]
+
+        %% End Conditions
+        F[Win Game]
+        G[Lose Game]
+
+        %% Admin Controls
+        H[Manage Game Settings]
+        I[Manage Enemies & Waves]
+        J[Balance Heroes / Abilities]
+        K[Monitor Game]
+    end
+
+    %% Player Flow
+    p --> A
+    p --> B
+    p --> C
+    p --> D
+    p --> E
+
+    %% Gameplay Relations
+    E --> E1
+    E --> E2
+    E --> E4
+    E --> E5
+    E --> E6
+    E --> E7
+    E --> E8
+
+    %% Conditional gameplay
+    E --> E3
+
+    %% Dependencies
+    E1 --> E5
+    E1 --> E6
+    E6 --> E7
+    E6 --> E8
+
+    %% End
+    E --> F
+    E --> G
+
+    %% Admin
+    a --> H
+    a --> I
+    a --> J
+    a --> K
 
 <details>
   <summary><strong>Game ideas and analysis</strong></summary>
