@@ -502,7 +502,7 @@ The ten contribution scores were then summed (resulting in a total between 0 and
   Table 2. SUS responses (Hard Mode)
 </p>
 
-**Graphical Representation**
+**Chart**
 
 ![SUS Graph](images/SUS-Graph.jpg)
 <p align="center">
@@ -511,7 +511,7 @@ The ten contribution scores were then summed (resulting in a total between 0 and
   Figure 1. Comparison of SUS scores (Easy vs Hard Mode)
 </p>
 
-**Chart:**
+**Interpretation:**
 
 An SUS score of around 68 is widely regarded as average usability. In this study, Easy Mode achieved a mean score of 73.25, while Hard Mode scored 67.5. This places the overall usability of the game at an average level, with Easy Mode approaching good usability. Participants found Easy Mode straightforward to learn, intuitive to use, and generally user-friendly. Importantly, the increase in difficulty had only a modest impact on perceived usability. Players remained able to understand and engage with the core mechanics effectively in both versions. Although Hard Mode fell slightly below the average benchmark, this was anticipated given the greater complexity and cognitive demands.
 
