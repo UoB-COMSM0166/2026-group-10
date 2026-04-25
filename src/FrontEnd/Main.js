@@ -324,41 +324,41 @@ const sketch = (p) => {
             return p.loadSound(path, cb); // Fallback
         };
 
-        window.menuBackground = loadImg("FrontEnd/Assert/Image/menu_background.png");
-        window.generalBackground = loadImg("FrontEnd/Assert/Image/general-background.png");
-        window.selectDifficultyBg = loadImg("FrontEnd/Assert/Image/select_difficulty_bg.png");
-        window.cursorImage = loadImg("FrontEnd/Assert/Image/cursor.png");
+        window.menuBackground = loadImg("src/FrontEnd/Assert/Image/menu_background.png");
+        window.generalBackground = loadImg("src/FrontEnd/Assert/Image/general-background.png");
+        window.selectDifficultyBg = loadImg("src/FrontEnd/Assert/Image/select_difficulty_bg.png");
+        window.cursorImage = loadImg("src/FrontEnd/Assert/Image/cursor.png");
         
-        window.introImages[0] = loadImg("FrontEnd/Assert/Image/intro1.png");
-        window.introImages[1] = loadImg("FrontEnd/Assert/Image/intro2.jpg");
-        window.introImages[2] = loadImg("FrontEnd/Assert/Image/intro3.png");
-        window.introImages[3] = loadImg("FrontEnd/Assert/Image/intro4.jpg");
+        window.introImages[0] = loadImg("src/FrontEnd/Assert/Image/intro1.png");
+        window.introImages[1] = loadImg("src/FrontEnd/Assert/Image/intro2.jpg");
+        window.introImages[2] = loadImg("src/FrontEnd/Assert/Image/intro3.png");
+        window.introImages[3] = loadImg("src/FrontEnd/Assert/Image/intro4.jpg");
         
-        window.characterImages[0] = loadImg("FrontEnd/Assert/Image/elf_img_no_bg.png");
-        window.characterImages[1] = loadImg("FrontEnd/Assert/Image/warrior_img.jpg");
-        window.characterImages[2] = loadImg("FrontEnd/Assert/Image/mage_img.jpg");
+        window.characterImages[0] = loadImg("src/FrontEnd/Assert/Image/elf_img_no_bg.png");
+        window.characterImages[1] = loadImg("src/FrontEnd/Assert/Image/warrior_img.jpg");
+        window.characterImages[2] = loadImg("src/FrontEnd/Assert/Image/mage_img.jpg");
 
-        window.introVoices[0] = loadSnd("FrontEnd/Assert/Sound/introVoiceOne.mp3");
-        window.introVoices[1] = loadSnd("FrontEnd/Assert/Sound/introVoiceTwo.mp3");
-        window.introVoices[2] = loadSnd("FrontEnd/Assert/Sound/introVoiceThree.mp3");
-        window.introVoices[3] = loadSnd("FrontEnd/Assert/Sound/introVoiceFour.mp3");
+        window.introVoices[0] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceOne.mp3");
+        window.introVoices[1] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceTwo.mp3");
+        window.introVoices[2] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceThree.mp3");
+        window.introVoices[3] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceFour.mp3");
         
-        window.characterVoices[0] = loadSnd("FrontEnd/Assert/Sound/elf_narration.mp3");
-        window.characterVoices[1] = loadSnd("FrontEnd/Assert/Sound/warrior_narration.mp3");
-        window.characterVoices[2] = loadSnd("FrontEnd/Assert/Sound/mage_narration.mp3");
+        window.characterVoices[0] = loadSnd("src/FrontEnd/Assert/Sound/elf_narration.mp3");
+        window.characterVoices[1] = loadSnd("src/FrontEnd/Assert/Sound/warrior_narration.mp3");
+        window.characterVoices[2] = loadSnd("src/FrontEnd/Assert/Sound/mage_narration.mp3");
 
-        window.menuMusic = loadSnd("FrontEnd/Assert/Sound/menu_music.mp3", () => {
+        window.menuMusic = loadSnd("src/FrontEnd/Assert/Sound/menu_music.mp3", () => {
             if (window.musicStarted && window.gameState.settings.isMusic && !window.menuMusic.isPlaying()) {
                 window.menuMusic.amp(0.15);
                 window.menuMusic.loop();
                 window.menuMusic.play();
             }
         });
-        window.introMusic = loadSnd("FrontEnd/Assert/Sound/intro-music.mp3");
-        window.clickNoise = loadSnd("FrontEnd/Assert/Sound/general_click_noise.mp3");
+        window.introMusic = loadSnd("src/FrontEnd/Assert/Sound/intro-music.mp3");
+        window.clickNoise = loadSnd("src/FrontEnd/Assert/Sound/general_click_noise.mp3");
 
         p.loadFont(
-            "FrontEnd/Assert/Image/message_font.ttf", 
+            "src/FrontEnd/Assert/Image/message_font.ttf", 
             (f) => { window.font = f; },
             (err) => {
                 console.warn("Could not load font, using default.");

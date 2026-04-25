@@ -20,7 +20,7 @@ class SelectDifficultyScene {
         this.backButton = new Button(sketch, 20, sketch.height - 70, 100, 50, "Back", () => {
             window.activeScene = new MenuScene(sketch, window.menuBackground);
         });
-     }
+    }
 
      display() {
         if (this.backgroundImage && this.backgroundImage.complete && this.backgroundImage.naturalWidth > 0) {
@@ -40,4 +40,4 @@ class SelectDifficultyScene {
      }
 
 
-    }
+}
