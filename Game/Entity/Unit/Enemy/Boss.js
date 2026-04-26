@@ -56,10 +56,11 @@ export default class Boss extends Unit {
         }
 
         this.stop();
+        const castTarget = target ?? this.target ?? null;
         const source = { x: this.position.x, y: this.position.y };
         const context = {
             caster: this,
-            target,
+            target: castTarget,
             source,
             tick,
         };
@@ -73,7 +74,7 @@ export default class Boss extends Unit {
                 phase: 'casting',
                 remaining: skill.castRemaining,
                 skill,
-                target,
+                target: castTarget,
                 source,
                 tick,
             };
@@ -84,7 +85,7 @@ export default class Boss extends Unit {
             phase: 'casting',
             remaining: 120,
             skill,
-            target,
+            target: castTarget,
             source,
             tick,
         };

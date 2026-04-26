@@ -120,26 +120,58 @@ class IceBolt extends BossSkill {
         this.damage = 90;
         this.slowDuration = 60;
         this.slowRatio = 0.5;
+        this.lockedDestination = null;
+    }
+
+    startCast(context = {}) {
+        const lockedTarget = context?.target?.position;
+        if (!lockedTarget) {
+            return false;
+        }
+
+        this.lockedDestination = {
+            x: Number(lockedTarget.x) || 0,
+            y: Number(lockedTarget.y) || 0,
+        };
+
+        const started = super.startCast(context);
+        if (!started) {
+            this.lockedDestination = null;
+        }
+
+        return started;
+    }
+
+    cancelCast() {
+        this.lockedDestination = null;
+        super.cancelCast();
+    }
+
+    getCastSkillEntityData() {
+        if (!this.lockedDestination) {
+            return null;
+        }
+
+        return {
+            category: 'IceBolt',
+            position: {
+                x: Number(this.lockedDestination.x) || 0,
+                y: Number(this.lockedDestination.y) || 0,
+            },
+            hitbox: this.hitbox,
+            color: 'rgba(120, 220, 255, 0.9)',
+            followCaster: false,
+        };
     }
 
     casted(caster, tick) {
         super.casted();
-        if (!caster?.target?.position) {
+        const destination = this.lockedDestination;
+        this.lockedDestination = null;
+
+        if (!destination) {
             return;
         }
-
-        const destination = {
-            x: Number(caster.target.position.x) || 0,
-            y: Number(caster.target.position.y) || 0,
-        };
-        const origin = {
-            x: Number(caster.position?.x) || 0,
-            y: Number(caster.position?.y) || 0,
-        };
-        const dx = destination.x - origin.x;
-        const dy = destination.y - origin.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const speed = distance / this.flightDuration;
         const slowBuff = new Buff(
             'Ice Bolt Slow',
             'Slowed by Ice Bolt.',
@@ -153,52 +185,21 @@ class IceBolt extends BossSkill {
 
         const iceBolt = new Area(
             `${caster.id ?? caster.name}_ice_bolt_${tick}`,
-            origin,
-            speed,
+            destination,
+            0,
             this.hitbox,
             destination,
-            () => {},
-            this.flightDuration + 1,
-            this.flightDuration + 1,
-            distance,
+            (unit) => {
+                unit.takeDamage(this.damage, caster);
+                unit.addBuff(slowBuff);
+            },
+            1,
+            0,
+            0,
             caster
         );
 
         iceBolt.category = 'IceBolt';
-        iceBolt.flightRemaining = this.flightDuration;
-        iceBolt.impact = (units) => {
-            for (const unit of units.values()) {
-                if (!unit?.alive || !unit.alive()) {
-                    continue;
-                }
-
-                if (iceBolt.getDistance(unit.position) <= iceBolt.hitbox + unit.hitbox) {
-                    unit.takeDamage(this.damage, caster);
-                    unit.addBuff(slowBuff);
-                }
-            }
-        };
-        iceBolt.update = (size, units) => {
-            if (iceBolt.finished) {
-                return;
-            }
-
-            if (!iceBolt.available(size)) {
-                iceBolt.finished = true;
-                return;
-            }
-
-            iceBolt.flightRemaining -= 1;
-            if (iceBolt.flightRemaining > 0) {
-                return;
-            }
-
-            iceBolt.position = { x: destination.x, y: destination.y };
-            iceBolt.setVelocity(0, 0);
-            iceBolt.impact(units);
-            iceBolt.finished = true;
-        };
-
         this.events.emit('enemy_skill_entity:created', { entity: iceBolt });
     }
 }
@@ -210,21 +211,26 @@ class FrostBlast extends BossSkill {
             'After chanting, freeze and weaken nearby target.',
             600, 0, 100, events, null, 200, 120
         );
-        this.range = 20;
+        this.range = 200;
         this.damage = 40;
         this.freezeDuration = 200;
         this.armorReduction = 5;
         this.armorReductionDuration = 120;
     }
 
+    getCastSkillEntityData() {
+        return {
+            category: 'FrostBlast',
+            position: null,
+            hitbox: this.range,
+            color: 'rgba(120, 220, 255, 0.9)',
+            followCaster: true,
+        };
+    }
+
     casted(caster, tick) {
         super.casted();
-        const target = caster?.target;
-        if (!caster?.position || !target?.position || !target?.alive || !target.alive()) {
-            return;
-        }
-
-        if (caster.getDistance(target.position) >= this.range) {
+        if (!caster?.position) {
             return;
         }
 
@@ -249,9 +255,21 @@ class FrostBlast extends BossSkill {
             false
         );
 
-        target.takeDamage(this.damage, caster);
-        target.addBuff(freezeBuff);
-        target.addBuff(armorBreakBuff);
+        const frostBlast = new Aura(
+            `${caster.id ?? caster.name}_frost_blast_${tick}`,
+            caster,
+            this.range,
+            this.damage,
+            (unit) => {
+                unit.addBuff(freezeBuff);
+                unit.addBuff(armorBreakBuff);
+            },
+            1,
+            0
+        );
+
+        frostBlast.category = 'FrostBlast';
+        this.events.emit('enemy_skill_entity:created', { entity: frostBlast });
     }
 }
 

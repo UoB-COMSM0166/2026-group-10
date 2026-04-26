@@ -19,9 +19,11 @@ export function loadSpriteImage(hero, enemies, map) {
 
     return {
         hero: loadImageAsset(`FrontEnd/Assert/Image/${hero}/Walk_Layout.png`),
+        death: loadImageAsset(`FrontEnd/Assert/Image/${hero}/Death_Layout.png`),
         background: loadImageAsset(`FrontEnd/Assert/Image/${map}/background.png`),
         objective: loadImageAsset(`FrontEnd/Assert/Image/${map}/Sprite_Tree.png`),
         enemies: load,
+        casting: loadImageAsset(`FrontEnd/Assert/Image/${map}/Casting.png`),
     }
 }
 

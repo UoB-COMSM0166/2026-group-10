@@ -13,6 +13,9 @@ export default class Render {
     static HERO_FRAME_COUNT = 8;
     static HERO_DIRECTION_COUNT = 8;
     static HERO_FRAME_SIZE = 96;
+    static HERO_DEATH_FRAME_COUNT = 21;
+    static HERO_DEATH_FRAME_WIDTH = 128;
+    static HERO_DEATH_FRAME_HEIGHT = 96;
     static GAME_TICK_RATE = 60;
     static ENTITY_SPRITE_BASE_SIZE = 10;
     static HERO_SPRITE_SCALE = 0.3;
@@ -95,6 +98,9 @@ export default class Render {
         const drawQueue = this.buildDrawQueue(state);
 
         this.withWorldTransform(() => {
+            this.renderBackground();
+            this.renderBossSkill(state.boss);
+
             for (const item of drawQueue) {
                 this.renderQueueItem(item, state.tick);
             }
@@ -103,6 +109,64 @@ export default class Render {
                 this.renderEnemyHealthBar(enemy);
             }
         });
+    }
+
+    renderBackground() {
+        const sketch = this.layer;
+        const background = this.sprites?.background;
+        if (!background?.complete) {
+            return;
+        }
+
+        this.drawImage(
+            sketch,
+            background,
+            0,
+            0,
+            sketch.width,
+            sketch.height
+        );
+    }
+
+    renderBossSkill(boss) {
+        if (boss?.castState?.phase !== 'casting') {
+            return;
+        }
+
+        const fakeSkillEntity = this.buildBossSkillEntity(boss);
+        if (!fakeSkillEntity?.position || (Number(fakeSkillEntity.hitbox) || 0) <= 0) {
+            return;
+        }
+
+        this.renderBaseRing(
+            fakeSkillEntity,
+            fakeSkillEntity.color ?? '#78dcff'
+        );
+    }
+
+    buildBossSkillEntity(boss) {
+        const skillEntityData = boss?.castState?.skillEntityData;
+        if (!skillEntityData) {
+            return null;
+        }
+
+        const position = skillEntityData.followCaster
+            ? boss?.position
+            : skillEntityData.position;
+        if (!position) {
+            return null;
+        }
+
+        return {
+            id: `${boss?.id ?? 'boss'}_${skillEntityData.category ?? 'skill'}`,
+            category: skillEntityData.category ?? 'SkillEntity',
+            position: {
+                x: Number(position.x) || 0,
+                y: Number(position.y) || 0,
+            },
+            hitbox: Number(skillEntityData.hitbox) || 0,
+            color: skillEntityData.color ?? '#78dcff',
+        };
     }
 
     renderEntity(entity, tick = 0, n = 0) {
@@ -116,6 +180,10 @@ export default class Render {
     }
 
     renderHeroSprite(hero, tick = 0) {
+        if (hero?.alive === false && this.renderHeroDeathSprite(hero)) {
+            return true;
+        }
+
         const sprite = this.getHeroSprite(hero);
         if (!sprite?.image) {
             return false;
@@ -127,6 +195,42 @@ export default class Render {
             Render.HERO_SPRITE_SCALE,
             2
         );
+    }
+
+    renderHeroDeathSprite(hero) {
+        const sprite = this.getHeroDeathSprite();
+        if (!sprite?.image) {
+            return false;
+        }
+
+        const elapsedTicks = this.getHeroDeathElapsedTicks(hero);
+        const frameCount = Math.max(1, Number(sprite.frameCount) || 1);
+        const animationFps = 24;
+        const frameIndex = Math.min(
+            frameCount - 1,
+            Math.max(
+                0,
+                Math.floor((elapsedTicks * animationFps) / Render.GAME_TICK_RATE)
+            )
+        );
+
+        return this.renderAnimationSprite(
+            sprite,
+            hero,
+            frameIndex,
+            Render.HERO_SPRITE_SCALE,
+            2
+        );
+    }
+
+    getHeroDeathElapsedTicks(hero) {
+        const respawnCD = Number(hero?.respawnCD) || 0;
+        const remainingRespawnCD = Number(hero?.remainingRespawnCD) || 0;
+        if (respawnCD <= 0) {
+            return 0;
+        }
+
+        return Math.max(0, respawnCD - remainingRespawnCD);
     }
 
     renderBillboardImage(image, entity, scaleMultiplier = 1, footOffset = Render.ENTITY_SPRITE_FOOT_OFFSET, facingRight = true) {
@@ -352,6 +456,10 @@ export default class Render {
         return this.buildHeroSprite(this.sprites?.hero ?? null);
     }
 
+    getHeroDeathSprite() {
+        return this.buildHeroDeathSprite(this.sprites?.death ?? null);
+    }
+
     getSpriteKey(entity) {
         const key = entity?.name ?? entity?.category ?? '';
         return String(key).trim();
@@ -387,6 +495,20 @@ export default class Render {
         };
     }
 
+    buildHeroDeathSprite(image) {
+        if (!image?.complete) {
+            return null;
+        }
+
+        return {
+            image,
+            frameCount: Render.HERO_DEATH_FRAME_COUNT,
+            directionCount: 1,
+            frameWidth: Render.HERO_DEATH_FRAME_WIDTH,
+            frameHeight: Render.HERO_DEATH_FRAME_HEIGHT,
+        };
+    }
+
     getEnemyFrameCount(image) {
         const width = Number(image?.width) || 0;
         const height = Number(image?.height) || 0;
@@ -419,8 +541,28 @@ export default class Render {
         const directionRow = directionCount > 1
             ? Math.max(0, Math.min(directionCount - 1, Math.floor(angle)))
             : 0;
-        const sourceX = frameIndex * sprite.frameWidth;
-        const sourceY = directionRow * sprite.frameHeight;
+        return this.renderAnimationSprite(
+            sprite,
+            entity,
+            frameIndex,
+            scaleMultiplier,
+            hitboxMultiplier,
+            directionRow
+        );
+    }
+
+    renderAnimationSprite(sprite, entity, frameIndex = 0, scaleMultiplier = 1, hitboxMultiplier = 1, directionRow = 0) {
+        const sketch = this.layer;
+        const hitbox = (Number(entity?.hitbox) || 0) * hitboxMultiplier;
+        if (!sprite?.image || !entity?.position || hitbox <= 0) {
+            return false;
+        }
+
+        const frameCount = Math.max(1, Number(sprite.frameCount) || 1);
+        const directionCount = Math.max(1, Number(sprite.directionCount) || 1);
+        const clampedFrameIndex = Math.max(0, Math.min(frameCount - 1, Math.floor(Number(frameIndex) || 0)));
+        const clampedDirectionRow = Math.max(0, Math.min(directionCount - 1, Math.floor(Number(directionRow) || 0)));
+        const sourceY = clampedDirectionRow * sprite.frameHeight;
         const drawWidth = Math.max(1, hitbox * Render.ENTITY_SPRITE_BASE_SIZE * scaleMultiplier);
         const aspectRatio = sprite.frameWidth > 0 ? sprite.frameHeight / sprite.frameWidth : 1;
         const drawHeight = drawWidth * aspectRatio;
@@ -436,7 +578,7 @@ export default class Render {
             -drawHeight + feetY,
             drawWidth,
             drawHeight,
-            sourceX,
+            clampedFrameIndex * sprite.frameWidth,
             sourceY,
             sprite.frameWidth,
             sprite.frameHeight

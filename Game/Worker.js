@@ -37,6 +37,9 @@ function buildCastState(unit) {
     const skill = castState.skill ?? null;
     const phase = castState.phase ?? null;
     const remaining = Math.max(0, Number(castState.remaining) || 0);
+    const skillEntityData = typeof skill?.getCastSkillEntityData === 'function'
+        ? skill.getCastSkillEntityData(castState) ?? null
+        : null;
     const duration = phase === 'backswing'
         ? Math.max(0, Number(skill?.backswingDuration) || Number(skill?.backswingRemaining) || remaining)
         : Math.max(0, Number(skill?.castDuration) || remaining);
@@ -47,6 +50,7 @@ function buildCastState(unit) {
         duration,
         casting: phase === 'casting',
         skillName: skill?.name ?? null,
+        skillEntityData,
     };
 }
 
