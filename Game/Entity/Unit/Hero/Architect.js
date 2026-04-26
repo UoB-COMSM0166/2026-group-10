@@ -4,7 +4,7 @@ import { ArrowTower, Demolish, FlameTower, FrostTower, Poverty, RockTower } from
 export default class Architect extends Hero {
     constructor(position, events, _, clock) {
         super(
-            'Architect', 'Rion Steelgear', position, 0, 0, 1, 200,
+            'Architect', 'Rion Steelgear', position, 0, 0, 1000, 200,
             'Manipulate magical elements to deal massive damage from a distance.',
             0, 0, 0, events, clock
         );
@@ -42,7 +42,7 @@ export default class Architect extends Hero {
                 return;
             }
 
-            this.restoreMP(20);
+            this.restoreMP(5);
         });
     }
 

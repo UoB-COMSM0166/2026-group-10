@@ -2,6 +2,32 @@ import Skill from './Skill.js';
 import Buff from './Buff.js';
 import { Tower } from './SkillEntity.js';
 
+const MAX_ACTIVE_TOWERS = 9;
+
+function getActiveTowerCount(events) {
+    const registry = events?.skillEntityRegistry;
+    if (!(registry instanceof Map)) {
+        return 0;
+    }
+
+    let count = 0;
+    for (const entity of registry.values()) {
+        if (entity?.category === 'Tower' && !entity.finished) {
+            count += 1;
+        }
+    }
+
+    return count;
+}
+
+function failTowerPlacement() {
+    return {
+        ok: false,
+        code: 409,
+        message: `Tower limit reached. Maximum ${MAX_ACTIVE_TOWERS} towers can exist at the same time.`,
+    };
+}
+
 class FlameTowerEntity extends Tower {
     constructor(id, position, hitbox, events, duration, attackRange, damage, armorReduction, source = null) {
         super(id, position, hitbox, events, duration, attackRange, 1, 0, 0, damage, source);
@@ -109,7 +135,7 @@ export class ArrowTower extends Skill {
         super(
             'ArrowTower', 'Physics',
             'Build an arrow tower at the target point.',
-            0, 40, 99999, events, 'Point', false
+            0, 40, 600, events, 'Point', false
         );
         this.duration = Number.MAX_SAFE_INTEGER;
         this.attackRange = 150;
@@ -121,11 +147,15 @@ export class ArrowTower extends Skill {
     }
 
     casted(target, caster, _, tick) {
-        super.casted();
         if (!target || !caster) {
-            return;
+            return { ok: false, code: 400, message: 'Tower target point is required.' };
         }
 
+        if (getActiveTowerCount(this.events) >= MAX_ACTIVE_TOWERS) {
+            return failTowerPlacement();
+        }
+
+        super.casted();
         const casterId = caster?.name ?? caster;
         const tower = new Tower(
             `${casterId}_arrow_tower_${tick}`,
@@ -146,6 +176,7 @@ export class ArrowTower extends Skill {
         );
 
         this.events.emit('skill_entity:created', { entity: tower });
+        return { ok: true };
     }
 }
 
@@ -154,7 +185,7 @@ export class RockTower extends Skill {
         super(
             'RockTower', 'Physics',
             'Build a rock tower at the target point.',
-            0, 60, 99999, events, 'Point', false
+            0, 60, 600, events, 'Point', false
         );
         this.duration = Number.MAX_SAFE_INTEGER;
         this.attackRange = 130;
@@ -167,11 +198,15 @@ export class RockTower extends Skill {
     }
 
     casted(target, caster, _, tick) {
-        super.casted();
         if (!target || !caster) {
-            return;
+            return { ok: false, code: 400, message: 'Tower target point is required.' };
         }
 
+        if (getActiveTowerCount(this.events) >= MAX_ACTIVE_TOWERS) {
+            return failTowerPlacement();
+        }
+
+        super.casted();
         const casterId = caster?.name ?? caster;
         const tower = new Tower(
             `${casterId}_rock_tower_${tick}`,
@@ -192,6 +227,7 @@ export class RockTower extends Skill {
         );
 
         this.events.emit('skill_entity:created', { entity: tower });
+        return { ok: true };
     }
 }
 
@@ -200,7 +236,7 @@ export class FlameTower extends Skill {
         super(
             'FlameTower', 'Physics',
             'Build a flame tower at the target point.',
-            0, 100, 99999, events, 'Point', false
+            0, 100, 600, events, 'Point', false
         );
         this.duration = Number.MAX_SAFE_INTEGER;
         this.attackRange = 160;
@@ -210,11 +246,15 @@ export class FlameTower extends Skill {
     }
 
     casted(target, caster, _, tick) {
-        super.casted();
         if (!target || !caster) {
-            return;
+            return { ok: false, code: 400, message: 'Tower target point is required.' };
         }
 
+        if (getActiveTowerCount(this.events) >= MAX_ACTIVE_TOWERS) {
+            return failTowerPlacement();
+        }
+
+        super.casted();
         const casterId = caster?.name ?? caster;
         const tower = new FlameTowerEntity(
             `${casterId}_flame_tower_${tick}`,
@@ -229,6 +269,7 @@ export class FlameTower extends Skill {
         );
 
         this.events.emit('skill_entity:created', { entity: tower });
+        return { ok: true };
     }
 }
 
@@ -237,7 +278,7 @@ export class FrostTower extends Skill {
         super(
             'FrostTower', 'Physics',
             'Build a frost tower at the target point.',
-            0, 80, 99999, events, 'Point', false
+            0, 80, 600, events, 'Point', false
         );
         this.duration = Number.MAX_SAFE_INTEGER;
         this.auraRadius = 150;
@@ -249,11 +290,15 @@ export class FrostTower extends Skill {
     }
 
     casted(target, caster, _, tick) {
-        super.casted();
         if (!target || !caster) {
-            return;
+            return { ok: false, code: 400, message: 'Tower target point is required.' };
         }
 
+        if (getActiveTowerCount(this.events) >= MAX_ACTIVE_TOWERS) {
+            return failTowerPlacement();
+        }
+
+        super.casted();
         const casterId = caster?.name ?? caster;
         const tower = new FrostTowerEntity(
             `${casterId}_frost_tower_${tick}`,
@@ -270,6 +315,7 @@ export class FrostTower extends Skill {
         );
 
         this.events.emit('skill_entity:created', { entity: tower });
+        return { ok: true };
     }
 }
 
@@ -278,7 +324,7 @@ export class Demolish extends Skill {
         super(
             'Demolish', 'Physics',
             'Destroy a target tower and restore mana.',
-            0, 0, 99999, events, 'Tower', false
+            0, 0, 600, events, 'Tower', false
         );
         this.manaRefund = 20;
     }
