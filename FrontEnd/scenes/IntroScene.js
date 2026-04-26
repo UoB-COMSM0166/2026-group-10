@@ -8,41 +8,41 @@ class IntroScene {
         const cx = sketch.width / 2;
         this.slides = [
             {
-                text: `On the edge of a forest was a town called Cinder, where the people lived happily...`,
+                text: `Deep within a forest near Cinder, lives a tree that is the source of life`,
                 image: introImages[0],
                 narration: introVoices[0],
                 x: cx - 200,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 500,
+                height: 420
             }, {
-                text: `But one day, an evil, tree released an army of cruel creatures to attack Cinder...`,
+                text: `recently, an army of undead creatures has awakened from the earth...`,
                 image: introImages[1],
                 narration: introVoices[1],
                 x: cx - 200,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 500,
+                height: 420
             }, {
-                text: `the evil army is fast approaching the town...`,
+                text: `the evil army want to destroy the precious tree...`,
                 image: introImages[2],
                 narration: introVoices[2],
                 x: cx - 200,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 500,
+                height: 420
             }, {
-                text: `only you can stop them and protect the good people of Cinder...`,
+                text: `only you can stop them and protect the ancient tree...`,
                 image: introImages[3],
                 narration: introVoices[3],
                 x: cx - 200,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 500,
+                height: 420
             }
         ]
 
-        this.mainMenuButton = new Button(sketch, 20, 50, 130, 50, "Main Menu", () => {
+        this.mainMenuButton = new Button(sketch, 20, 50, 160, 50, "Main Menu", () => {
             //stopping intro music before returning to main menu
             if(introMusic.isPlaying() == true) {
                 introMusic.stop();
@@ -155,15 +155,20 @@ class IntroScene {
             this.sketch.drawingContext.drawImage(slide.image, bounceX, slide.y, slide.width, slide.height);
         }
 
-        //displaying the text
-        this.sketch.fill('orange');
-        this.sketch.textAlign(this.sketch.CENTER, this.sketch.CENTER);
-        this.sketch.textSize(40);
-
         // making the text bounce up and down
         let bounceRate = 0.02;
         let bounceHeight = 10;
         let bounceY = this.sketch.height/1.3 + this.sketch.sin(this.sketch.frameCount * bounceRate) * bounceHeight;
+        
+        //making a shaded background for the text to increase text readability
+        this.sketch.fill(0, 120);
+        this.sketch.rect(0, bounceY - 30, this.sketch.width, 80);
+        //displaying the text
+        this.sketch.fill(255, 255, 255, 220);
+        this.sketch.textAlign(this.sketch.CENTER, this.sketch.CENTER);
+        this.sketch.textSize(40);
+
+        
 
         this.sketch.text(slide.text, this.sketch.width/2, bounceY);
                 

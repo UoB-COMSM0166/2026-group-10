@@ -5,15 +5,15 @@ class SelectDifficultyScene {
         const cx = sketch.width / 2;
         const cy = sketch.height / 2;
         
-        this.easyButton = new Button(sketch, cx - 100, cy - 130, 200, 75, "Easy", () => {
+        this.easyButton = new Button(sketch, cx - 100, cy - 20, 200, 75, "Easy", () => {
             window.gameState.selectedDifficulty = "easy";
             window.activeScene = new SelectCharacterScene(sketch, window.generalBackground);
         });
-        this.mediumButton = new Button(sketch, cx - 100, cy - 40, 200, 75, "Medium", () => {
+        this.mediumButton = new Button(sketch, cx - 100, cy + 90, 200, 75, "Medium", () => {
             window.gameState.selectedDifficulty = "medium";
             window.activeScene = new SelectCharacterScene(sketch, window.generalBackground);
         });
-        this.HardButton = new Button(sketch, cx - 100, cy + 50, 200, 75, "Hard", () => {
+        this.HardButton = new Button(sketch, cx - 100, cy + 200, 200, 75, "Hard", () => {
             window.gameState.selectedDifficulty = "hard";
             window.activeScene = new SelectCharacterScene(sketch, window.generalBackground);
         });

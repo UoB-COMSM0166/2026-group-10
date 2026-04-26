@@ -30,7 +30,7 @@ class SelectCharacterScene {
             height: 400
         }];
 
-        this.mainMenuButton = new Button(sketch, 20, 50, 130, 50, "Main Menu", () => {
+        this.mainMenuButton = new Button(sketch, 20, 50, 160, 50, "Main Menu", () => {
            //stopping all narration tracks before returning to main menu
             this.stopAllNarration();
             //returning to main menu
@@ -56,7 +56,7 @@ class SelectCharacterScene {
             }
         });
 
-        this.backButton = new Button(sketch, 40, sketch.height - 70, 200, 50, "Previous Character", () => {
+        this.backButton = new Button(sketch, 40, sketch.height - 70, 250, 50, "Previous Character", () => {
             //if user clicks back when viewing first character do nothing, else load previous character
             if(this.currentSlide > 0) {
                 this.currentSlide--;
@@ -109,10 +109,13 @@ class SelectCharacterScene {
         }
 
         //displaying text for current slide
-        this.sketch.fill('orange');
+        this.sketch.fill(0, 120);
+        this.sketch.rect(0, this.sketch.height - 300, this.sketch.width, 80);
+        this.sketch.fill(255);
+        //displaying text for current slide
         this.sketch.textAlign(this.sketch.CENTER, this.sketch.CENTER);
         this.sketch.textSize(40);
-        this.sketch.text(slide.text, this.sketch.width/2, this.sketch.height - 160);
+        this.sketch.text(slide.text, this.sketch.width/2, this.sketch.height - 260);
     }
 
     mousePressed() {

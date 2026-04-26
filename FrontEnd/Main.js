@@ -324,24 +324,24 @@ const sketch = (p) => {
             return p.loadSound(path, cb); // Fallback
         };
 
-        window.menuBackground = loadImg("FrontEnd/Assert/Image/menu_background.png");
-        window.generalBackground = loadImg("FrontEnd/Assert/Image/general-background.png");
-        window.selectDifficultyBg = loadImg("FrontEnd/Assert/Image/select_difficulty_bg.png");
+        window.menuBackground = loadImg("FrontEnd/Assert/Image/newMenuBG.png");
+        window.generalBackground = loadImg("FrontEnd/Assert/Image/generalBGZelda.png");
+        window.selectDifficultyBg = loadImg("FrontEnd/Assert/Image/newSelectDifficultyBG.png");
         window.cursorImage = loadImg("FrontEnd/Assert/Image/cursor.png");
         
         window.introImages[0] = loadImg("FrontEnd/Assert/Image/intro1.png");
-        window.introImages[1] = loadImg("FrontEnd/Assert/Image/intro2.jpg");
+        window.introImages[1] = loadImg("FrontEnd/Assert/Image/intro2.png");
         window.introImages[2] = loadImg("FrontEnd/Assert/Image/intro3.png");
-        window.introImages[3] = loadImg("FrontEnd/Assert/Image/intro4.jpg");
+        window.introImages[3] = loadImg("FrontEnd/Assert/Image/intro4.png");
         
-        window.characterImages[0] = loadImg("FrontEnd/Assert/Image/elf_img_no_bg.png");
-        window.characterImages[1] = loadImg("FrontEnd/Assert/Image/warrior_img.jpg");
-        window.characterImages[2] = loadImg("FrontEnd/Assert/Image/mage_img.jpg");
+        window.characterImages[0] = loadImg("FrontEnd/Assert/Image/Profile_Ranger.png");
+        window.characterImages[1] = loadImg("FrontEnd/Assert/Image/Profile_Warrior.png");
+        window.characterImages[2] = loadImg("FrontEnd/Assert/Image/Profile_Archmage.png");
 
-        window.introVoices[0] = loadSnd("FrontEnd/Assert/Sound/introVoiceOne.mp3");
-        window.introVoices[1] = loadSnd("FrontEnd/Assert/Sound/introVoiceTwo.mp3");
-        window.introVoices[2] = loadSnd("FrontEnd/Assert/Sound/introVoiceThree.mp3");
-        window.introVoices[3] = loadSnd("FrontEnd/Assert/Sound/introVoiceFour.mp3");
+        window.introVoices[0] = loadSnd("FrontEnd/Assert/Sound/intro_narration_1.mp3");
+        window.introVoices[1] = loadSnd("FrontEnd/Assert/Sound/intro_narration_2.mp3");
+        window.introVoices[2] = loadSnd("FrontEnd/Assert/Sound/intro_narration_3.mp3");
+        window.introVoices[3] = loadSnd("FrontEnd/Assert/Sound/intro_narration_4.mp3");
         
         window.characterVoices[0] = loadSnd("FrontEnd/Assert/Sound/elf_narration.mp3");
         window.characterVoices[1] = loadSnd("FrontEnd/Assert/Sound/warrior_narration.mp3");
