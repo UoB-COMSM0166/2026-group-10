@@ -660,11 +660,13 @@ For the animation, we manually copied sprite textures from some older games usin
 
 > Using Aseprite to create Animation.
 
-**Sound Asserts
-**
-> To be completed...
+**Sound Asserts**
 
-## Unfinished Work
+We use two separate audio tracks in the game: one for background music (BGM) and another for sound effects.
+
+To keep memory usage low, the background music system relies on MIDI files to store musical data. These files are played using the Tone.js MIDI library. For a more pleasant listening experience, sine waves are used for the music, as they produce a softer sound compared to triangle or square waves.
+
+Each BGM track can only play one MIDI file at a time. The system also responds to in-game events—such as boss fights, player death, or respawning—by automatically switching to the most appropriate background music.
 
 **Skill Effects**
 
