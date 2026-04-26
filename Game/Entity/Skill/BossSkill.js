@@ -88,17 +88,4 @@ export default class BossSkill extends Skill {
     isBusy() {
         return this.isCasting() || this.isBackswing();
     }
-
-    getTimingState() {
-        return {
-            phase: this.phase,
-            casting: this.isCasting(),
-            backswing: this.isBackswing(),
-            remaining: this.isCasting() ? this.castRemaining : this.backswingRemaining,
-            castRemaining: this.castRemaining,
-            backswingRemaining: this.backswingRemaining,
-            castDuration: this.castDuration,
-            backswingDuration: this.backswingDuration,
-        };
-    }
 }

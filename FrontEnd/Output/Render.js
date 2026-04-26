@@ -26,69 +26,69 @@ export default class Render {
         this.sprites = loadSpriteImage(hero, enemies, map);
     }
 
-    renderHero(hero, tick = 0) {
-        const sketch = this.layer;
-        if (!hero?.position) {
-            return;
-        }
-
-        this.withWorldTransform(() => {
-            this.renderBaseRing(hero);
-
-            if (this.renderHeroSprite(hero, tick)) {
-                return;
-            }
-
-            sketch.noStroke();
-            sketch.fill(hero.alive ? '#8cd3ff' : '#5f6f82');
-            sketch.circle(hero.position.x, hero.position.y, hero.hitbox);
-        });
-    }
-
-    renderEnemies(enemies = [], tick = 0) {
-        const sketch = this.layer;
-        this.withWorldTransform(() => {
-            sketch.noStroke();
-
-            for (const enemy of enemies) {
-                if (!enemy?.position) {
-                    continue;
-                }
-
-                this.renderBaseRing(enemy);
-
-                if (!this.renderEntity(enemy, tick, 0)) {
-                    sketch.fill(this.getEnemyColor(enemy.name));
-                    sketch.circle(enemy.position.x, enemy.position.y, enemy.hitbox * 2.1);
-                }
-
-                this.renderEnemyHealthBar(enemy);
-            }
-        });
-    }
-
-    renderSkillEntities(entities = [], color, tick = 0) {
-        const sketch = this.layer;
-        this.withWorldTransform(() => {
-            sketch.noFill();
-            sketch.stroke(color);
-            sketch.strokeWeight(2);
-
-            for (const entity of entities) {
-                if (!entity?.position) {
-                    continue;
-                }
-
-                if (!this.renderEntity(entity, tick)) {
-                    sketch.circle(entity.position.x, entity.position.y, entity.hitbox * 2);
-                }
-            }
-        });
-    }
-
-    renderUnitsAndProjectiles(state) {
-        this.renderScene(state);
-    }
+    // renderHero(hero, tick = 0) {
+    //     const sketch = this.layer;
+    //     if (!hero?.position) {
+    //         return;
+    //     }
+    //
+    //     this.withWorldTransform(() => {
+    //         this.renderBaseRing(hero);
+    //
+    //         if (this.renderHeroSprite(hero, tick)) {
+    //             return;
+    //         }
+    //
+    //         sketch.noStroke();
+    //         sketch.fill(hero.alive ? '#8cd3ff' : '#5f6f82');
+    //         sketch.circle(hero.position.x, hero.position.y, hero.hitbox);
+    //     });
+    // }
+    //
+    // renderEnemies(enemies = [], tick = 0) {
+    //     const sketch = this.layer;
+    //     this.withWorldTransform(() => {
+    //         sketch.noStroke();
+    //
+    //         for (const enemy of enemies) {
+    //             if (!enemy?.position) {
+    //                 continue;
+    //             }
+    //
+    //             this.renderBaseRing(enemy);
+    //
+    //             if (!this.renderEntity(enemy, tick, 0)) {
+    //                 sketch.fill(this.getEnemyColor(enemy.name));
+    //                 sketch.circle(enemy.position.x, enemy.position.y, enemy.hitbox * 2.1);
+    //             }
+    //
+    //             this.renderEnemyHealthBar(enemy);
+    //         }
+    //     });
+    // }
+    //
+    // renderSkillEntities(entities = [], color, tick = 0) {
+    //     const sketch = this.layer;
+    //     this.withWorldTransform(() => {
+    //         sketch.noFill();
+    //         sketch.stroke(color);
+    //         sketch.strokeWeight(2);
+    //
+    //         for (const entity of entities) {
+    //             if (!entity?.position) {
+    //                 continue;
+    //             }
+    //
+    //             if (!this.renderEntity(entity, tick)) {
+    //                 sketch.circle(entity.position.x, entity.position.y, entity.hitbox * 2);
+    //             }
+    //         }
+    //     });
+    // }
+    //
+    // renderUnitsAndProjectiles(state) {
+    //     this.renderScene(state);
+    // }
 
     renderScene(state) {
         if (!state) {
@@ -521,7 +521,6 @@ export default class Render {
     }
 
     renderDirectionalSprite(sprite, entity, tick = 0, scaleMultiplier = 1, hitboxMultiplier = 1) {
-        const sketch = this.layer;
         const hitbox = (Number(entity?.hitbox) || 0) * hitboxMultiplier;
         if (!sprite?.image || !entity?.position || hitbox <= 0) {
             return false;

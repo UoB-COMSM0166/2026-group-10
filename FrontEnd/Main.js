@@ -1,7 +1,8 @@
 import Input from './Input.js';
+import { getSoundResource } from './Assert/AssetSheet.js';
 import UI from './Output/UI.js';
 import Render from './Output/Render.js';
-import { BackgroundMusic } from './Output/Sound.js';
+import { BackgroundMusic, SoundEffect } from './Output/Sound.js';
 
 const p5Ctor = window.p5;
 if (!p5Ctor) {
@@ -12,17 +13,20 @@ const GAME_WIDTH = 1600;
 const GAME_HEIGHT = 900;
 // TODO: Connect this to the Menu.
 const DEFAULT_GAME_CONFIG = {
-    hero: 'Warrior',
-    category: 'Long Sword',
+    hero: 'Architect',
+    category: 'Penis',
     world: 'Forest',
 };
 
 const worker = new Worker(new URL('../Game/Worker.js', import.meta.url), { type: 'module' });
+const soundResource = getSoundResource();
 const MUSIC_TRACKS = [
-    { id: 'normal', label: 'Normal', url: 'FrontEnd/Assert/Sound/Normal.mid', loop: true },
-    { id: 'death', label: 'Death', url: 'FrontEnd/Assert/Sound/Death.mid', loop: false },
-    { id: 'dead', label: 'Dead', url: 'FrontEnd/Assert/Sound/Dead.mid', loop: true },
-    { id: 'boss', label: 'Boss', url: 'FrontEnd/Assert/Sound/Boss.mid', loop: true },
+    { id: 'normal', label: 'Normal', url: soundResource.normal, loop: true },
+    { id: 'death', label: 'Death', url: soundResource.death, loop: false },
+    { id: 'dead', label: 'Dead', url: soundResource.dead, loop: true },
+    { id: 'boss', label: 'Boss', url: soundResource.boss, loop: true },
+    { id: 'win', label: 'Win', url: soundResource.win, loop: false },
+    { id: 'lose', label: 'Lose', url: soundResource.lose, loop: false },
 ];
 window.addEventListener('contextmenu', (event) => {
     event.preventDefault();
@@ -34,14 +38,45 @@ let latestResult = null;
 let uiMessageQueue = [];
 let bookPausedGame = false;
 const music = new BackgroundMusic(MUSIC_TRACKS);
+const soundEffect = new SoundEffect({
+    eventMap: {
+        'hero:attack:hit': 'heroAttack',
+        'skill_entity:created': 'heroSkill',
+        'enemy_skill_entity:created': 'enemySkill',
+        'allied_decoy:created': 'heroSkill',
+        'enemy:killed': 'enemyKilled',
+        'enemy:reached_objective': 'objectiveHit',
+        'hero:death': 'heroDeath',
+        'hero:respawn': 'heroRespawn',
+        'wave:start': 'waveStart',
+        'game:win': 'victory',
+        'objective:destroyed': 'defeat',
+    },
+    eventCooldowns: {
+        'hero:attack:hit': 80,
+        'skill_entity:created': 120,
+        'enemy_skill_entity:created': 180,
+        'allied_decoy:created': 250,
+        'enemy:killed': 60,
+        'enemy:reached_objective': 220,
+        'hero:death': 1000,
+        'hero:respawn': 800,
+        'wave:start': 1200,
+        'game:win': 1500,
+        'objective:destroyed': 1500,
+    },
+});
 const musicState = {
     desiredTrackId: null,
     currentTrackId: null,
     heroAlive: true,
     bossAlive: false,
+    gameWon: false,
+    gameLost: false,
     previousStarted: false,
     previousHeroAlive: null,
     previousBossId: null,
+    previousGameWon: false,
     requestId: 0,
 };
 
@@ -104,12 +139,39 @@ function handleMusicState(state) {
     }
 
     const started = Boolean(state.flags?.started);
+    const gameWon = Boolean(state.flags?.gameWon);
     const heroAlive = state.hero?.alive !== false;
     const bossId = state.boss?.id ?? null;
     const bossAlive = Boolean(bossId && state.boss?.alive !== false && !state.boss?.finished);
 
     musicState.heroAlive = heroAlive;
     musicState.bossAlive = bossAlive;
+    musicState.gameWon = gameWon;
+
+    if (musicState.gameLost) {
+        musicState.previousStarted = started;
+        musicState.previousHeroAlive = heroAlive;
+        musicState.previousBossId = bossId;
+        musicState.previousGameWon = gameWon;
+        return;
+    }
+
+    if (!musicState.previousGameWon && gameWon) {
+        void playMusicTrack('win', { restart: true });
+        musicState.previousStarted = started;
+        musicState.previousHeroAlive = heroAlive;
+        musicState.previousBossId = bossId;
+        musicState.previousGameWon = gameWon;
+        return;
+    }
+
+    if (gameWon) {
+        musicState.previousStarted = started;
+        musicState.previousHeroAlive = heroAlive;
+        musicState.previousBossId = bossId;
+        musicState.previousGameWon = gameWon;
+        return;
+    }
 
     if (!musicState.previousStarted && started && heroAlive) {
         void playMusicTrack('normal');
@@ -128,9 +190,11 @@ function handleMusicState(state) {
     musicState.previousStarted = started;
     musicState.previousHeroAlive = heroAlive;
     musicState.previousBossId = bossId;
+    musicState.previousGameWon = gameWon;
 }
 
 async function unlockAudioAndSync() {
+    await soundEffect.unlock();
     await syncMusicToDesiredTrack();
 }
 
@@ -301,6 +365,20 @@ worker.onmessage = (event) => {
             at: Date.now(),
         });
         latestEvents = latestEvents.slice(-12);
+        soundEffect.handleEvent(name, payload);
+        if (name === 'game:start') {
+            musicState.gameLost = false;
+            musicState.gameWon = false;
+            musicState.previousStarted = false;
+            musicState.previousHeroAlive = null;
+            musicState.previousBossId = null;
+            musicState.previousGameWon = false;
+            void playMusicTrack('normal', { restart: true });
+        }
+        if (name === 'objective:destroyed') {
+            musicState.gameLost = true;
+            void playMusicTrack('lose', { restart: true });
+        }
     } else if (type === 'result') {
         latestResult = event.data;
     } else if (type === 'error') {
@@ -350,6 +428,11 @@ const input = new Input({
         }
 
         sketchUi.handleSkillClick(state.hero, mouse, postCommand);
+    },
+    setCheatInputState: (value) => {
+        if (sketchUi && typeof sketchUi.setCheatInputState === 'function') {
+            sketchUi.setCheatInputState(value);
+        }
     },
 });
 input.vectorTargetStart = null;

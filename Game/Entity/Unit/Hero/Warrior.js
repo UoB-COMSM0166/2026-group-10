@@ -20,6 +20,11 @@ export default class Warrior extends Hero {
 
         this.currentMP = 0;
 
+        this.statsGrowth.set('Speed', 0.2);
+        this.statsGrowth.set('Armor', 0.3);
+        this.statsGrowth.set('Strength', 1.5);
+        this.statsGrowth.set('Intelligence', 0.5);
+
         const slash = new Slash(this.events);
         const bladeSpin = new BladeSpin(this.events);
         const sacrifice = new Sacrifice(this.events);
@@ -138,7 +143,6 @@ export default class Warrior extends Hero {
             this.skill.set(skillSlot, nextSkill);
         }
 
-        this.currentCategory = nextCategory;
         this.applyPassiveSkills();
         return this.skill.get(normalizedSlot) ?? null;
     }

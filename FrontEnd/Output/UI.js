@@ -3,7 +3,7 @@ import { loadUIImage } from "../Assert/AssetSheet.js";
 
 // TODO: Connect this to Menu.
 
-const HERO = 'Warrior';
+const HERO = 'Architect';
 const WORLD = 'Forest';
 const SKILL_ICON_SLOT_BY_NAME = {
     'Ice Pick': 'A_1', 'Fire Ball': 'A_2', 'Stick': 'A_3',
@@ -18,7 +18,8 @@ const SKILL_ICON_SLOT_BY_NAME = {
     'Jumping Slash': 'E_1', 'Stride': 'E_2', 'Ball Lightning': 'E_3',
     'Earthquake Slash': 'R_1', 'Flaw': 'R_2', 'Static Explosion': 'R_3',
     'Sanguivore': 'P_1', 'Focus': 'P_2', 'SpiritBlade': 'P_3',
-
+    'Arrow Tower': 'A_1', 'Rock Tower': 'Q_1', 'FlameTower': 'W_1',
+    'Frost Tower': 'E_1', 'Demolish': 'R_1', 'Poverty': 'P_1',
 };
 const SKILL_ORDER = ['Q', 'W', 'E', 'R', 'Max'];
 
@@ -49,9 +50,12 @@ export default class UI {
             Lightning: '#9a25fb',
             default: '#6c7a89',
         };
-        this.buffFallbackColor = '#b8c4d6';
         this.toast = null;
         this.toastDuration = 60;
+        this.cheatInput = {
+            active: false,
+            content: '',
+        };
     }
 
     draw(state, mouse = null) {
@@ -76,6 +80,7 @@ export default class UI {
         }
         this.drawSkillDetail(state.hero, mouse);
         this.drawToasts();
+        this.drawCheatInput();
     }
 
     drawBossStatusPanel(boss) {
@@ -196,6 +201,13 @@ export default class UI {
         return message;
     }
 
+    setCheatInputState(state = {}) {
+        this.cheatInput = {
+            active: Boolean(state.active),
+            content: String(state.content ?? ''),
+        };
+    }
+
     pushToast(message, tone = 'info') {
         if (!message) {
             return;
@@ -232,6 +244,40 @@ export default class UI {
         const startY = layer.height - 340;
 
         this.drawToast(startX, startY, width, height, this.toast);
+    }
+
+    drawCheatInput() {
+        if (!this.cheatInput?.active) {
+            return;
+        }
+
+        const layer = this.layer;
+        const width = 760;
+        const height = 108;
+        const x = (layer.width - width) / 2;
+        const y = layer.height - 180;
+        const content = this.cheatInput.content ?? '';
+
+        layer.push();
+        layer.noStroke();
+        layer.fill(10, 14, 22, 232);
+        layer.rect(x, y, width, height, 18);
+        layer.fill('#f5c750');
+        layer.rect(x, y, width, 6, 18, 18, 0, 0);
+        View.text(layer, x + width / 2, y + 18, 'Cheat Input', 22, 255, true, 0, 0, 'Arial', 3);
+
+        layer.fill(18, 24, 36, 240);
+        layer.rect(x + 24, y + 42, width - 48, 44, 12);
+        layer.stroke('#8caeff');
+        layer.strokeWeight(2);
+        layer.noFill();
+        layer.rect(x + 24, y + 42, width - 48, 44, 12);
+        layer.noStroke();
+
+        const displayContent = `cheat:${content}${Math.floor(Date.now() / 500) % 2 === 0 ? '_' : ''}`;
+        View.text(layer, x + 36 + (width - 72) / 2, y + 64, displayContent, 22, 255, false, 0, 0, 'Arial', 2);
+        View.text(layer, x + width / 2, y + 94, 'Press Enter to submit, Esc to cancel', 14, 210, false, 0, 0, 'Arial', 2);
+        layer.pop();
     }
 
     drawToast(x, y, width, height, toast) {
@@ -424,7 +470,7 @@ export default class UI {
             const positive = buff.positive === true;
             const timeLeft = Number(buff.timeLeft) || 0;
             const maxTime = Number(buff.maxTime) || 0;
-            const icon = buff.icon ? layer.color(buff.icon) : this.buffFallbackColor;
+            // const icon = buff.icon ? layer.color(buff.icon) : this.buffFallbackColor;
             const index = buffs.indexOf(buff);
             const gap = 12;
             const size = 40;
@@ -453,7 +499,7 @@ export default class UI {
         layer.rect(x, y, width, height, 18);
         layer.pop();
 
-        let statusText = 'Upcoming';
+        let statusText;
 
         if (flags?.paused) {
             statusText = 'Pause';
@@ -647,53 +693,40 @@ export default class UI {
 
     //     layer.pop();
     // }
-
-    getRatio(value, maxValue) {
-        if (!maxValue || maxValue <= 0) {
-            return 0;
-        }
-
-        return value / maxValue;
-    }
+    //
+    // getRatio(value, maxValue) {
+    //     if (!maxValue || maxValue <= 0) {
+    //         return 0;
+    //     }
+    //
+    //     return value / maxValue;
+    // }
 
     getSkillColor(category) {
         return this.skillPalette[category] ?? this.skillPalette.default;
     }
 
-    parseColor(value, fallback) {
-        const layer = this.layer;
-        if (typeof value === 'string' && value.length > 0) {
-            return layer.color(value);
-        }
-
-        return layer.color(fallback);
-    }
-
-    compactName(name) {
-        if (!name) {
-            return '';
-        }
-
-        const words = String(name).split(/\s+/).filter(Boolean);
-        if (words.length === 1) {
-            return words[0].slice(0, 8);
-        }
-
-        return words.map((word) => word[0]).join('').slice(0, 4);
-    }
-
-    getBuffInitials(name) {
-        if (!name) {
-            return '';
-        }
-
-        const words = String(name).split(/\s+/).filter(Boolean);
-        if (words.length === 1) {
-            return words[0].slice(0, 2).toUpperCase();
-        }
-
-        return words.map((word) => word[0]).join('').slice(0, 2).toUpperCase();
-    }
+    // parseColor(value, fallback) {
+    //     const layer = this.layer;
+    //     if (typeof value === 'string' && value.length > 0) {
+    //         return layer.color(value);
+    //     }
+    //
+    //     return layer.color(fallback);
+    // }
+    //
+    // compactName(name) {
+    //     if (!name) {
+    //         return '';
+    //     }
+    //
+    //     const words = String(name).split(/\s+/).filter(Boolean);
+    //     if (words.length === 1) {
+    //         return words[0].slice(0, 8);
+    //     }
+    //
+    //     return words.map((word) => word[0]).join('').slice(0, 4);
+    // }
 
     formatSeconds(currentCooldown, cooldown) {
         const current = (Number(currentCooldown) || 0) / 60;
@@ -889,27 +922,27 @@ export default class UI {
             && point.y <= rect.y + rect.height;
     }
 
-    getDetailedSkill(hero) {
-        const skills = hero?.skills ?? {};
-        const preferredSlots = [
-            hero?.selectedSkill,
-            hero?.targeting?.skillKey,
-            'A',
-            'Q',
-            'W',
-            'E',
-            'R',
-            'P',
-        ].filter(Boolean);
-
-        for (const slot of preferredSlots) {
-            if (skills[slot]) {
-                return skills[slot];
-            }
-        }
-
-        return Object.values(skills).find(Boolean) ?? null;
-    }
+    // getDetailedSkill(hero) {
+    //     const skills = hero?.skills ?? {};
+    //     const preferredSlots = [
+    //         hero?.selectedSkill,
+    //         hero?.targeting?.skillKey,
+    //         'A',
+    //         'Q',
+    //         'W',
+    //         'E',
+    //         'R',
+    //         'P',
+    //     ].filter(Boolean);
+    //
+    //     for (const slot of preferredSlots) {
+    //         if (skills[slot]) {
+    //             return skills[slot];
+    //         }
+    //     }
+    //
+    //     return Object.values(skills).find(Boolean) ?? null;
+    // }
 
     getSkillTreeSlot(hero, slot) {
         const skillTree = hero?.skillTree;
@@ -968,26 +1001,6 @@ export default class UI {
 
     getRespawnSeconds(hero) {
         return Math.max(0, Math.ceil((Number(hero?.remainingRespawnCD) || 0) / 60));
-    }
-
-    loadImageAssets(assetMap) {
-        const assets = {};
-
-        for (const [key, path] of Object.entries(assetMap ?? {})) {
-            assets[key] = this.loadImageAsset(path);
-        }
-
-        return assets;
-    }
-
-    loadImageAsset(path) {
-        if (typeof window === 'undefined' || typeof window.Image !== 'function') {
-            return null;
-        }
-
-        const image = new window.Image();
-        image.src = path;
-        return image;
     }
 
     loadFontAssets(fontMap) {

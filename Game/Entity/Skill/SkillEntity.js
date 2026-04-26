@@ -315,10 +315,10 @@ export class Guardian extends Unit {
         duration, attackRange, attackInterval, missileSpeed, missileHitbox, damage, onHitEffect = null
     ) {
         super(id, position, 0, hitbox, 1, 0);
-        this.events = events;
         this.duration = Number(duration);
         this.attackRange = Number(attackRange);
         this.attackInterval = Number(attackInterval);
+        this.events = events;
         this.attackCooldown = 0;
         this.missileSpeed = Number(missileSpeed);
         this.missileHitbox = Number(missileHitbox);

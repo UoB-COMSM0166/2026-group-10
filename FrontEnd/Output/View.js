@@ -17,19 +17,8 @@ export default class View {
         layer.fill(color);
         const width = layer.textWidth(text) + paddingX * 2;
         const height = layer.textAscent() + paddingY * 2;
-        let realX = 0;
-        let realY = 0;
-        // if (alignX === View.CENTER) {
-            realX = x - width / 2;
-        // } else if (alignX === View.RIGHT) {
-        //     realX = x - width;
-        // }
-
-        // if (alignY === View.CENTER) {
-            realY = y + height / 2;
-        // } else if (alignY === View.BOTTOM) {
-        //     realY = y + height;
-        // }
+        let realX = x - width / 2;
+        let realY = y + height / 2;
 
         layer.text(text, realX, realY);
     }
@@ -46,7 +35,8 @@ export default class View {
         layer.rect(x, y, width * clampedRatio, height);
 
         View.text(layer, x + width / 2, y + height / 2, `${Math.round(current)} / ${Math.round(max)}`, textSize, 255, true, 0, 0, "Arial", 3);
-        View.text(layer, x + width, y + height / 2, `+${regen.toFixed(1)}`, textSize - 8, 200, true, 30, 0, "Arial", 2);
+        const mpRegen = regen >= 0 ? '+' : '';
+        View.text(layer, x + width, y + height / 2, mpRegen+`${regen.toFixed(1)}`, textSize - 8, 200, true, 30, 0, "Arial", 2);
         layer.pop();
     }
 

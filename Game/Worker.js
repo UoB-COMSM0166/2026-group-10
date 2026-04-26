@@ -6,6 +6,7 @@ const TICK_MS = 1000 / TICK_RATE;
 let game = null;
 let loopHandle = null;
 let heroTargetingState = createHeroTargetingState();
+let lastGameConfig = null;
 
 function createHeroTargetingState() {
     return {
@@ -265,6 +266,8 @@ function emitState() {
 
 function sanitizeEventPayload(name, payload = {}) {
     switch (name) {
+        case 'game:start':
+            return {};
         case 'wave:start':
         case 'wave:end':
             return { wave: payload.wave };
@@ -280,6 +283,14 @@ function sanitizeEventPayload(name, payload = {}) {
             return {
                 heroId: payload.hero?.id ?? null,
             };
+        case 'hero:attack:hit':
+            return {
+                heroId: payload.hero?.id ?? null,
+                skillName: payload.skill?.name ?? null,
+                targetIds: Array.isArray(payload.targets)
+                    ? payload.targets.map((target) => target?.id ?? null).filter(Boolean)
+                    : [],
+            };
         case 'enemy:spawned':
             return {
                 enemy: buildUnitState(payload.newEnemy),
@@ -292,6 +303,12 @@ function sanitizeEventPayload(name, payload = {}) {
         case 'enemy:reached_objective':
             return {
                 enemyId: payload.enemy?.id ?? null,
+            };
+        case 'skill_entity:created':
+        case 'enemy_skill_entity:created':
+        case 'allied_decoy:created':
+            return {
+                entity: buildEntityState(payload.entity),
             };
         default:
             return payload;
@@ -336,15 +353,20 @@ function registerEventBridge() {
     }
 
     const forwardedEvents = [
+        'game:start',
         'wave:start',
         'wave:end',
         'game:win',
         'objective:destroyed',
         'hero:death',
         'hero:respawn',
+        'hero:attack:hit',
         'enemy:spawned',
         'enemy:killed',
         'enemy:reached_objective',
+        'skill_entity:created',
+        'enemy_skill_entity:created',
+        'allied_decoy:created',
     ];
 
     for (const eventName of forwardedEvents) {
@@ -385,6 +407,7 @@ function createGame(payload = {}) {
 
     try {
         game = new GameManager(hero, category, world);
+        lastGameConfig = { hero, category, world };
         registerEventBridge();
         emitState();
         return {
@@ -436,6 +459,7 @@ function startLoop() {
 
     if (!game.started) {
         game.started = true;
+        game.events.emit('game:start', {});
         game.startWave();
     }
 
@@ -613,10 +637,20 @@ function castHeroSkill(skill, payload = {}) {
     const tickNow = game.clock.now();
     const source = clonePosition(game.hero.position);
     const category = skill.targetCategory;
+    const normalizeSkillCastResult = (result) => {
+        if (result && typeof result === 'object' && Object.prototype.hasOwnProperty.call(result, 'ok')) {
+            return result;
+        }
+
+        if (result === false) {
+            return { ok: false, code: 409, message: 'Skill cast failed.' };
+        }
+
+        return { ok: true };
+    };
 
     if (category === null) {
-        skill.casted(game.hero, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted(game.hero, tickNow));
     }
 
     if (category === 'Point') {
@@ -629,8 +663,7 @@ function castHeroSkill(skill, payload = {}) {
             return { ok: false, code: 409, message: 'Point target is out of range.' };
         }
 
-        skill.casted(target, game.hero, source, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted(target, game.hero, source, tickNow));
     }
 
     if (category === 'Vector') {
@@ -644,8 +677,7 @@ function castHeroSkill(skill, payload = {}) {
             return { ok: false, code: 409, message: 'Vector start target is out of range.' };
         }
 
-        skill.casted({ start, end }, game.hero, source, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted({ start, end }, game.hero, source, tickNow));
     }
 
     if (category === 'Unit') {
@@ -658,8 +690,7 @@ function castHeroSkill(skill, payload = {}) {
             return { ok: false, code: 409, message: 'Unit target is out of range.' };
         }
 
-        skill.casted(target, game.hero, source, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted(target, game.hero, source, tickNow));
     }
 
     if (category === 'Tower') {
@@ -672,8 +703,7 @@ function castHeroSkill(skill, payload = {}) {
             return { ok: false, code: 409, message: 'Tower target is out of range.' };
         }
 
-        skill.casted(target, game.hero, source, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted(target, game.hero, source, tickNow));
     }
 
     return { ok: false, code: 400, message: `Unsupported target category: ${category}` };
@@ -1052,6 +1082,151 @@ function handleShopCommand(command, requestId) {
     emitResult(command, requestId, 501, 'Shop command is not implemented yet.');
 }
 
+function clearEnemiesWithoutEvents() {
+    if (!game) {
+        return 0;
+    }
+
+    const enemyIds = [...game.enemies.keys()];
+    for (const id of enemyIds) {
+        game.units.delete(id);
+    }
+
+    game.enemies.clear();
+    game.boss = null;
+    return enemyIds.length;
+}
+
+function parseCheatMoneyAmount(command, payload = {}) {
+    const payloadAmount = Number(payload.amount);
+    if (Number.isFinite(payloadAmount)) {
+        return payloadAmount;
+    }
+
+    const match = String(command).match(/^cheat:money\(([-+]?\d+(?:\.\d+)?)\)$/i);
+    if (!match) {
+        return null;
+    }
+
+    const parsedAmount = Number(match[1]);
+    return Number.isFinite(parsedAmount) ? parsedAmount : null;
+}
+
+function resetCurrentGame() {
+    if (!lastGameConfig) {
+        return {
+            ok: false,
+            code: 409,
+            message: 'No game configuration available to reset.',
+        };
+    }
+
+    const wasRunning = loopHandle !== null;
+    stopLoop();
+    clearHeroTargetingState();
+
+    try {
+        game = new GameManager(lastGameConfig.hero, lastGameConfig.category, lastGameConfig.world);
+        registerEventBridge();
+        if (wasRunning) {
+            startLoop();
+        }
+        emitState();
+        return {
+            ok: true,
+            code: 200,
+            message: 'Current game reset.',
+            data: { ...lastGameConfig, running: wasRunning },
+        };
+    } catch (error) {
+        game = null;
+        emitState();
+        return {
+            ok: false,
+            code: 400,
+            message: error instanceof Error ? error.message : 'Failed to reset current game.',
+        };
+    }
+}
+
+function handleCheatCommand(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
+    const loweredCommand = String(command).toLowerCase();
+
+    if (loweredCommand === 'cheat:suicide') {
+        game.hero.currentHP = 0;
+        game.hero.die();
+        emitState();
+        emitResult(command, requestId, 200, 'Hero has been killed.');
+        return;
+    }
+
+    if (loweredCommand.startsWith('cheat:money')) {
+        const amount = parseCheatMoneyAmount(command, payload);
+        if (!Number.isFinite(amount)) {
+            emitResult(command, requestId, 400, 'Cheat money command requires a numeric amount.');
+            return;
+        }
+
+        game.hero.collectCoin(amount);
+        emitState();
+        emitResult(command, requestId, 200, `Granted ${amount} gold.`, { amount });
+        return;
+    }
+
+    if (loweredCommand === 'cheat:clear') {
+        if (!game.currentWave) {
+            emitResult(command, requestId, 409, 'No active wave to clear.');
+            return;
+        }
+
+        for (const lane of game.currentWave.lanes) {
+            lane.counter = 0;
+            lane.timer = lane.cd;
+        }
+
+        const removedEnemies = clearEnemiesWithoutEvents();
+        game.beforeWave = 0;
+        game.finishWave();
+        emitState();
+        emitResult(command, requestId, 200, 'Current wave cleared.', { removedEnemies });
+        return;
+    }
+
+    if (loweredCommand === 'cheat:surrender') {
+        game.objective.currentHP = 0;
+        game.events.emit('objective:destroyed', {});
+        emitState();
+        emitResult(command, requestId, 200, 'Objective destroyed. Game over.');
+        return;
+    }
+
+    if (loweredCommand === 'cheat:nuclear') {
+        const removedEnemies = clearEnemiesWithoutEvents();
+        emitState();
+        emitResult(command, requestId, 200, 'All current enemies removed without death events.', { removedEnemies });
+        return;
+    }
+
+    if (loweredCommand === 'cheat:win') {
+        game.events.emit('game:win', {});
+        emitState();
+        emitResult(command, requestId, 200, 'Game declared won.');
+        return;
+    }
+
+    if (loweredCommand === 'cheat:reset') {
+        const result = resetCurrentGame();
+        emitResult(command, requestId, result.code, result.message, result.data ?? null);
+        return;
+    }
+
+    emitResult(command, requestId, 400, `Unknown cheat command: ${command}`);
+}
+
 function handleLegacyCommand(type, requestId) {
     if (type === 'tick') {
         if (!requireGame(type, requestId)) {
@@ -1159,6 +1334,11 @@ self.onmessage = (event) => {
         loweredCommand === 'shop:repair'
     ) {
         handleShopCommand(normalizedCommand, requestId);
+        return;
+    }
+
+    if (loweredCommand.startsWith('cheat:')) {
+        handleCheatCommand(normalizedCommand, requestId, payload);
         return;
     }
 

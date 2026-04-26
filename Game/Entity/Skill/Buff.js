@@ -22,13 +22,13 @@ export default class Buff {
         }
     }
 
-    increaseLevel(amount) {
-        this.level += Number(amount) || 0;
-    }
-
-    decreaseLevel(amount) {
-        this.level = Math.max(1, this.level - (Number(amount) || 0));
-    }
+    // increaseLevel(amount) {
+    //     this.level += Number(amount) || 0;
+    // }
+    //
+    // decreaseLevel(amount) {
+    //     this.level = Math.max(1, this.level - (Number(amount) || 0));
+    // }
 
     clone() {
         return new Buff(

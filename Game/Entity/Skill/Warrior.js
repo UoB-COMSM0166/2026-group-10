@@ -942,12 +942,14 @@ export class ForeSight extends Skill {
     constructor(events) {
         super(
             'Fore Sight', 'Long Sword',
-            'Blink away from a chosen point and counter if the original position is struck shortly after.',
+            'Blink away from a chosen point and counter with a brief aura around yourself if the original position is struck shortly after.',
             240, 20, 180, events, 'Point', false, 150
         );
         this.triggerWindow = 30;
         this.damage = 40;
         this.hitbox = 100;
+        this.auraDuration = 12;
+        this.auraEffectPeriod = 1;
     }
 
     upgrade() {
@@ -970,8 +972,8 @@ export class ForeSight extends Skill {
             y: Number(target.y) || 0,
         };
 
-        const dx = start.x - targetPoint.x;
-        const dy = start.y - targetPoint.y;
+        const dx = targetPoint.x - start.x;
+        const dy = targetPoint.y - start.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance <= 0) {
             return;
@@ -989,30 +991,31 @@ export class ForeSight extends Skill {
             start,
             this.triggerWindow,
             () => {
-                const enemyRegistry = this.events?.enemyRegistry;
-                if (!(enemyRegistry instanceof Map) || !caster.alive()) {
+                if (!caster.alive()) {
                     return;
                 }
 
-                const hitTargets = [];
                 const totalDamage = this.getAttackDamage(this.damage, caster);
-                for (const enemy of enemyRegistry.values()) {
-                    if (!enemy?.alive || !enemy.alive()) {
-                        continue;
-                    }
+                const hitTargetIds = new Set();
+                const aura = new Aura(
+                    `${caster.name}_fore_sight_aura_${tick}`,
+                    caster,
+                    this.hitbox,
+                    0,
+                    (enemy) => {
+                        if (!enemy?.alive || !enemy.alive() || hitTargetIds.has(enemy.id)) {
+                            return;
+                        }
 
-                    const enemyDx = enemy.position.x - caster.position.x;
-                    const enemyDy = enemy.position.y - caster.position.y;
-                    const enemyDistance = Math.sqrt(enemyDx * enemyDx + enemyDy * enemyDy);
-                    if (enemyDistance > this.hitbox + enemy.hitbox) {
-                        continue;
-                    }
+                        hitTargetIds.add(enemy.id);
+                        enemy.takeDamage(totalDamage, caster);
+                        emitWarriorAttackHit(this.events, caster, this, [enemy]);
+                    },
+                    this.auraDuration,
+                    this.auraEffectPeriod
+                );
+                this.events.emit('skill_entity:created', { entity: aura });
 
-                    enemy.takeDamage(totalDamage, caster);
-                    hitTargets.push(enemy);
-                }
-
-                emitWarriorAttackHit(this.events, caster, this, hitTargets);
                 if (this.upgraded) {
                     this.currentCooldown = 0;
                     caster.restoreMP(this.manaCost);

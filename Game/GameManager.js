@@ -127,6 +127,13 @@ export default class GameManager {
             }
         });
 
+        this.events.on('hero:death', () => {
+            this.objective.takeDamage(300);
+            if (!this.objective.alive()) {
+                this.events.emit('objective:destroyed');
+            }
+        });
+
         this.events.on('objective:destroyed', () => {
             this.gameOver = true;
         });

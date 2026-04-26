@@ -115,7 +115,6 @@ class IceBolt extends BossSkill {
             'After chanting, fire an ice spike at the target location.',
             600, 0, 99999, events, null, 90, 0
         );
-        this.flightDuration = 60;
         this.hitbox = 60;
         this.damage = 90;
         this.slowDuration = 60;
@@ -300,8 +299,7 @@ class Blink extends BossSkill {
         };
         const targetDistance = Number(caster.nextBlinkDistance) || this.targetDistance;
         const randomDirection = Boolean(caster.nextBlinkRandomDirection);
-        let dirX = 1;
-        let dirY = 0;
+        let dirX, dirY;
 
         if (randomDirection) {
             const direction = caster.getRandomDirection();
