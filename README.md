@@ -372,6 +372,13 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 
 `activeScene` then iterates through all of its buttons, calling the `wasIClicked()` function for each one. If the `wasIClicked()` function verifies that this button was indeed the one the user clicked, it will invoke its `onClick()` callback function that was passed to the button during the button's creation. Since the `onClick()` method is stored within the button that invokes it, it is represented in the sequence diagram by an arrow from the button pointing back to itself (a self-call).
 
+## STATE MACHINE DIAGRAM
+
+<p align="center">
+  <img src="statediagram.png" width="100"/>
+</p>
+
+
 ### Implementation
 
 **Base System**
