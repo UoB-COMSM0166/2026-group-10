@@ -373,6 +373,7 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 `activeScene` then iterates through all of its buttons, calling the `wasIClicked()` function for each one. If the `wasIClicked()` function verifies that this button was indeed the one the user clicked, it will invoke its `onClick()` callback function that was passed to the button during the button's creation. Since the `onClick()` method is stored within the button that invokes it, it is represented in the sequence diagram by an arrow from the button pointing back to itself (a self-call).
 
 ## STATE MACHINE DIAGRAM
+The below state diagram tells the flow of our game which transits from one state to another such as menu,gameplay and end.It also tells hero interaction with the game and also tells various mechanics such as gold, xp gained,player death and Respawn.The diagram shows how players progress through game and how various elememts interact with the game.
 
 <p align="center">
   <img src="statediagram.png" width="700"/>
