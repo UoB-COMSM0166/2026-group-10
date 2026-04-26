@@ -376,7 +376,7 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 The below state diagram tells the flow of our game which transits from one state to another such as menu,gameplay and end.It also tells hero interaction with the game and also tells various mechanics such as gold, xp gained,player death and Respawn.The diagram shows how players progress through game and how various elememts interact with the game.
 
 <p align="center">
-  <img src="statediagram.png" width="700"/>
+  <img src="statediagram.png" width="900"/>
 </p>
 
 
