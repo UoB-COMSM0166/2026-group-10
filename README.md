@@ -274,6 +274,7 @@ By considering the plethora of stakeholders around our game, we gained a better 
 ---
 ### Usecase Diagram
 <img width="1200" height="896" alt="chart" src="images/Use case.png" />
+The use case diagram illustrates the interaction of player with our game Gates of cinder.It illustrates the game lore,hero selection,difficulty level and various aspects of the game.It also defines the gameflow and objectives of the game.
 
 ---
 
