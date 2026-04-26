@@ -269,7 +269,17 @@ By considering the plethora of stakeholders around our game, we gained a better 
 ---
 ### Usecase Diagram
 <img width="1200" height="896" alt="chart" src="images/Use case.png" />
-The use case diagram illustrates the interaction of player with our game Gates of cinder.It illustrates the game lore,hero selection,difficulty level and various aspects of the game.It also defines the gameflow and objectives of the game.
+The use case diagram illustrates the interaction of player with our game Gates of cinder.It illustrates the game lore,hero selection,difficulty level and various aspects of the game.It also defines the gameflow and objectives of the game.The below table summarizes above diagram.
+| Category            | Use Cases |
+|--------------------|----------|
+| Pre-Game Actions   | Start Game, View Lore, Select Hero (Hugo Fortis), Select Difficulty |
+| Core Gameplay      | Enter Battle (Play Game), Kill Enemies, Defend Corona Terrae |
+| Combat & Skills    | Use Hero Abilities, Build/Place Towers (Engineer Only) |
+| Progression        | Earn XP, Level Up (Spend Skill Points) |
+| Resources          | Earn Gold & Wood |
+| Upgrades           | Upgrade Skills / Equipment, Turret Blueprints |
+| Maintenance        | Repair Corona Terrae |
+| Outcomes           | Win Game (All Waves Cleared), Lose Game (Corona Terrae Destroyed) |
 
 ---
 
