@@ -3,8 +3,11 @@ export default class Entity {
         this.id = String(id);
         this.position = { x: position.x, y: position.y };
         this.velocity = { vx: 0, vy: 0 };
-        this.baseSpeed = Number(speed);
-        this.speed = this.baseSpeed;
+        this.angle = 0;
+        this.baseStats = new Map();
+        this.stats = new Map();
+        this.baseStats.set('Speed', Number(speed));
+        this.stats.set('Speed', Number(speed));
         this.baseHitbox = Number(hitbox);
         this.hitbox = this.baseHitbox;
 
@@ -12,19 +15,28 @@ export default class Entity {
         this.waypoint = [];
     }
 
+    updateAngleFromVelocity() {
+        const vx = Number(this.velocity?.vx) || 0;
+        const vy = Number(this.velocity?.vy) || 0;
+
+        if (vx === 0 && vy === 0) {
+            return;
+        }
+
+        const angle = (Math.atan2(-vx, vy) * 180 / Math.PI + 360) % 360;
+        this.angle = Math.round(angle / 45) % 8;
+    }
+
+    setVelocity(vx = 0, vy = 0) {
+        this.velocity.vx = Number(vx) || 0;
+        this.velocity.vy = Number(vy) || 0;
+        this.updateAngleFromVelocity();
+    }
+
     getDistance(position) {
         const dx = position.x - this.position.x;
         const dy = position.y - this.position.y;
         return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    checkInside(position) {
-        return this.getDistance(position) <= this.hitbox;
-    }
-
-    checkCollision(entity) {
-        const distance = this.getDistance(entity.position);
-        return distance <= (this.hitbox + entity.hitbox);
     }
 
     navigateToUnit(targetUnit) {
@@ -34,20 +46,18 @@ export default class Entity {
     navigateToPoint(targetSpot) {
         const dist = this.getDistance(targetSpot);
 
-        if (dist <= this.speed) {
+        if (dist <= this.stats.get('Speed')) {
             // Snap to target to avoid overshooting and velocity sign flipping.
             this.position.x = targetSpot.x;
             this.position.y = targetSpot.y;
-            this.velocity.vx = 0;
-            this.velocity.vy = 0;
+            this.setVelocity(0, 0);
             return;
         }
 
         const dx = targetSpot.x - this.position.x;
         const dy = targetSpot.y - this.position.y;
-        const scale = this.speed / dist;
-        this.velocity.vx = dx * scale;
-        this.velocity.vy = dy * scale;
+        const scale = this.stats.get('Speed') / dist;
+        this.setVelocity(dx * scale, dy * scale);
     }
 
     setTarget(target) {
@@ -70,8 +80,7 @@ export default class Entity {
     moveAlongWaypoint() {
         if (!Array.isArray(this.waypoint) || this.waypoint.length === 0) {
             if (this.velocity) {
-                this.velocity.vx = 0;
-                this.velocity.vy = 0;
+                this.setVelocity(0, 0);
             }
             return;
         }
@@ -85,8 +94,7 @@ export default class Entity {
     }
 
     stop() {
-        this.velocity.vx = 0;
-        this.velocity.vy = 0;
+        this.setVelocity(0, 0);
     }
 
     calculateMovement() {
@@ -99,7 +107,7 @@ export default class Entity {
     }
 
     updateMovement() {
-        if (this.speed <= 0) { return; }
+        if (this.stats.get('Speed') <= 0) { return; }
         if (this.target) {
             this.navigateToUnit(this.target);
             this.calculateMovement();

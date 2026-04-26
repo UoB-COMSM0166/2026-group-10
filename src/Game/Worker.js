@@ -1,11 +1,12 @@
 import GameManager from './GameManager.js';
 
-const game = new GameManager();
 const TICK_RATE = 60;
 const TICK_MS = 1000 / TICK_RATE;
 
+let game = null;
 let loopHandle = null;
 let heroTargetingState = createHeroTargetingState();
+let lastGameConfig = null;
 
 function createHeroTargetingState() {
     return {
@@ -28,6 +29,32 @@ function clonePosition(position) {
     };
 }
 
+function buildCastState(unit) {
+    const castState = unit?.castState;
+    if (!castState) {
+        return null;
+    }
+
+    const skill = castState.skill ?? null;
+    const phase = castState.phase ?? null;
+    const remaining = Math.max(0, Number(castState.remaining) || 0);
+    const skillEntityData = typeof skill?.getCastSkillEntityData === 'function'
+        ? skill.getCastSkillEntityData(castState) ?? null
+        : null;
+    const duration = phase === 'backswing'
+        ? Math.max(0, Number(skill?.backswingDuration) || Number(skill?.backswingRemaining) || remaining)
+        : Math.max(0, Number(skill?.castDuration) || remaining);
+
+    return {
+        phase,
+        remaining,
+        duration,
+        casting: phase === 'casting',
+        skillName: skill?.name ?? null,
+        skillEntityData,
+    };
+}
+
 function buildUnitState(unit) {
     if (!unit) {
         return null;
@@ -36,26 +63,30 @@ function buildUnitState(unit) {
     return {
         id: unit.id,
         name: unit.name ?? unit.id,
+        category: unit.category ?? null,
         position: clonePosition(unit.position),
         velocity: unit.velocity ? {
             vx: Number(unit.velocity.vx) || 0,
             vy: Number(unit.velocity.vy) || 0,
         } : null,
+        angle: Number(unit.angle) || 0,
         hp: Number(unit.currentHP) || 0,
         maxHP: Number(unit.maxHP) || 0,
         mp: Number(unit.currentMP) || 0,
         maxMP: Number(unit.maxMP) || 0,
         hpRegen: Number(unit.hpRegen) || 0,
         mpRegen: Number(unit.mpRegen) || 0,
-        speed: Number(unit.speed) || 0,
-        baseSpeed: Number(unit.baseSpeed) || 0,
-        armor: Number(unit.armor) || 0,
-        attackAmp: Number(unit.attackAmp) || 0,
-        spellAmp: Number(unit.spellAmp) || 0,
+        speed: typeof unit.getStat === 'function' ? unit.getStat('Speed') : Number(unit.speed) || 0,
+        baseSpeed: typeof unit.getBaseStat === 'function' ? unit.getBaseStat('Speed') : Number(unit.baseSpeed) || 0,
+        armor: typeof unit.getStat === 'function' ? unit.getStat('Armor') : Number(unit.armor) || 0,
+        strength: Number(unit.strength) || 0,
+        intelligence: Number(unit.intelligence) || 0,
         hitbox: Number(unit.hitbox) || 0,
+        isBoss: unit?.skills instanceof Map && typeof unit.castSkill === 'function',
         inFountain: false,
         alive: typeof unit.alive === 'function' ? unit.alive() : true,
         finished: Boolean(unit.finished),
+        castState: buildCastState(unit),
         buffs: Array.isArray(unit.buffs) ? unit.buffs.map((buff) => ({
             name: buff.name,
             description: buff.description,
@@ -73,6 +104,9 @@ function buildHeroSkillState(hero) {
     const skills = {};
 
     for (const [slot, skill] of hero.skill.entries()) {
+        const unlocked = typeof hero.isSkillSlotUnlocked === 'function'
+            ? hero.isSkillSlotUnlocked(slot)
+            : true;
         skills[slot] = skill ? {
             slot,
             name: skill.name,
@@ -86,6 +120,8 @@ function buildHeroSkillState(hero) {
             passive: Boolean(skill.passive),
             active: Boolean(skill.active),
             upgraded: Boolean(skill.upgraded),
+            upgradeCost: Number(skill.upgradeCost) || 0,
+            unlocked,
         } : null;
     }
 
@@ -99,6 +135,9 @@ function buildHeroSkillTreeState(hero) {
     }
 
     for (const [slot, skills] of hero.skillTree.entries()) {
+        const unlocked = typeof hero.isSkillSlotUnlocked === 'function'
+            ? hero.isSkillSlotUnlocked(slot)
+            : true;
         skillTree[slot] = Array.isArray(skills)
             ? skills.map((skill) => skill ? {
                 slot,
@@ -113,11 +152,21 @@ function buildHeroSkillTreeState(hero) {
                 passive: Boolean(skill.passive),
                 active: Boolean(skill.active),
                 upgraded: Boolean(skill.upgraded),
+                upgradeCost: Number(skill.upgradeCost) || 0,
+                unlocked,
             } : null)
             : [];
     }
 
     return skillTree;
+}
+
+function buildMapState(map) {
+    if (!(map instanceof Map)) {
+        return {};
+    }
+
+    return Object.fromEntries(map.entries());
 }
 
 function buildEntityState(entity) {
@@ -133,6 +182,7 @@ function buildEntityState(entity) {
             vx: Number(entity.velocity.vx) || 0,
             vy: Number(entity.velocity.vy) || 0,
         } : null,
+        angle: Number(entity.angle) || 0,
         hitbox: Number(entity.hitbox) || 0,
         finished: Boolean(entity.finished),
         duration: Number(entity.duration) || 0,
@@ -140,6 +190,10 @@ function buildEntityState(entity) {
 }
 
 function buildStateSnapshot() {
+    if (!game) {
+        return null;
+    }
+
     return {
         tick: game.clock.now(),
         world: {
@@ -175,6 +229,14 @@ function buildStateSnapshot() {
                 : false,
             remainingRespawnCD: Number(game.hero.remainingRespawnCD) || 0,
             respawnCD: Number(game.hero.respawnCD) || 0,
+            gold: Number(game.hero.gold) || 0,
+            stats: buildMapState(game.hero.stats),
+            statsGrowth: buildMapState(game.hero.statsGrowth),
+            upgradeCost: buildMapState(game.hero.upgradeCost),
+            spellSlotLevel: Number(game.hero.spellSlotLevel) || 0,
+            spellSlotUpgradeCost: Number(game.hero.spellSlotUpgradeCost) || 0,
+            skillSlotUnlocked: buildMapState(game.hero.skillSlotUnlocked),
+            nextSkillSlotToUnlock: game.hero.nextSkillSlotToUnlock ?? null,
             selectedSkill: heroTargetingState.skillKey,
             targeting: { ...heroTargetingState },
             casting: game.hero.isCasting(),
@@ -182,6 +244,7 @@ function buildStateSnapshot() {
             skillTree: buildHeroSkillTreeState(game.hero),
         },
         objective: buildUnitState(game.objective),
+        boss: buildUnitState(game.boss),
         enemies: [...game.enemies.values()].map((enemy) => buildUnitState(enemy)),
         skillEntities: [...game.skillEntities.values()].map((entity) => buildEntityState(entity)),
         enemySkillEntities: [...game.enemySkillEntities.values()].map((entity) => buildEntityState(entity)),
@@ -203,6 +266,8 @@ function emitState() {
 
 function sanitizeEventPayload(name, payload = {}) {
     switch (name) {
+        case 'game:start':
+            return {};
         case 'wave:start':
         case 'wave:end':
             return { wave: payload.wave };
@@ -218,6 +283,14 @@ function sanitizeEventPayload(name, payload = {}) {
             return {
                 heroId: payload.hero?.id ?? null,
             };
+        case 'hero:attack:hit':
+            return {
+                heroId: payload.hero?.id ?? null,
+                skillName: payload.skill?.name ?? null,
+                targetIds: Array.isArray(payload.targets)
+                    ? payload.targets.map((target) => target?.id ?? null).filter(Boolean)
+                    : [],
+            };
         case 'enemy:spawned':
             return {
                 enemy: buildUnitState(payload.newEnemy),
@@ -230,6 +303,12 @@ function sanitizeEventPayload(name, payload = {}) {
         case 'enemy:reached_objective':
             return {
                 enemyId: payload.enemy?.id ?? null,
+            };
+        case 'skill_entity:created':
+        case 'enemy_skill_entity:created':
+        case 'allied_decoy:created':
+            return {
+                entity: buildEntityState(payload.entity),
             };
         default:
             return payload;
@@ -269,16 +348,25 @@ function clearHeroTargetingState() {
 }
 
 function registerEventBridge() {
+    if (!game?.events) {
+        return;
+    }
+
     const forwardedEvents = [
+        'game:start',
         'wave:start',
         'wave:end',
         'game:win',
         'objective:destroyed',
         'hero:death',
         'hero:respawn',
+        'hero:attack:hit',
         'enemy:spawned',
         'enemy:killed',
         'enemy:reached_objective',
+        'skill_entity:created',
+        'enemy_skill_entity:created',
+        'allied_decoy:created',
     ];
 
     for (const eventName of forwardedEvents) {
@@ -292,18 +380,86 @@ function registerEventBridge() {
 }
 
 function tick() {
+    if (!game) {
+        return;
+    }
+
     game.clock.tickCount += 1;
     game.update();
     emitState();
 }
 
+function createGame(payload = {}) {
+    const hero = String(payload.hero ?? '').trim();
+    const category = payload.category ?? null;
+    const world = String(payload.world ?? '').trim();
+
+    if (!hero) {
+        return { ok: false, code: 400, message: 'Hero is required.' };
+    }
+
+    if (!world) {
+        return { ok: false, code: 400, message: 'World is required.' };
+    }
+
+    stopLoop();
+    clearHeroTargetingState();
+
+    try {
+        game = new GameManager(hero, category, world);
+        lastGameConfig = { hero, category, world };
+        registerEventBridge();
+        emitState();
+        return {
+            ok: true,
+            code: 200,
+            message: 'Game created.',
+            data: { hero, category, world },
+        };
+    } catch (error) {
+        game = null;
+        return {
+            ok: false,
+            code: 400,
+            message: error instanceof Error ? error.message : 'Failed to create game.',
+        };
+    }
+}
+
+function destroyGame() {
+    stopLoop();
+    clearHeroTargetingState();
+    game = null;
+    emitState();
+
+    return {
+        ok: true,
+        code: 200,
+        message: 'Game destroyed.',
+    };
+}
+
+function requireGame(command, requestId) {
+    if (game) {
+        return true;
+    }
+
+    emitResult(command, requestId, 409, 'Game has not been created. Send create:game first.');
+    return false;
+}
+
 function startLoop() {
+    if (!game) {
+        return false;
+    }
+
     if (loopHandle !== null) {
         return false;
     }
 
     if (!game.started) {
         game.started = true;
+        game.events.emit('game:start', {});
         game.startWave();
     }
 
@@ -326,6 +482,10 @@ function normalizeKey(key) {
 }
 
 function isHeroControllable() {
+    if (!game) {
+        return { ok: false, code: 409, message: 'Game has not been created.' };
+    }
+
     if (!game.started) {
         return { ok: false, code: 400, message: 'Game has not started.' };
     }
@@ -341,7 +501,20 @@ function isHeroControllable() {
     return { ok: true };
 }
 
+function isHeroInFountain() {
+    if (!game) {
+        return false;
+    }
+
+    return typeof game.hero.inFountain === 'function'
+        && game.hero.inFountain(game.objective.position);
+}
+
 function getHeroSkill(key) {
+    if (!game) {
+        return { key: normalizeKey(key), skill: null };
+    }
+
     const normalizedKey = normalizeKey(key);
     if (!normalizedKey) {
         return { key: normalizedKey, skill: null };
@@ -354,6 +527,10 @@ function getHeroSkill(key) {
 }
 
 function canUseSkill(key, skill) {
+    if (typeof game.hero.isSkillSlotUnlocked === 'function' && !game.hero.isSkillSlotUnlocked(key)) {
+        return { ok: false, code: 409, message: `Skill slot ${key} is locked.` };
+    }
+
     if (!skill) {
         return { ok: false, code: 404, message: `Skill slot ${key} not found.` };
     }
@@ -362,11 +539,19 @@ function canUseSkill(key, skill) {
         return { ok: false, code: 400, message: `Skill slot ${key} is passive and cannot be used.` };
     }
 
+    if (game.hero.isCasting()) {
+        return { ok: false, code: 409, message: 'Hero cannot use skills while casting.' };
+    }
+
     if (game.hero.skillCastingDisabled) {
         return { ok: false, code: 409, message: 'Hero cannot cast skills right now.' };
     }
 
-    if (!skill.cooledDown()) {
+    if (key === 'A' && game.hero.sheatheSwordActive) {
+        return { ok: false, code: 409, message: 'Skill slot A is unavailable while Sheathe Sword is active.' };
+    }
+
+    if (!skill.toggleable && !skill.cooledDown()) {
         return { ok: false, code: 409, message: `Skill slot ${key} is cooling down.` };
     }
 
@@ -378,6 +563,10 @@ function canUseSkill(key, skill) {
 }
 
 function resolveUnitTarget(payload = {}, skill) {
+    if (!game) {
+        return null;
+    }
+
     const targetId = payload.targetId ?? payload.target?.id ?? null;
     if (targetId) {
         const explicitTarget = game.enemies.get(targetId) ?? null;
@@ -389,7 +578,50 @@ function resolveUnitTarget(payload = {}, skill) {
     return game.hero.findNearestEnemy(game.enemies, skill.range);
 }
 
+function resolveTowerTarget(payload = {}) {
+    if (!game) {
+        return null;
+    }
+
+    const targetId = payload.targetId ?? payload.target?.id ?? null;
+    if (targetId) {
+        const explicitTarget = game.skillEntities.get(targetId) ?? null;
+        if (explicitTarget?.category === 'Tower' && !explicitTarget.finished) {
+            return explicitTarget;
+        }
+    }
+
+    const targetPosition = clonePosition(payload.position ?? payload.target);
+    if (!targetPosition) {
+        return null;
+    }
+
+    let nearestTower = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+    for (const entity of game.skillEntities.values()) {
+        if (entity?.category !== 'Tower' || entity.finished || !entity.position) {
+            continue;
+        }
+
+        const dx = entity.position.x - targetPosition.x;
+        const dy = entity.position.y - targetPosition.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance >= nearestDistance) {
+            continue;
+        }
+
+        nearestTower = entity;
+        nearestDistance = distance;
+    }
+
+    return nearestTower;
+}
+
 function isTargetInRange(targetPosition, skill) {
+    if (!game) {
+        return false;
+    }
+
     if (!targetPosition || !skill) {
         return false;
     }
@@ -398,13 +630,27 @@ function isTargetInRange(targetPosition, skill) {
 }
 
 function castHeroSkill(skill, payload = {}) {
+    if (!game) {
+        return { ok: false, code: 409, message: 'Game has not been created.' };
+    }
+
     const tickNow = game.clock.now();
     const source = clonePosition(game.hero.position);
     const category = skill.targetCategory;
+    const normalizeSkillCastResult = (result) => {
+        if (result && typeof result === 'object' && Object.prototype.hasOwnProperty.call(result, 'ok')) {
+            return result;
+        }
+
+        if (result === false) {
+            return { ok: false, code: 409, message: 'Skill cast failed.' };
+        }
+
+        return { ok: true };
+    };
 
     if (category === null) {
-        skill.casted(game.hero, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted(game.hero, tickNow));
     }
 
     if (category === 'Point') {
@@ -417,8 +663,7 @@ function castHeroSkill(skill, payload = {}) {
             return { ok: false, code: 409, message: 'Point target is out of range.' };
         }
 
-        skill.casted(target, game.hero, source, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted(target, game.hero, source, tickNow));
     }
 
     if (category === 'Vector') {
@@ -432,8 +677,7 @@ function castHeroSkill(skill, payload = {}) {
             return { ok: false, code: 409, message: 'Vector start target is out of range.' };
         }
 
-        skill.casted({ start, end }, game.hero, source, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted({ start, end }, game.hero, source, tickNow));
     }
 
     if (category === 'Unit') {
@@ -446,8 +690,20 @@ function castHeroSkill(skill, payload = {}) {
             return { ok: false, code: 409, message: 'Unit target is out of range.' };
         }
 
-        skill.casted(target, game.hero, source, tickNow);
-        return { ok: true };
+        return normalizeSkillCastResult(skill.casted(target, game.hero, source, tickNow));
+    }
+
+    if (category === 'Tower') {
+        const target = resolveTowerTarget(payload);
+        if (!target) {
+            return { ok: false, code: 404, message: 'No valid tower target found.' };
+        }
+
+        if (!isTargetInRange(target.position, skill)) {
+            return { ok: false, code: 409, message: 'Tower target is out of range.' };
+        }
+
+        return normalizeSkillCastResult(skill.casted(target, game.hero, source, tickNow));
     }
 
     return { ok: false, code: 400, message: `Unsupported target category: ${category}` };
@@ -464,6 +720,10 @@ function armHeroSkill(key, skill) {
 }
 
 function handleGameCommand(command, requestId) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (command === 'game:start') {
         if (loopHandle !== null) {
             emitResult(command, requestId, 200, 'Game is already running.');
@@ -496,14 +756,22 @@ function handleGameCommand(command, requestId) {
         startLoop();
         emitState();
         emitResult(command, requestId, 200, 'Game resumed.');
-        return;
     }
 }
 
 function handleHeroMove(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     const heroState = isHeroControllable();
     if (!heroState.ok) {
         emitResult(command, requestId, heroState.code, heroState.message);
+        return;
+    }
+
+    if (game.hero.isCasting()) {
+        emitResult(command, requestId, 409, 'Hero cannot move while casting.');
         return;
     }
 
@@ -523,8 +791,17 @@ function handleHeroMove(command, requestId, payload = {}) {
 }
 
 function handleHeroStop(command, requestId) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
+        return;
+    }
+
+    if (game.hero.isCasting()) {
+        emitResult(command, requestId, 409, 'Hero cannot stop while casting.');
         return;
     }
 
@@ -536,6 +813,10 @@ function handleHeroStop(command, requestId) {
 }
 
 function handleHeroPress(command, requestId) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     const heroState = isHeroControllable();
     if (!heroState.ok) {
         emitResult(command, requestId, heroState.code, heroState.message);
@@ -554,6 +835,25 @@ function handleHeroPress(command, requestId) {
         clearHeroTargetingState();
         emitState();
         emitResult(command, requestId, 200, `Skill slot ${key} targeting cancelled.`);
+        return;
+    }
+
+    if (skill.toggleable) {
+        const active = skill.toggle(game.hero, game.clock.now());
+        if (active) {
+            skill.casted();
+        } else {
+            skill.currentCooldown = 0;
+        }
+
+        clearHeroTargetingState();
+        emitState();
+        emitResult(command, requestId, 200, `Skill slot ${key} ${active ? 'activated' : 'deactivated'}.`, {
+            phase: 'cast',
+            skillKey: key,
+            targetCategory: null,
+            active,
+        });
         return;
     }
 
@@ -586,6 +886,10 @@ function handleHeroPress(command, requestId) {
 }
 
 function handleHeroCast(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     const heroState = isHeroControllable();
     if (!heroState.ok) {
         emitResult(command, requestId, heroState.code, heroState.message);
@@ -631,14 +935,28 @@ function handleHeroCast(command, requestId, payload = {}) {
 }
 
 function handleHeroUpgradeSkill(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
+        return;
+    }
+
+    if (!isHeroInFountain()) {
+        emitResult(command, requestId, 409, 'Hero upgrades can only be used in the fountain.');
         return;
     }
 
     const key = normalizeKey(payload.slot ?? payload.key);
     if (!key) {
         emitResult(command, requestId, 400, 'Skill slot is required.');
+        return;
+    }
+
+    if (typeof game.hero.isSkillSlotUnlocked === 'function' && !game.hero.isSkillSlotUnlocked(key)) {
+        emitResult(command, requestId, 409, `Skill slot ${key} is locked.`);
         return;
     }
 
@@ -669,8 +987,17 @@ function handleHeroUpgradeSkill(command, requestId, payload = {}) {
 }
 
 function handleHeroUpgrade(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
+        return;
+    }
+
+    if (!isHeroInFountain()) {
+        emitResult(command, requestId, 409, 'Hero upgrades can only be used in the fountain.');
         return;
     }
 
@@ -700,12 +1027,16 @@ function handleHeroUpgrade(command, requestId, payload = {}) {
 }
 
 function handleHeroSkillChange(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
         return;
     }
 
-    if (typeof game.hero.inFountain !== 'function' || !game.hero.inFountain(game.objective.position)) {
+    if (!isHeroInFountain()) {
         emitResult(command, requestId, 409, 'Skills can only be changed in the fountain.');
         return;
     }
@@ -714,6 +1045,11 @@ function handleHeroSkillChange(command, requestId, payload = {}) {
     const name = String(payload.name ?? '').trim();
     if (!slot || !name) {
         emitResult(command, requestId, 400, 'Skill slot and name are required.');
+        return;
+    }
+
+    if (typeof game.hero.isSkillSlotUnlocked === 'function' && !game.hero.isSkillSlotUnlocked(slot)) {
+        emitResult(command, requestId, 409, `Skill slot ${slot} is locked.`);
         return;
     }
 
@@ -728,8 +1064,7 @@ function handleHeroSkillChange(command, requestId, payload = {}) {
         return;
     }
 
-    game.hero.changeSkill(slot, nextSkill);
-    const changedSkill = game.hero.skill.get(slot) ?? null;
+    const changedSkill = game.hero.changeSkill(slot, nextSkill);
     if (!changedSkill || changedSkill.name !== name) {
         emitResult(command, requestId, 404, `Unable to equip ${name} in slot ${slot}.`);
         return;
@@ -747,8 +1082,156 @@ function handleShopCommand(command, requestId) {
     emitResult(command, requestId, 501, 'Shop command is not implemented yet.');
 }
 
-function handleLegacyCommand(type, requestId, payload) {
+function clearEnemiesWithoutEvents() {
+    if (!game) {
+        return 0;
+    }
+
+    const enemyIds = [...game.enemies.keys()];
+    for (const id of enemyIds) {
+        game.units.delete(id);
+    }
+
+    game.enemies.clear();
+    game.boss = null;
+    return enemyIds.length;
+}
+
+function parseCheatMoneyAmount(command, payload = {}) {
+    const payloadAmount = Number(payload.amount);
+    if (Number.isFinite(payloadAmount)) {
+        return payloadAmount;
+    }
+
+    const match = String(command).match(/^cheat:money\(([-+]?\d+(?:\.\d+)?)\)$/i);
+    if (!match) {
+        return null;
+    }
+
+    const parsedAmount = Number(match[1]);
+    return Number.isFinite(parsedAmount) ? parsedAmount : null;
+}
+
+function resetCurrentGame() {
+    if (!lastGameConfig) {
+        return {
+            ok: false,
+            code: 409,
+            message: 'No game configuration available to reset.',
+        };
+    }
+
+    const wasRunning = loopHandle !== null;
+    stopLoop();
+    clearHeroTargetingState();
+
+    try {
+        game = new GameManager(lastGameConfig.hero, lastGameConfig.category, lastGameConfig.world);
+        registerEventBridge();
+        if (wasRunning) {
+            startLoop();
+        }
+        emitState();
+        return {
+            ok: true,
+            code: 200,
+            message: 'Current game reset.',
+            data: { ...lastGameConfig, running: wasRunning },
+        };
+    } catch (error) {
+        game = null;
+        emitState();
+        return {
+            ok: false,
+            code: 400,
+            message: error instanceof Error ? error.message : 'Failed to reset current game.',
+        };
+    }
+}
+
+function handleCheatCommand(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
+    const loweredCommand = String(command).toLowerCase();
+
+    if (loweredCommand === 'cheat:suicide') {
+        game.hero.currentHP = 0;
+        game.hero.die();
+        emitState();
+        emitResult(command, requestId, 200, 'Hero has been killed.');
+        return;
+    }
+
+    if (loweredCommand.startsWith('cheat:money')) {
+        const amount = parseCheatMoneyAmount(command, payload);
+        if (!Number.isFinite(amount)) {
+            emitResult(command, requestId, 400, 'Cheat money command requires a numeric amount.');
+            return;
+        }
+
+        game.hero.collectCoin(amount);
+        emitState();
+        emitResult(command, requestId, 200, `Granted ${amount} gold.`, { amount });
+        return;
+    }
+
+    if (loweredCommand === 'cheat:clear') {
+        if (!game.currentWave) {
+            emitResult(command, requestId, 409, 'No active wave to clear.');
+            return;
+        }
+
+        for (const lane of game.currentWave.lanes) {
+            lane.counter = 0;
+            lane.timer = lane.cd;
+        }
+
+        const removedEnemies = clearEnemiesWithoutEvents();
+        game.beforeWave = 0;
+        game.finishWave();
+        emitState();
+        emitResult(command, requestId, 200, 'Current wave cleared.', { removedEnemies });
+        return;
+    }
+
+    if (loweredCommand === 'cheat:surrender') {
+        game.objective.currentHP = 0;
+        game.events.emit('objective:destroyed', {});
+        emitState();
+        emitResult(command, requestId, 200, 'Objective destroyed. Game over.');
+        return;
+    }
+
+    if (loweredCommand === 'cheat:nuclear') {
+        const removedEnemies = clearEnemiesWithoutEvents();
+        emitState();
+        emitResult(command, requestId, 200, 'All current enemies removed without death events.', { removedEnemies });
+        return;
+    }
+
+    if (loweredCommand === 'cheat:win') {
+        game.events.emit('game:win', {});
+        emitState();
+        emitResult(command, requestId, 200, 'Game declared won.');
+        return;
+    }
+
+    if (loweredCommand === 'cheat:reset') {
+        const result = resetCurrentGame();
+        emitResult(command, requestId, result.code, result.message, result.data ?? null);
+        return;
+    }
+
+    emitResult(command, requestId, 400, `Unknown cheat command: ${command}`);
+}
+
+function handleLegacyCommand(type, requestId) {
     if (type === 'tick') {
+        if (!requireGame(type, requestId)) {
+            return true;
+        }
         tick();
         emitResult(type, requestId, 200, 'Tick completed.');
         return true;
@@ -763,9 +1246,6 @@ function handleLegacyCommand(type, requestId, payload) {
     return false;
 }
 
-registerEventBridge();
-emitState();
-
 self.onmessage = (event) => {
     const { command, type, payload, requestId } = event.data ?? {};
     const normalizedCommand = typeof command === 'string' ? command : (typeof type === 'string' ? type : '');
@@ -777,6 +1257,30 @@ self.onmessage = (event) => {
     }
 
     if (handleLegacyCommand(normalizedCommand, requestId, payload)) {
+        return;
+    }
+
+    if (normalizedCommand === 'create:game') {
+        const result = createGame(payload);
+        emitResult(
+            normalizedCommand,
+            requestId,
+            result.code,
+            result.message,
+            result.data ?? null
+        );
+        return;
+    }
+
+    if (normalizedCommand === 'destroy:game') {
+        const result = destroyGame();
+        emitResult(
+            normalizedCommand,
+            requestId,
+            result.code,
+            result.message,
+            result.data ?? null
+        );
         return;
     }
 
@@ -833,5 +1337,12 @@ self.onmessage = (event) => {
         return;
     }
 
+    if (loweredCommand.startsWith('cheat:')) {
+        handleCheatCommand(normalizedCommand, requestId, payload);
+        return;
+    }
+
     emitResult(normalizedCommand, requestId, 400, `Unknown worker command: ${normalizedCommand}`);
 };
+
+emitState();

@@ -1,6 +1,4 @@
 export default class View {
-    static buttonRegistry = new Map();
-
     LEFT = 0;
     CENTER = 1;
     RIGHT = 2;
@@ -19,19 +17,8 @@ export default class View {
         layer.fill(color);
         const width = layer.textWidth(text) + paddingX * 2;
         const height = layer.textAscent() + paddingY * 2;
-        let realX = 0;
-        let realY = 0;
-        // if (alignX === View.CENTER) {
-            realX = x - width / 2;
-        // } else if (alignX === View.RIGHT) {
-        //     realX = x - width;
-        // }
-
-        // if (alignY === View.CENTER) {
-            realY = y + height / 2;
-        // } else if (alignY === View.BOTTOM) {
-        //     realY = y + height;
-        // }
+        let realX = x - width / 2;
+        let realY = y + height / 2;
 
         layer.text(text, realX, realY);
     }
@@ -48,11 +35,10 @@ export default class View {
         layer.rect(x, y, width * clampedRatio, height);
 
         View.text(layer, x + width / 2, y + height / 2, `${Math.round(current)} / ${Math.round(max)}`, textSize, 255, true, 0, 0, "Arial", 3);
-        View.text(layer, x + width, y + height / 2, `+${regen.toFixed(1)}`, textSize - 8, 200, true, 30, 0, "Arial", 2);
+        const mpRegen = regen >= 0 ? '+' : '';
+        View.text(layer, x + width, y + height / 2, mpRegen+`${regen.toFixed(1)}`, textSize - 8, 200, true, 30, 0, "Arial", 2);
         layer.pop();
     }
-
-    static image(layer, x, y, width, height) {}
 
     static skillIcon(layer, x, y, width, height, skill, highLight, iconImage = null) {
         layer.push();
@@ -163,5 +149,106 @@ export default class View {
         }
 
         return words.map((word) => word[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    static upgradeSkillButton(layer, x, y, width, height, func, cost, iconImage, currentGold, upgraded = false) {
+        layer.push();
+        layer.stroke(255, 28);
+        layer.strokeWeight(2);
+        const sufficientColor = layer.color(203, 166, 0);
+        const insufficientColor = layer.color(6, 10, 18);
+        layer.fill(upgraded ? insufficientColor : (currentGold >= cost ? sufficientColor : insufficientColor));
+        layer.rect(x, y, width, height, 10);
+
+        const text = upgraded ? 'Max' : `${cost}`;
+        const textSize = 20;
+        const iconLoaded = !upgraded && Boolean(iconImage?.complete);
+        const iconSize = Math.min(30, height - 24);
+        const gap = iconLoaded ? 5 : 0;
+
+        layer.textFont("Arial");
+        layer.textSize(textSize);
+        const textWidth = layer.textWidth(text);
+        const contentWidth = (iconLoaded ? iconSize + gap : 0) + textWidth;
+        const contentX = x + width / 2 - contentWidth / 2;
+
+        if (iconLoaded) {
+            layer.drawingContext.drawImage(
+                iconImage,
+                contentX,
+                y + height / 2 - iconSize / 2,
+                iconSize,
+                iconSize
+            );
+        }
+
+        View.text(
+            layer,
+            contentX + (iconLoaded ? iconSize + gap : 0) + textWidth / 2,
+            y + height / 2,
+            text,
+            textSize,
+            255,
+            true,
+            0,
+            0,
+            'Arial',
+            3
+        );
+
+        layer.pop();
+    }
+
+    static heroStateDetails(layer, x, y, iconImage, value) {
+        layer.push();
+        const iconLoaded = Boolean(iconImage?.complete);
+        if (iconLoaded) {
+            layer.drawingContext.drawImage(iconImage, x, y, 80, 80);
+        }
+        View.text(layer, x + 140, y + 40, View.formatOutput(value), 30, 255, true, 0, 0, 'Arial', 3);
+        layer.pop();
+    }
+
+    static upgradeStatButton(layer, x, y, iconImage, cost, currentGold, growth, maxed = false) {
+        layer.push();
+        const sufficientColor = layer.color(203, 166, 0);
+        const insufficientColor = layer.color(6, 10, 18);
+        const maxedColor = layer.color(72, 76, 84);
+        layer.fill(maxed ? maxedColor : (currentGold >= cost ? sufficientColor : insufficientColor));
+        layer.rect(x, y, 200, 80, 10);
+
+        if (maxed) {
+            View.text(layer, x + 100, y + 40, 'Max', 30, 255, true, 0, 0, 'Arial', 3);
+            layer.pop();
+            return;
+        }
+
+        View.text(layer, x + 40, y + 40, '+' + View.formatOutput(growth), 20, 175, true, 0, 0, 'Arial', 3);
+        if (Boolean(iconImage?.complete)) {
+            layer.drawingContext.drawImage(iconImage, x + 100, y + 25, 30, 30);
+        }
+        View.text(layer, x + 160, y + 40, cost, 30, 255, true, 0, 0, 'Arial', 3)
+        layer.pop();
+    }
+
+    static formatOutput(value, decimals = 2) {
+        const number = Number(value);
+        if (!Number.isFinite(number)) {
+            return String(value ?? '');
+        }
+
+        return number.toFixed(decimals);
+    }
+
+    static drawSkillDetailRow(layer, x, y, label, value) {
+        layer.fill(170, 182, 198);
+        layer.textAlign(layer.LEFT, layer.TOP);
+        layer.textSize(15);
+        layer.text(`${label}`, x, y);
+
+        layer.fill(255);
+        layer.textSize(15);
+        layer.text(String(value ?? ''), x + 92, y - 1);
+        return y + 24;
     }
 }

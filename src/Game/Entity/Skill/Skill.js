@@ -1,5 +1,8 @@
 export default class Skill {
-    constructor(name, category, description, cooldown, manaCost, range, events, targetCategory, passive) {
+    constructor(
+        name, category, description, cooldown, manaCost, range,
+        events, targetCategory, passive, upgradeCost = 0
+    ) {
         this.name = String(name);
         this.category = String(category);
         this.description = String(description);
@@ -8,7 +11,7 @@ export default class Skill {
         this.manaCost = Number(manaCost);
         this.range = range;
         this.upgraded = false;
-        this.upgradeGold = 0;
+        this.upgradeCost = upgradeCost || 0;
         this.events = events;
         this.targetCategory = targetCategory;
         this.passive = passive;
@@ -18,6 +21,7 @@ export default class Skill {
         this.onToggleOn = null;
         this.onToggleActive = null;
         this.onToggleOff = null;
+        this.slot = null;
     }
 
     upgrade() {
@@ -42,15 +46,23 @@ export default class Skill {
 
     getAttackDamage(baseDamage, caster, { includeBonusDamage = false } = {}) {
         const damage = Number(baseDamage) || 0;
-        const attackAmp = Number(caster?.attackAmp) || 0;
+        const attackAmp = Number(caster?.strength) || 0;
         const bonusDamage = includeBonusDamage ? (Number(this.bonusDamage) || 0) : 0;
-        return damage + attackAmp + bonusDamage;
+        return (damage + attackAmp + bonusDamage) * this.getIntelligenceDamageMultiplier(caster);
     }
 
     getSpellDamage(baseDamage, caster) {
         const damage = Number(baseDamage) || 0;
-        const spellAmp = Number(caster?.spellAmp) || 0;
-        return damage * (1 + spellAmp);
+        return damage * this.getIntelligenceDamageMultiplier(caster);
+    }
+
+    getIntelligenceDamageMultiplier(caster) {
+        if (!['Q', 'W', 'E', 'R'].includes(this.slot)) {
+            return 1;
+        }
+
+        const intelligence = Number(caster?.intelligence) || 0;
+        return 1 + intelligence * 0.02;
     }
 
     enableToggle(onToggleOn, onToggleActive, onToggleOff) {

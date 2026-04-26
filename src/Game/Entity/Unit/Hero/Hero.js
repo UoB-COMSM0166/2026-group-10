@@ -1,40 +1,66 @@
 import Unit from '../Unit.js';
 
 const BASE_RESPAWN_CD = 600;  // Ticks
+const SKILL_SLOT_UNLOCK_ORDER = ['W', 'E', 'R'];
+const HP_PER_STRENGTH = 20;
+const HP_REGEN_PER_STRENGTH = 0.01;
 
 export default class Hero extends Unit {
     constructor(
         id, name, position, speed, hitbox, hp, mp,
-        description, armor, attackAmp, spellAmp,
-        events, ui, clock
+        description, armor, strength, intelligence,
+        events, clock, category
     ) {
         super(id, position, speed, hitbox, hp, mp);
         this.name = String(name);
         this.events = events;
-        this.ui = ui;
+        // this.ui = ui;
         this.clock = clock;
         this.description = String(description);
+        this.baseMaxHP = this.maxHP;
 
-        this.baseArmor = Number(armor);
-        this.armor = this.baseArmor;
-        this.baseAttackAmp = Number(attackAmp);
-        this.attackAmp = this.baseAttackAmp
-        this.baseSpellAmp = Number(spellAmp);
-        this.spellAmp = this.baseSpellAmp;
+        this.baseStats.set('Armor', Number(armor));
+        this.baseStats.set('Strength', Number(strength));
+        this.baseStats.set('Intelligence', Number(intelligence));
+        this.stats.set('Armor', Number(armor));
+        this.stats.set('Strength', Number(strength));
+        this.stats.set('Intelligence', Number(intelligence));
+        this.syncStatAliases();
 
         this.respawnCD = BASE_RESPAWN_CD;
         this.active = false;
         this.remainingRespawnCD = 0;
+        this.spawnPosition = position;
 
-        this.gold = 0;
+        this.gold = 1000;
         this.castState = null;
 
-        this.speedLevel = 0;
-        this.armorLevel = 0;
-        this.attackAmpLevel = 0;
-        this.spellAmpLevel = 0;
-        this.spellSlotLevel = 0;
+        this.upgradeCost = new Map();
+        this.upgradeCost.set('Speed', 100);
+        this.upgradeCost.set('Armor', 100);
+        this.upgradeCost.set('Strength', 100);
+        this.upgradeCost.set('Intelligence', 100);
+        this.upgradeCost.set('SpellSlot', 80);
 
+        this.statsGrowth = new Map();
+        this.statsGrowth.set('Speed', 0);
+        this.statsGrowth.set('Armor', 0);
+        this.statsGrowth.set('Strength', 0);
+        this.statsGrowth.set('Intelligence', 0);
+
+        this.spellSlotLevel = 0;
+        this.spellSlotUpgradeCost = 80;
+        this.skillSlotUnlocked = new Map([
+            ['A', true],
+            ['Q', true],
+            ['W', false],
+            ['E', false],
+            ['R', false],
+            ['P', true],
+        ]);
+        this.nextSkillSlotToUnlock = this.findNextLockedSkillSlot();
+
+        this.category = category;
         this.skill = new Map();
         this.skill.set('A', null);
         this.skill.set('Q', null);
@@ -42,11 +68,14 @@ export default class Hero extends Unit {
         this.skill.set('E', null);
         this.skill.set('R', null);
         this.skill.set('P', null);
-        this.renderRange = null;
         this.applyPassiveSkills();
     }
 
-    takeDamage(amount) {
+    collectCoin(amount) {
+        this.gold += Number(amount);
+    }
+
+    takeDamage(amount, source = null, options = {}) {
         super.takeDamage(amount);
         if (!this.alive()) {
             this.die();
@@ -61,7 +90,28 @@ export default class Hero extends Unit {
         this.currentHP = 0;
         this.remainingRespawnCD = this.respawnCD;
         this.events.emit('hero:death', { hero: this, respawnTick: this.remainingRespawnCD });
-        this.ui.emit('hero:death', { hero: this, respawnTick: this.remainingRespawnCD });
+        // this.ui.emit('hero:death', { hero: this, respawnTick: this.remainingRespawnCD });
+    }
+
+    respawn() {
+        this.interruptCast();
+        this.position = { x: this.spawnPosition.x, y: this.spawnPosition.y };
+        this.currentHP = this.maxHP;
+        this.remainingRespawnCD = 0;
+        this.stop();
+        this.clearWaypoints();
+        this.events.emit('hero:respawn', { hero: this });
+    }
+
+    updateRespawn() {
+        if (this.alive() || this.remainingRespawnCD <= 0) {
+            return;
+        }
+
+        this.remainingRespawnCD -= 1;
+        if (this.remainingRespawnCD <= 0) {
+            this.respawn();
+        }
     }
 
     updateMovement() {
@@ -79,6 +129,10 @@ export default class Hero extends Unit {
             return;
         }
 
+        if (typeof this.castState.onTick === 'function') {
+            this.castState.onTick();
+        }
+
         this.castState.remaining -= 1;
         if (this.castState.remaining > 0) {
             return;
@@ -91,9 +145,17 @@ export default class Hero extends Unit {
         }
     }
 
+    updateBuffs() {
+        this.stats.set('Strength', this.baseStats.get('Strength'));
+        this.stats.set('Intelligence', this.baseStats.get('Intelligence'));
+        super.updateBuffs();
+        this.syncStatAliases();
+        this.applyStrengthStats();
+    }
+
     updateSkill() {
         for (const [slot, skill] of this.skill.entries()) {
-            if (skill) {
+            if (skill && this.isSkillSlotUnlocked(slot)) {
                 skill.coolingDown();
                 skill.updateToggle(this, this.clock.now());
                 if (slot === 'A' && skill.currentCooldown > 0 && skill.cooldownAcceleration > 0) {
@@ -112,47 +174,65 @@ export default class Hero extends Unit {
     }
 
     upgrade(category) {
-        let goldRequired = 0;
-        switch (category) {
-            case 'SpellSlot':
-                if (this.spellSlotLevel >= 3) return { success: false, message: 'Spell Slot Level Maxed Out.' };
-                goldRequired = this.spellSlotLevel * 40 + 20;
-                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
-                this.gold -= goldRequired;
-                this.spellSlotLevel += 1;
-                return { success: true, message: 'New Spell Slot Unlocked.' };
-            case 'Speed':
-                goldRequired = this.speedLevel * 40 + 20;
-                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
-                this.gold -= goldRequired;
-                this.speedLevel += 1;
-                return { success: true, message: `Speed Upgraded to Lv. ${this.speedLevel}` };
-            case 'Armor':
-                goldRequired = this.armorLevel * 40 + 20;
-                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
-                this.gold -= goldRequired;
-                this.armorLevel += 1;
-                return { success: true, message: `Armor Upgraded to Lv. ${this.armorLevel}` };
-            case 'AttackAmp':
-                goldRequired = this.attackAmpLevel * 40 + 20;
-                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
-                this.gold -= goldRequired;
-                this.attackAmpLevel += 1;
-                return { success: true, message: `Attack Amplification Upgraded to Lv. ${this.speedLevel}` };
-            case 'SpellAmp':
-                goldRequired = this.spellAmpLevel * 40 + 20;
-                if (goldRequired > this.gold) return { success: false, message: 'Insufficient Gold.' };
-                this.gold -= goldRequired;
-                this.spellAmpLevel += 1;
-                return { success: true, message: `Spell Amplification Upgraded to Lv. ${this.spellAmpLevel}` };
-            default:
-                return { success: false, message: 'Unknown Category. This should not happen.' };
+        const upgradeCategory = String(category ?? '').trim();
+        if (upgradeCategory === 'SpellSlot') {
+            const slot = this.nextSkillSlotToUnlock;
+            if (!slot) {
+                return { success: false, message: 'Spell Slot Level Maxed Out.' };
+            }
+
+            const goldRequired = this.spellSlotUpgradeCost;
+            if (goldRequired > this.gold) {
+                return { success: false, message: 'Insufficient Gold.' };
+            }
+
+            this.gold -= goldRequired;
+            this.skillSlotUnlocked.set(slot, true);
+            this.spellSlotLevel += 1;
+            this.equipDefaultSkillForSlot(slot);
+            this.nextSkillSlotToUnlock = this.findNextLockedSkillSlot();
+            this.spellSlotUpgradeCost += 50;
+            this.upgradeCost.set('SpellSlot', this.spellSlotUpgradeCost);
+
+            return { success: true, message: `Skill slot ${slot} unlocked.` };
         }
+
+        if (!this.upgradeCost.has(upgradeCategory)) {
+            return { success: false, message: 'Unknown Category. This should not happen.' };
+        }
+
+        const goldRequired = this.upgradeCost.get(upgradeCategory);
+        if (goldRequired > this.gold) {
+            return { success: false, message: 'Insufficient Gold.' };
+        }
+
+        const statGrowth = Number(this.statsGrowth.get(upgradeCategory)) || 0;
+        this.gold -= goldRequired;
+        this.baseStats.set(upgradeCategory, (Number(this.baseStats.get(upgradeCategory)) || 0) + statGrowth);
+        this.stats.set(upgradeCategory, (Number(this.stats.get(upgradeCategory)) || 0) + statGrowth);
+        this.upgradeCost.set(upgradeCategory, goldRequired + 50);
+        this.syncStatAliases();
+
+        return { success: true, message: `${upgradeCategory} Upgraded.` };
     }
 
     upgradeSkill(slot, name) {
+        if (!this.isSkillSlotUnlocked(slot)) {
+            return null;
+        }
+
         const findSkill = this.skillTree.get(slot)?.find(s => s.name === name);
         if (findSkill) {
+            if (findSkill.upgraded) {
+                return findSkill;
+            }
+
+            const goldRequired = Number(findSkill.upgradeCost) || 0;
+            if (goldRequired > this.gold) {
+                return null;
+            }
+
+            this.gold -= goldRequired;
             findSkill.upgrade();
             return findSkill;
         }
@@ -166,7 +246,7 @@ export default class Hero extends Unit {
         this.removeTarget();
     }
 
-    startCast(duration, onComplete) {
+    startCast(duration, onComplete, onTick = null) {
         const castDuration = Math.max(0, Number(duration) || 0);
 
         this.stop();
@@ -180,6 +260,7 @@ export default class Hero extends Unit {
         this.castState = {
             remaining: castDuration,
             onComplete,
+            onTick: typeof onTick === 'function' ? onTick : null,
         };
     }
 
@@ -191,20 +272,106 @@ export default class Hero extends Unit {
         return this.castState !== null;
     }
 
-    setRenderRange(skill) {
-        this.renderRange = Number(skill.range);
-    }
-
-    clearRenderRange() {
-        this.renderRange = null;
-    }
-
     applyPassiveSkills() {
-        for (const skill of this.skill.values()) {
+        for (const [slot, skill] of this.skill.entries()) {
+            if (!this.isSkillSlotUnlocked(slot)) {
+                continue;
+            }
+
             if (skill?.passive && typeof skill.applyTo === 'function') {
                 skill.applyTo(this);
             }
         }
+    }
+
+    initializeSkillSlots() {
+        if (!(this.skillTree instanceof Map)) {
+            return;
+        }
+
+        for (const [slot, skills] of this.skillTree.entries()) {
+            if (!Array.isArray(skills)) {
+                continue;
+            }
+
+            for (const skill of skills) {
+                if (skill) {
+                    skill.slot = slot;
+                }
+            }
+        }
+    }
+
+    syncStatAliases() {
+        this.baseStrength = Number(this.baseStats.get('Strength')) || 0;
+        this.strength = Number(this.stats.get('Strength')) || 0;
+        this.baseIntelligence = Number(this.baseStats.get('Intelligence')) || 0;
+        this.intelligence = Number(this.stats.get('Intelligence')) || 0;
+    }
+
+    applyStrengthStats() {
+        const previousMaxHP = this.maxHP;
+        this.maxHP = this.baseMaxHP + this.strength * HP_PER_STRENGTH;
+        this.hpRegen += this.strength * HP_REGEN_PER_STRENGTH;
+
+        if (this.maxHP > previousMaxHP) {
+            this.currentHP += this.maxHP - previousMaxHP;
+        }
+
+        this.currentHP = Math.min(this.currentHP, this.maxHP);
+    }
+
+    normalizeSkillSlot(slot) {
+        const normalizedSlot = String(slot ?? '').trim().toUpperCase();
+        return this.skillSlotUnlocked.has(normalizedSlot) ? normalizedSlot : '';
+    }
+
+    isSkillSlotUnlocked(slot) {
+        const normalizedSlot = this.normalizeSkillSlot(slot);
+        return normalizedSlot ? Boolean(this.skillSlotUnlocked.get(normalizedSlot)) : false;
+    }
+
+    findNextLockedSkillSlot() {
+        return SKILL_SLOT_UNLOCK_ORDER.find((slot) => !this.isSkillSlotUnlocked(slot)) ?? null;
+    }
+
+    equipDefaultSkillForSlot(slot) {
+        const normalizedSlot = this.normalizeSkillSlot(slot);
+        if (!normalizedSlot || this.skill.get(normalizedSlot)) {
+            return this.skill.get(normalizedSlot) ?? null;
+        }
+
+        const availableSkills = this.skillTree?.get(normalizedSlot) ?? [];
+        const currentCategory = this.skill.get('A')?.category ?? null;
+        const defaultSkill = availableSkills.find((skill) => skill?.category === currentCategory)
+            ?? availableSkills.find(Boolean)
+            ?? null;
+        if (!defaultSkill) {
+            return null;
+        }
+
+        this.skill.set(normalizedSlot, defaultSkill);
+        defaultSkill.slot = normalizedSlot;
+        if (normalizedSlot === 'P') {
+            this.applyPassiveSkills();
+        }
+
+        return defaultSkill;
+    }
+
+    changeSkill(slot, skill) {
+        const normalizedSlot = this.normalizeSkillSlot(slot);
+        if (!skill || !this.isSkillSlotUnlocked(normalizedSlot)) {
+            return null;
+        }
+
+        this.skill.set(normalizedSlot, skill);
+        skill.slot = normalizedSlot;
+        if (normalizedSlot === 'P') {
+            this.applyPassiveSkills();
+        }
+
+        return skill;
     }
 
     inFountain(objectivePosition) {

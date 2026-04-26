@@ -7,7 +7,7 @@ export class IcePick extends Skill {
         super(
             'Ice Pick', 'Ice',
             'Lyra\'Gotha generate a ice pick that moving towards a enemy and deals damage.',
-            10, 0, 150, events, 'Unit', false
+            10, 0, 150, events, 'Unit', false, 200
         );
     }
 
@@ -20,7 +20,7 @@ export class IcePick extends Skill {
         super.casted();
 
         const buffEffect = (unit) => {
-            unit.speed = Math.max(0, unit.baseSpeed - 0.5);
+            unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - 0.5));
         }
 
         const buff = new Buff(
@@ -55,7 +55,7 @@ export class StormBlast extends Skill {
         super(
             'Storm Blast', 'Ice',
             'Lyra\'Gotha manipulates air currents in an area, summoning a storm that damages enemies in it.',
-            450, 20, 200, events, 'Point', false
+            450, 20, 200, events, 'Point', false, 300
         );
         this.hitbox = 70;
     }
@@ -71,7 +71,7 @@ export class StormBlast extends Skill {
         const totalDamage = this.getSpellDamage(5, caster);
 
         const buffEffect = (unit) => {
-            unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * 0.7);
+            unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * 0.7));
         }
 
         const buff = new Buff(
@@ -110,7 +110,7 @@ export class FrostShield extends Skill {
             'Lyra\'Gotha’ summons the surrounding cold air, casting a frost shield around herself to reduce ' +
             'damage taken. While the shield is active, it casts frost magic every second on nearby enemy units, ' +
             'dealing minor damage and slowing them.',
-            600, 50, 0, events, null, false
+            600, 50, 0, events, null, false, 300
         );
         this.duration = 300;
         this.hitbox = 150;
@@ -132,7 +132,7 @@ export class FrostShield extends Skill {
         }
 
         const slowBuffEffect = (unit) => {
-            unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * 0.7);
+            unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * 0.7));
         };
 
         const shieldBuff = new Buff(
@@ -141,7 +141,7 @@ export class FrostShield extends Skill {
             'rgba(120, 180, 255, 1)',
             this.duration,
             (unit) => {
-                unit.armor += this.armor;
+                unit.addStat('Armor', this.armor);
             },
             true
         );
@@ -194,7 +194,7 @@ export class Chakra extends Skill {
     constructor(events) {
         super(
             'Chakra', 'Ice', 'Lyra\'Gotha channels her inner energy, restoring a portion of her mana.',
-            420, 0, 0, events, null, false
+            420, 0, 0, events, null, false, 300
         )
     }
 
@@ -220,7 +220,7 @@ export class Blizzard extends Skill {
             'Blizzard', 'Ice',
             'Lyra\'Gotha controls all ice elements across the entire map, summoning a Blizzard that Freezes ' +
             'all enemies. During the chanting, the hero cannot be affected by negative effects or perform other actions.',
-            30, 80, 0, events, null, false
+            30, 80, 0, events, null, false, 400
         );
         this.castDuration = 60;
         this.size = { width: 1280, height: 720 };
@@ -239,7 +239,7 @@ export class Blizzard extends Skill {
         }
 
         const buffEffect = (unit) => {
-            unit.speed = 0;
+            unit.setStat('Speed', 0);
         }
 
         caster.startCast(this.castDuration, () => {
@@ -287,7 +287,7 @@ export class ManaDrain extends Skill {
         super(
             'Mana Drain', 'Ice',
             'Restore mana whenever an enemy is killed.',
-            0, 0, 0, events, null, true
+            0, 0, 0, events, null, true, 150
         );
     }
 
@@ -328,7 +328,7 @@ export class FireBall extends Skill {
         super(
             'Fire Ball', 'Fire',
             'Lyra\'Gotha generate a fire ball that moving in straight.',
-            10, 0, 200, events, 'Point', false
+            10, 0, 200, events, 'Point', false, 200
         );
         this.baseDamage = 15;
         this.upgradedDamage = 20;
@@ -388,7 +388,7 @@ export class FlameWave extends Skill {
             'Flame Wave', 'Fire',
             'Lyra\'Gotha Channeled the dragon\'s breath, unleashing a wave of flames that damage and ignite ' +
             'all the enemies caught in its path.',
-            18, 20, 260, events, 'Point', false
+            18, 20, 260, events, 'Point', false, 300
         );
         this.speed = 8;
         this.hitbox = 35;
@@ -416,9 +416,9 @@ export class FlameWave extends Skill {
             'rgba(255, 100, 0, 1)',
             this.igniteDuration,
             (unit) => {
-                unit.takeDamage(this.igniteDamage);
+                unit.takeDamage(this.getSpellDamage(this.igniteDamage, caster));
                 if (this.upgraded) {
-                    unit.speed = Math.max(0, unit.speed - unit.baseSpeed * this.slowAmount);
+                    unit.setStat('Speed', Math.max(0, unit.getStat('Speed') - unit.getBaseStat('Speed') * this.slowAmount));
                 }
             },
             false,
@@ -459,7 +459,7 @@ export class Burning extends Skill {
         super(
             'Burning', 'Fire',
             'Ignite the air around Lyra\'Gotha, burning nearby enemies while increasing her movement speed.',
-            60, 20, 0, events, null, false
+            60, 20, 0, events, null, false, 300
         );
         this.duration = 120;
         this.hitbox = 100;
@@ -487,7 +487,7 @@ export class Burning extends Skill {
             'rgba(255, 120, 0, 1)',
             this.duration,
             (unit) => {
-                unit.speed += this.moveSpeedBonus;
+                unit.addStat('Speed', this.moveSpeedBonus);
             },
             true
         );
@@ -513,7 +513,7 @@ export class ViperGuardian extends Skill {
         super(
             'Viper Guardian', 'Fire',
             'Summon a guardian that automatically attacks the nearest enemy in range.',
-            30, 35, 250, events, 'Point', false
+            30, 35, 250, events, 'Point', false, 300
         );
         this.duration = 600;
         this.attackRange = 100;
@@ -542,7 +542,7 @@ export class ViperGuardian extends Skill {
             'rgba(255, 110, 0, 1)',
             45,
             (unit) => {
-                unit.takeDamage(3);
+                unit.takeDamage(this.getSpellDamage(3, caster));
             },
             false,
             10,
@@ -572,7 +572,7 @@ export class Meteorite extends Skill {
         super(
             'Meteorite', 'Fire',
             'Summon a meteorite at the target point after a short delay, damaging and stunning enemies on impact.',
-            24, 40, 250, events, 'Point', false
+            24, 40, 250, events, 'Point', false, 400
         );
         this.delay = 30;
         this.hitbox = 35;
@@ -605,7 +605,7 @@ export class Meteorite extends Skill {
             'rgba(255, 170, 80, 1)',
             this.stunDuration,
             (unit) => {
-                unit.speed = 0;
+                unit.setStat('Speed', 0);
             },
             false
         );
@@ -697,8 +697,10 @@ export class Meteorite extends Skill {
                 meteorite.speed = this.rollSpeed;
                 meteorite.origin = { x: meteorite.position.x, y: meteorite.position.y };
                 meteorite.distanceTravelled = 0;
-                meteorite.velocity.vx = dx / distance * meteorite.speed;
-                meteorite.velocity.vy = dy / distance * meteorite.speed;
+                meteorite.setVelocity(
+                    dx / distance * meteorite.speed,
+                    dy / distance * meteorite.speed
+                );
                 meteorite.period = this.rollEffectPeriod;
                 meteorite.duration -= 1;
                 return;
@@ -736,7 +738,7 @@ export class FierySoul extends Skill {
         super(
             'Fiery Soul', 'Fire',
             'Each ignited enemy increases the attack speed of the current A skill.',
-            0, 0, 0, events, null, true
+            0, 0, 0, events, null, true, 150
         );
         this.attackSpeedPerIgnited = 0.25;
         this.moveSpeedPerIgnited = 1;
@@ -804,7 +806,7 @@ export class FierySoul extends Skill {
                 }
 
                 if (this.upgraded && ignitedCount > 0) {
-                    unit.speed += ignitedCount * this.moveSpeedPerIgnited;
+                    unit.addStat('Speed', ignitedCount * this.moveSpeedPerIgnited);
                 }
             },
             true
@@ -819,7 +821,7 @@ export class Lightning extends Skill {
         super(
             'Lightning', 'Lightning',
             'Lyra\'Gotha summons a lightning strike that hits a area, dealing magic damage and apply a static field buff to enemies hit.',
-            10, 0, 200, events, 'Point', false
+            10, 0, 200, events, 'Point', false, 200
         );
         this.hitbox = 70;
         this.damage = 15;
@@ -880,7 +882,7 @@ export class ThunderCloud extends Skill {
         super(
             'Thunder Cloud', 'Lightning',
             'Summon a thunder cloud that slowly drifts forward, periodically damaging enemies and applying Static Field.',
-            20, 30, 240, events, 'Point', false
+            20, 30, 240, events, 'Point', false, 300
         );
         this.speed = 1.5;
         this.hitbox = 80;
@@ -943,7 +945,7 @@ export class ChainLightning extends Skill {
         super(
             'Chain Lightning', 'Lightning',
             'Strike a target with lightning, then chain to nearby enemies, damaging and applying Static Field to each one hit.',
-            16, 25, 220, events, 'Unit', false
+            16, 25, 220, events, 'Unit', false, 300
         );
         this.damage = 14;
         this.maxTargets = 4;
@@ -1016,7 +1018,7 @@ export class BallLightning extends Skill {
         super(
             'Ball Lightning', 'Lightning',
             'Transform into a ball of lightning, gaining speed, becoming immune to damage, and shocking enemies you pass through.',
-            24, 35, 0, events, null, false
+            24, 35, 0, events, null, false, 300
         );
         this.duration = 120;
         this.damage = 18;
@@ -1056,7 +1058,7 @@ export class BallLightning extends Skill {
             'rgba(180, 220, 255, 1)',
             this.duration,
             (unit) => {
-                unit.speed += this.moveSpeedBonus;
+                unit.addStat('Speed', this.moveSpeedBonus);
                 unit.hitbox = this.hitbox;
                 unit.invulnerable = true;
                 unit.skillCastingDisabled = true;
@@ -1064,7 +1066,7 @@ export class BallLightning extends Skill {
             true
         );
 
-        caster.speed += this.moveSpeedBonus;
+        caster.addStat('Speed', this.moveSpeedBonus);
         caster.hitbox = this.hitbox;
         caster.invulnerable = true;
         caster.skillCastingDisabled = true;
@@ -1099,8 +1101,7 @@ export class BallLightning extends Skill {
 
             aura.position = { x: aura.source.position.x, y: aura.source.position.y };
             aura.hitbox = aura.source.hitbox;
-            aura.velocity.vx = 0;
-            aura.velocity.vy = 0;
+            aura.setVelocity(0, 0);
         };
 
         this.events.emit('skill_entity:created', { entity: aura });
@@ -1112,7 +1113,7 @@ export class StaticExplosion extends Skill {
         super(
             'Static Explosion', 'Lightning',
             'Detonate Static Field on all affected enemies, dealing damage and stunning them.',
-            30, 40, 0, events, null, false
+            30, 40, 0, events, null, false, 400
         );
         this.damage = 20;
         this.stunDuration = 45;
@@ -1139,7 +1140,7 @@ export class StaticExplosion extends Skill {
             'rgba(255, 255, 180, 1)',
             this.stunDuration,
             (unit) => {
-                unit.speed = 0;
+                unit.setStat('Speed', 0);
             },
             false
         );
@@ -1168,7 +1169,7 @@ export class ElectromagneticField extends Skill {
         super(
             'Electromagnetic Field', 'Lightning',
             'Generate an electromagnetic aura that slows nearby enemies.',
-            0, 0, 0, events, null, true
+            0, 0, 0, events, null, true, 150
         );
         this.hitbox = 120;
         this.slowRatio = 0.1;
@@ -1194,7 +1195,7 @@ export class ElectromagneticField extends Skill {
             'rgba(180, 220, 255, 1)',
             this.slowDuration,
             (unit) => {
-                unit.speed = Math.max(0, unit.baseSpeed - unit.baseSpeed * this.slowRatio);
+                unit.setStat('Speed', Math.max(0, unit.getBaseStat('Speed') - unit.getBaseStat('Speed') * this.slowRatio));
             },
             false
         );

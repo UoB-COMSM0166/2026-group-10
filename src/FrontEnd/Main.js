@@ -1,6 +1,8 @@
 import Input from './Input.js';
+import { getSoundResource } from './Assert/AssetSheet.js';
 import UI from './Output/UI.js';
 import Render from './Output/Render.js';
+import { BackgroundMusic, SoundEffect } from './Output/Sound.js';
 
 const p5Ctor = window.p5;
 if (!p5Ctor) {
@@ -9,7 +11,23 @@ if (!p5Ctor) {
 
 const GAME_WIDTH = 1600;
 const GAME_HEIGHT = 900;
+// TODO: Connect this to the Menu.
+const DEFAULT_GAME_CONFIG = {
+    hero: 'Architect',
+    category: 'Penis',
+    world: 'Forest',
+};
+
 const worker = new Worker(new URL('../Game/Worker.js', import.meta.url), { type: 'module' });
+const soundResource = getSoundResource();
+const MUSIC_TRACKS = [
+    { id: 'normal', label: 'Normal', url: soundResource.normal, loop: true },
+    { id: 'death', label: 'Death', url: soundResource.death, loop: false },
+    { id: 'dead', label: 'Dead', url: soundResource.dead, loop: true },
+    { id: 'boss', label: 'Boss', url: soundResource.boss, loop: true },
+    { id: 'win', label: 'Win', url: soundResource.win, loop: false },
+    { id: 'lose', label: 'Lose', url: soundResource.lose, loop: false },
+];
 window.addEventListener('contextmenu', (event) => {
     event.preventDefault();
 });
@@ -19,12 +37,179 @@ let latestEvents = [];
 let latestResult = null;
 let uiMessageQueue = [];
 let bookPausedGame = false;
-const objectiveSprite = {
-    image: null,
-    loaded: false,
-    failed: false,
-    promise: null,
+const music = new BackgroundMusic(MUSIC_TRACKS);
+const soundEffect = new SoundEffect({
+    eventMap: {
+        'hero:attack:hit': 'heroAttack',
+        'skill_entity:created': 'heroSkill',
+        'enemy_skill_entity:created': 'enemySkill',
+        'allied_decoy:created': 'heroSkill',
+        'enemy:killed': 'enemyKilled',
+        'enemy:reached_objective': 'objectiveHit',
+        'hero:death': 'heroDeath',
+        'hero:respawn': 'heroRespawn',
+        'wave:start': 'waveStart',
+        'game:win': 'victory',
+        'objective:destroyed': 'defeat',
+    },
+    eventCooldowns: {
+        'hero:attack:hit': 80,
+        'skill_entity:created': 120,
+        'enemy_skill_entity:created': 180,
+        'allied_decoy:created': 250,
+        'enemy:killed': 60,
+        'enemy:reached_objective': 220,
+        'hero:death': 1000,
+        'hero:respawn': 800,
+        'wave:start': 1200,
+        'game:win': 1500,
+        'objective:destroyed': 1500,
+    },
+});
+const musicState = {
+    desiredTrackId: null,
+    currentTrackId: null,
+    heroAlive: true,
+    bossAlive: false,
+    gameWon: false,
+    gameLost: false,
+    previousStarted: false,
+    previousHeroAlive: null,
+    previousBossId: null,
+    previousGameWon: false,
+    requestId: 0,
 };
+
+function getTrackIndexById(id) {
+    return MUSIC_TRACKS.findIndex((track) => track.id === id);
+}
+
+async function playMusicTrack(id, options = {}) {
+    if (!id) {
+        return;
+    }
+
+    const index = getTrackIndexById(id);
+    if (index < 0) {
+        console.warn(`Unknown music track: ${id}`);
+        return;
+    }
+
+    const shouldRestart = options.restart === true;
+    if (!shouldRestart && musicState.currentTrackId === id && music.isPlaying) {
+        musicState.desiredTrackId = id;
+        return;
+    }
+
+    musicState.desiredTrackId = id;
+    const requestId = musicState.requestId + 1;
+    musicState.requestId = requestId;
+
+    if (!shouldRestart && music.currentTrack?.id === id && music.isReady) {
+        await music.play();
+        if (requestId === musicState.requestId) {
+            musicState.currentTrackId = id;
+        }
+        return;
+    }
+
+    const changed = await music.switchTrack(index);
+    if (changed && requestId === musicState.requestId) {
+        musicState.currentTrackId = id;
+    }
+}
+
+async function syncMusicToDesiredTrack() {
+    if (!musicState.desiredTrackId) {
+        return;
+    }
+
+    if (musicState.currentTrackId === musicState.desiredTrackId && music.isPlaying) {
+        return;
+    }
+
+    await playMusicTrack(musicState.desiredTrackId, {
+        restart: musicState.currentTrackId !== musicState.desiredTrackId,
+    });
+}
+
+function handleMusicState(state) {
+    if (!state) {
+        return;
+    }
+
+    const started = Boolean(state.flags?.started);
+    const gameWon = Boolean(state.flags?.gameWon);
+    const heroAlive = state.hero?.alive !== false;
+    const bossId = state.boss?.id ?? null;
+    const bossAlive = Boolean(bossId && state.boss?.alive !== false && !state.boss?.finished);
+
+    musicState.heroAlive = heroAlive;
+    musicState.bossAlive = bossAlive;
+    musicState.gameWon = gameWon;
+
+    if (musicState.gameLost) {
+        musicState.previousStarted = started;
+        musicState.previousHeroAlive = heroAlive;
+        musicState.previousBossId = bossId;
+        musicState.previousGameWon = gameWon;
+        return;
+    }
+
+    if (!musicState.previousGameWon && gameWon) {
+        void playMusicTrack('win', { restart: true });
+        musicState.previousStarted = started;
+        musicState.previousHeroAlive = heroAlive;
+        musicState.previousBossId = bossId;
+        musicState.previousGameWon = gameWon;
+        return;
+    }
+
+    if (gameWon) {
+        musicState.previousStarted = started;
+        musicState.previousHeroAlive = heroAlive;
+        musicState.previousBossId = bossId;
+        musicState.previousGameWon = gameWon;
+        return;
+    }
+
+    if (!musicState.previousStarted && started && heroAlive) {
+        void playMusicTrack('normal');
+    }
+
+    if (musicState.previousHeroAlive === true && !heroAlive) {
+        void playMusicTrack('death', { restart: true });
+    } else if (musicState.previousHeroAlive === false && heroAlive) {
+        void playMusicTrack(bossAlive ? 'boss' : 'normal', { restart: true });
+    } else if (!musicState.previousBossId && bossId && heroAlive) {
+        void playMusicTrack('boss', { restart: true });
+    } else if (musicState.previousBossId && !bossId && heroAlive && musicState.currentTrackId === 'boss') {
+        void playMusicTrack('normal', { restart: true });
+    }
+
+    musicState.previousStarted = started;
+    musicState.previousHeroAlive = heroAlive;
+    musicState.previousBossId = bossId;
+    musicState.previousGameWon = gameWon;
+}
+
+async function unlockAudioAndSync() {
+    await soundEffect.unlock();
+    await syncMusicToDesiredTrack();
+}
+
+music.onTrackEnded = (track) => {
+    if (track?.id === 'death' && !musicState.heroAlive) {
+        void playMusicTrack('dead', { restart: true });
+    }
+};
+
+window.addEventListener('pointerdown', () => {
+    void unlockAudioAndSync();
+}, { passive: true });
+window.addEventListener('keydown', () => {
+    void unlockAudioAndSync();
+});
 
 function postCommand(command, payload = null) {
     const requestId = `${command}:${Date.now()}:${Math.random().toString(36).slice(2, 8)}`;
@@ -50,39 +235,28 @@ function getMouseWorldPosition(sketch) {
 }
 
 function drawWorld(sketch, state, vectorTargetStart = null) {
+    sketch.background('#0d1320');
+
+    sketch.push();
+    sketch.noStroke();
+    sketch.fill('#151e31');
+    sketch.rect(0, 0, sketch.width, sketch.height);
+
+    // sketch.fill('#19243a');
+    // sketch.circle(320, 540, 120);
+    // sketch.fill('#243550');
+    // sketch.circle(800, 90, 100);
+    // sketch.circle(1120, 450, 100);
+    sketch.pop();
 
     if (!state) {
         return;
     }
 
     worldRender.layer = sketch;
-    drawObjective(sketch, state.objective);
-    worldRender.renderUnitsAndProjectiles(state);
+    worldRender.renderScene(state);
     drawTargetingOverlay(sketch, state, vectorTargetStart);
     drawStatusText(sketch, state);
-}
-
-function drawObjective(sketch, objective) {
-    if (!objective?.position) {
-        return;
-    }
-
-    worldRender.withWorldTransform(() => {
-        worldRender.renderBaseRing(objective);
-
-        if (objectiveSprite.loaded && objectiveSprite.image) {
-            worldRender.renderBillboardImage(
-                objectiveSprite.image,
-                objective,
-                4 / Render.ENTITY_SPRITE_BASE_SIZE
-            );
-            return;
-        }
-
-        sketch.noStroke();
-        sketch.fill('#f5f1df');
-        sketch.circle(objective.position.x, objective.position.y, objective.hitbox * 2.6);
-    });
 }
 
 function drawTargetingOverlay(sketch, state, vectorTargetStart = null) {
@@ -109,7 +283,7 @@ function drawTargetingOverlay(sketch, state, vectorTargetStart = null) {
             if (hero?.position) {
                 sketch.line(hero.position.x, hero.position.y, mouse.x, mouse.y);
             }
-        } else if (targeting.targetCategory === 'Unit') {
+        } else if (targeting.targetCategory === 'Unit' || targeting.targetCategory === 'Tower') {
             sketch.circle(mouse.x, mouse.y, 34);
         } else if (targeting.targetCategory === 'Vector') {
             const start = vectorTargetStart ?? hero?.position ?? mouse;
@@ -184,12 +358,27 @@ worker.onmessage = (event) => {
 
     if (type === 'state') {
         latestState = payload;
+        handleMusicState(payload);
     } else if (type === 'event') {
         latestEvents.push({
             label: `${name}${payload?.wave ? ` ${payload.wave}` : ''}`,
             at: Date.now(),
         });
         latestEvents = latestEvents.slice(-12);
+        soundEffect.handleEvent(name, payload);
+        if (name === 'game:start') {
+            musicState.gameLost = false;
+            musicState.gameWon = false;
+            musicState.previousStarted = false;
+            musicState.previousHeroAlive = null;
+            musicState.previousBossId = null;
+            musicState.previousGameWon = false;
+            void playMusicTrack('normal', { restart: true });
+        }
+        if (name === 'objective:destroyed') {
+            musicState.gameLost = true;
+            void playMusicTrack('lose', { restart: true });
+        }
     } else if (type === 'result') {
         latestResult = event.data;
     } else if (type === 'error') {
@@ -240,64 +429,16 @@ const input = new Input({
 
         sketchUi.handleSkillClick(state.hero, mouse, postCommand);
     },
+    setCheatInputState: (value) => {
+        if (sketchUi && typeof sketchUi.setCheatInputState === 'function') {
+            sketchUi.setCheatInputState(value);
+        }
+    },
 });
 input.vectorTargetStart = null;
 let sketchUi = null;
 
-window.activeScene = null;
-window.menuBackground = null;
-window.mapOneBackground = null;
-window.selectDifficultyBg = null;
-window.generalBackground = null;
-window.msgTimer = 0;
-window.audioMessage = "";
-window.MESSAGE_DURATION = 80;
-window.menuMusic = null;
-window.musicStarted = false;
-window.clickNoise = null;
-window.cursorImage = null;
-window.font = null;
-window.introMusic = null;
-window.introImages = [];
-window.introVoices = [];
-window.characterImages = [];
-window.characterVoices = [];
-
-window.gameState = {
-    selectedCharacter: null,
-    selectedDifficulty: null,
-    settings: {
-        isSound: true,
-        isMusic: true
-    }
-};
-
-window.GameController = {
-    startGame() {
-        let heroClass = 'Archmage';
-        if (window.gameState.selectedCharacter === 'Elf Ranger') heroClass = 'Ranger';
-        else if (window.gameState.selectedCharacter === 'Human Warrior') heroClass = 'Warrior';
-        else if (window.gameState.selectedCharacter === 'Dracthyr Mage') heroClass = 'Archmage';
-
-        console.log(`Starting game with ${heroClass} character and ${window.gameState.selectedDifficulty} difficulty`);
-        postCommand('game:start', {
-            heroClass: heroClass,
-            difficulty: window.gameState.selectedDifficulty
-        });
-        postCommand('game:resume');
-        postCommand('snapshot');
-    }
-};
-
-window.playClickNoise = function() {
-    if (window.gameState.settings.isSound === true && window.clickNoise) {
-       window.clickNoise.amp(0.29);
-       window.clickNoise.play();
-    }
-};
-
 const sketch = (p) => {
-    let loadingComplete = false;
     let uiLayer = null;
     let ui = null;
 
@@ -309,164 +450,25 @@ const sketch = (p) => {
 
         p.textFont('sans-serif');
         uiLayer.textFont('sans-serif');
-        p.noCursor();
 
-        const loadImg = (path) => {
-            const img = new window.Image();
-            img.src = path;
-            return img;
-        };
-
-        const loadSnd = (path, cb) => {
-            if (window.p5 && window.p5.SoundFile) {
-                return new window.p5.SoundFile(path, cb);
-            }
-            return p.loadSound(path, cb); // Fallback
-        };
-
-        window.menuBackground = loadImg("src/FrontEnd/Assert/Image/menu_background.png");
-        window.generalBackground = loadImg("src/FrontEnd/Assert/Image/general-background.png");
-        window.selectDifficultyBg = loadImg("src/FrontEnd/Assert/Image/select_difficulty_bg.png");
-        window.cursorImage = loadImg("src/FrontEnd/Assert/Image/cursor.png");
-        
-        window.introImages[0] = loadImg("src/FrontEnd/Assert/Image/intro1.png");
-        window.introImages[1] = loadImg("src/FrontEnd/Assert/Image/intro2.jpg");
-        window.introImages[2] = loadImg("src/FrontEnd/Assert/Image/intro3.png");
-        window.introImages[3] = loadImg("src/FrontEnd/Assert/Image/intro4.jpg");
-        
-        window.characterImages[0] = loadImg("src/FrontEnd/Assert/Image/elf_img_no_bg.png");
-        window.characterImages[1] = loadImg("src/FrontEnd/Assert/Image/warrior_img.jpg");
-        window.characterImages[2] = loadImg("src/FrontEnd/Assert/Image/mage_img.jpg");
-
-        window.introVoices[0] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceOne.mp3");
-        window.introVoices[1] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceTwo.mp3");
-        window.introVoices[2] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceThree.mp3");
-        window.introVoices[3] = loadSnd("src/FrontEnd/Assert/Sound/introVoiceFour.mp3");
-        
-        window.characterVoices[0] = loadSnd("src/FrontEnd/Assert/Sound/elf_narration.mp3");
-        window.characterVoices[1] = loadSnd("src/FrontEnd/Assert/Sound/warrior_narration.mp3");
-        window.characterVoices[2] = loadSnd("src/FrontEnd/Assert/Sound/mage_narration.mp3");
-
-        window.menuMusic = loadSnd("src/FrontEnd/Assert/Sound/menu_music.mp3", () => {
-            if (window.musicStarted && window.gameState.settings.isMusic && !window.menuMusic.isPlaying()) {
-                window.menuMusic.amp(0.15);
-                window.menuMusic.loop();
-                window.menuMusic.play();
-            }
-        });
-        window.introMusic = loadSnd("src/FrontEnd/Assert/Sound/intro-music.mp3");
-        window.clickNoise = loadSnd("src/FrontEnd/Assert/Sound/general_click_noise.mp3");
-
-        p.loadFont(
-            "src/FrontEnd/Assert/Image/message_font.ttf", 
-            (f) => { window.font = f; },
-            (err) => {
-                console.warn("Could not load font, using default.");
-                window.font = 'sans-serif';
-            }
-        );
-
-        objectiveSprite.promise = new Promise((resolve, reject) => {
-            p.loadImage('FrontEnd/Assert/Image/Sprite_Tree.png', 
-                (img) => {
-                    objectiveSprite.image = img;
-                    objectiveSprite.loaded = true;
-                    resolve(img);
-                },
-                (err) => {
-                    objectiveSprite.failed = true;
-                    reject(err);
-                }
-            );
-        });
-
-        loadingComplete = true;
-
-        if (typeof MenuScene !== 'undefined') {
-            window.activeScene = new MenuScene(p, window.menuBackground);
-        }
+        postCommand('create:game', DEFAULT_GAME_CONFIG);
+        postCommand('game:start');
+        postCommand('snapshot');
+        void unlockAudioAndSync();
     };
 
     p.draw = () => {
-        if (!loadingComplete) {
-            p.background('#08101b');
-            p.fill(255);
-            p.textAlign(p.CENTER, p.CENTER);
-            p.textSize(32);
-            p.text("Loading Game...", p.width / 2, p.height / 2);
-            return;
-        }
-        
-        p.background('#08101b');
+        drawWorld(p, latestState, input.vectorTargetStart);
 
-        if (window.activeScene) {
-            window.activeScene.display();
-        }
-
-        if (window.activeScene && window.activeScene.constructor.name === 'MapOneScene') {
-            drawWorld(p, latestState, input.vectorTargetStart);
-
-            if (ui && latestState) {
-                while (uiMessageQueue.length > 0) {
-                    ui.handleWorkerMessage(uiMessageQueue.shift());
-                }
-                ui.draw(latestState, { x: p.mouseX, y: p.mouseY });
-                p.image(uiLayer, 0, 0);
+        if (ui && latestState) {
+            while (uiMessageQueue.length > 0) {
+                ui.handleWorkerMessage(uiMessageQueue.shift());
             }
-        }
-        
-        if (window.cursorImage && window.cursorImage.complete && window.cursorImage.naturalWidth > 0) {
-            p.drawingContext.drawImage(window.cursorImage, p.mouseX, p.mouseY, 32, 32);
+            ui.draw(latestState, { x: p.mouseX, y: p.mouseY });
+            p.image(uiLayer, 0, 0);
         }
     };
-
-    p.mousePressed = async () => {
-        if (!loadingComplete) return;
-        
-        // Satisfy browser's autoplay policy by initializing the AudioContext on user interaction
-        if (p.getAudioContext().state !== 'running') {
-            await p.userStartAudio();
-        }
-        
-        if (window.activeScene && typeof window.activeScene.mousePressed === 'function') {
-            window.activeScene.mousePressed();
-        }
-
-        if (window.musicStarted === false && window.menuMusic) {
-            window.musicStarted = true;
-            
-            let isReady = false;
-            if (typeof window.menuMusic.isLoaded === 'function') {
-                isReady = window.menuMusic.isLoaded();
-            } else if (typeof window.menuMusic.duration === 'function') {
-                isReady = window.menuMusic.duration() > 0;
-            }
-
-            if (window.gameState.settings.isMusic && isReady) {
-                window.menuMusic.amp(0.15);
-                window.menuMusic.loop();
-                window.menuMusic.play();
-            }
-        }
-
-        if (window.activeScene && window.activeScene.constructor.name === 'MapOneScene') {
-            input.handleMousePressed(p);
-        }
-    };
-
-    p.mouseReleased = () => {
-        if (!loadingComplete) return;
-        if (window.activeScene && window.activeScene.constructor.name === 'MapOneScene') {
-            input.handleMouseReleased(p);
-        }
-    };
-
-    p.keyPressed = () => {
-        if (!loadingComplete) return;
-        if (window.activeScene && window.activeScene.constructor.name === 'MapOneScene') {
-            input.handleKeyPressed(p);
-        }
-    };
+    input.bind(p);
 };
 
 new p5Ctor(sketch, document.getElementById('app'));

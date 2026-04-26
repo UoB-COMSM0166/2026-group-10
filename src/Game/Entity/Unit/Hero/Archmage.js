@@ -5,21 +5,27 @@ import {
     Lightning, ThunderCloud, ChainLightning, BallLightning, StaticExplosion, ElectromagneticField
 } from "../../Skill/Archmage.js";
 
+const MP_PER_INTELLIGENCE = 30;
+const MP_REGEN_PER_INTELLIGENCE = 0.05;
+
 export default class Archmage extends Hero {
-    constructor(position, events, element, ui, clock) {
+    constructor(position, events, element, clock) {
         super(
             'Archmage', 'Lyra\'Gotha', position, 1, 15, 180, 220,
-            'Magic damage with crowd control abilities.', 2, 3, 0.1,
-            events, ui, clock
+            'Manipulate magical elements to deal massive damage from a distance.',
+            2, 3, 4, events, clock, ['Ice', 'Fire', 'Lightning']
         );
+        this.baseMaxMP = this.maxMP;
 
         this.baseHpRegen = 1;
         this.baseMpRegen = 1.5;
         this.hpRegen = this.baseHpRegen;
         this.mpRegen = this.baseMpRegen;
 
-        this.mpName = 'Mana';
-        this.mpColor = 'rgb(0, 98, 255)';
+        this.statsGrowth.set('Speed', 0.15);
+        this.statsGrowth.set('Armor', 0.1);
+        this.statsGrowth.set('Strength', 1);
+        this.statsGrowth.set('Intelligence', 1.2);
 
         const icePick = new IcePick(this.events);
         const stormBlast = new StormBlast(this.events);
@@ -49,49 +55,43 @@ export default class Archmage extends Hero {
         this.skillTree.set('E', [chakra, viperGuardian, ballLightning]);
         this.skillTree.set('R', [blizzard, meteorite, staticExplosion]);
         this.skillTree.set('P', [manaDrain, fierySoul, electromagneticField]);
+        this.initializeSkillSlots();
 
         if (element === 'Ice') {
             this.skill.set('A', icePick);
             this.skill.set('Q', stormBlast);
-            this.skill.set('W', frostShield);
-            this.skill.set('E', chakra);
-            this.skill.set('R', blizzard);
+            // this.skill.set('W', frostShield);
+            // this.skill.set('E', chakra);
+            // this.skill.set('R', blizzard);
             this.skill.set('P', manaDrain);
         } 
         else if (element === 'Fire') {
             this.skill.set('A', fireBall);
             this.skill.set('Q', flameWave);
-            this.skill.set('W', burning);
-            this.skill.set('E', viperGuardian);
-            this.skill.set('R', meteorite);
+            // this.skill.set('W', burning);
+            // this.skill.set('E', viperGuardian);
+            // this.skill.set('R', meteorite);
             this.skill.set('P', fierySoul);
         } 
-        else if (element === 'Lightning') {
+        else if (element === 'Thunder') {
             this.skill.set('A', lightning);
             this.skill.set('Q', thunderCloud);
-            this.skill.set('W', chainLightning);
-            this.skill.set('E', ballLightning);
-            this.skill.set('R', staticExplosion);
+            // this.skill.set('W', chainLightning);
+            // this.skill.set('E', ballLightning);
+            // this.skill.set('R', staticExplosion);
             this.skill.set('P', electromagneticField);
         } 
 
         this.applyPassiveSkills();
 
-        // this.skill.set('W', null);
-        // this.skill.set('E', null);
-        // this.skill.set('R', null);
+        this.skill.set('W', null);
+        this.skill.set('E', null);
+        this.skill.set('R', null);
     }
 
     respawn() {
-        this.interruptCast();
-        this.position = { x: this.spawnPosition.x, y: this.spawnPosition.y };
-        this.currentHP = this.maxHP;
+        super.respawn();
         this.currentMP = this.maxMP;
-        this.remainingRespawnCD = 0;
-        this.stop();
-        this.clearWaypoints();
-        this.events.emit('hero:respawn', { hero: this });
-        this.ui.emit('hero:respawn', { hero: this });
     }
 
     updateRespawn() {
@@ -105,16 +105,24 @@ export default class Archmage extends Hero {
         }
     }
 
+    updateBuffs() {
+        super.updateBuffs();
+        this.applyIntelligenceStats();
+    }
+
+    applyIntelligenceStats() {
+        const previousMaxMP = this.maxMP;
+        this.maxMP = this.baseMaxMP + this.intelligence * MP_PER_INTELLIGENCE;
+        this.mpRegen += this.intelligence * MP_REGEN_PER_INTELLIGENCE;
+
+        if (this.maxMP > previousMaxMP) {
+            this.currentMP += this.maxMP - previousMaxMP;
+        }
+
+        this.currentMP = Math.min(this.currentMP, this.maxMP);
+    }
+
     changeSkill(slot, skill) {
-        if (!skill) {
-            return null;
-        }
-
-        this.skill.set(slot, skill);
-        if (slot === 'P') {
-            this.applyPassiveSkills();
-        }
-
-        return skill;
+        return super.changeSkill(slot, skill);
     }
 }

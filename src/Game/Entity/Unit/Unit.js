@@ -8,26 +8,32 @@ export default class Unit extends Entity {
         this.currentHP = Number(hp);
         this.currentMP = Number(mp);
 
-        this.baseArmor = 0;
-        this.armor = this.baseArmor;
+        this.baseStats.set('Armor', 0);
+        this.stats.set('Armor', 0);
         this.baseHpRegen = 0;
         this.baseMpRegen = 0;
         this.hpRegen = 0;
         this.mpRegen = 0;
         this.invulnerable = false;
         this.skillCastingDisabled = false;
+        this.onIncomingDamage = null;
 
         this.buffs = [];
     }
     
     // HP & MP受到影响
-    takeDamage(amount) {
-        if (this.invulnerable) {
-            return;
+    takeDamage(amount, source = null, options = {}) {
+        if (typeof this.onIncomingDamage === 'function' && !options?.ignoreReactive) {
+            this.onIncomingDamage(amount, source, options);
         }
 
-        const effectiveDamage = Math.max(0.01, amount - this.armor);
+        if (this.invulnerable) {
+            return 0;
+        }
+
+        const effectiveDamage = Math.max(0.01, amount - this.stats.get('Armor'));
         this.currentHP = Math.max(0, this.currentHP - effectiveDamage);
+        return effectiveDamage;
     }
 
     heal(amount) {
@@ -42,12 +48,24 @@ export default class Unit extends Entity {
         this.currentMP = Math.min(this.maxMP, this.currentMP + amount);
     }
 
-    immediateDeath() {
-        this.currentHP = 0;
-    }
-
     alive() {
         return this.currentHP > 0;
+    }
+
+    getStat(name) {
+        return Number(this.stats.get(name)) || 0;
+    }
+
+    setStat(name, value) {
+        this.stats.set(name, Number(value) || 0);
+    }
+
+    addStat(name, value) {
+        this.setStat(name, this.getStat(name) + (Number(value) || 0));
+    }
+
+    getBaseStat(name) {
+        return Number(this.baseStats.get(name)) || 0;
     }
 
     findNearestEnemy(enemies, range) {
@@ -142,13 +160,14 @@ export default class Unit extends Entity {
     }
 
     updateBuffs() {
-        this.speed = this.baseSpeed;
+        this.stats.set('Speed', this.baseStats.get('Speed'));
+        this.stats.set('Armor', this.baseStats.get('Armor'));
         this.hitbox = this.baseHitbox;
-        this.armor = this.baseArmor;
         this.hpRegen = this.baseHpRegen;
         this.mpRegen = this.baseMpRegen;
         this.invulnerable = false;
         this.skillCastingDisabled = false;
+        this.onIncomingDamage = null;
         this.applyBuffEffect();
         this.buffs = this.buffs.filter((buff) => {
             buff.remaining -= 1;
