@@ -358,6 +358,11 @@ The game frontend handles UI, sound effects, rendering, and hardware input. UI, 
 
 Each hero possesses multiple skills, which players can change using the skill book system. Based on hotkey bindings, skill types include A, Q, W, E, R, and passive skills. Each skill is a subclass of the Skill class and has mana cost and cooldown time, among other things. Most skills generate skill entities that can move and trigger hit detection. When a hit is detected, a callback function within the skill is executed, which may deal damage or apply debuffs.
 
+<p align="center">
+  <img src="Book.png" width="700"/>
+</p>
+<p align="center"><em>SKILLS</em>
+
 #### Other Challenges:
 
 #### Spatial Mapping and Rendering Logic
