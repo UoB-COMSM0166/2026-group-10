@@ -357,9 +357,63 @@ The use case diagram illustrates the interaction of player with our game Gates o
 - Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories. 
 
 ### Design
+- System architecture. Class diagrams, behavioural diagrams.
 
-- 15% ~750 words 
-- System architecture. Class diagrams, behavioural diagrams. 
+**System Architecture**
+
+This game runs on 2 processes: `Main` and `Worker`. The `Main` process is responsible for rendering, UI, input, and sound. `Worker` processes are responsible for executing the game logic.
+
+**`Worker` Process**
+
+A game runs on a `GameManager` instance, which have 2 tools to manage game logic: `Clock` and `EventEmitter`. `Clock` provides update functionality for game logic, such as manual updates, start, pause, and resume. `EventEmitter` is used to broadcast events between different classes. Events have an `id` and `payload`, making it easy for each instance to detect and trigger the corresponding function.
+
+1. `GameManager` manages the map and the units and skill entities on it. Each update calculates their new positions based on their movement. Skill entities also check for collisions during each update, and if a collision occurs, the relevant hit function is called.
+2. The most basic class is `Entity`. All movable objects on the map are subclasses of `Entity`. `Entity` is responsible for managing the movement of each entity and has methods such as move, stop, and sequence movement paths.
+3. `Unit` is a subclass of `Entity`. `Unit` is responsible for managing the state of entities, such as health points and buff lists. Unit detects the unit's survival and applies buff lists, affecting the unit's health, movement, and other attributes.
+4. `Hero` is a subclass of `Unit` and is directly managed by `GameManager`. `Hero` possess more special attributes than regular units: `Strength` and `Intelligence`. `Hero` have skills and skill books (except for `Architects`). Active skills are selected from skill books. Players can send commands to upgrade a hero's skills or attribute values, all of which require spending gold.
+5. `Enemy` is a subclass of `Unit`. All `Enemy` instances are stored in a `Map`, whose keys are their `id`.  `Enemy` does not have any additional complex attribute values. Some Enemies have skill entities while alive, and most Enemies have `diecry` effects, which trigger certain effects after death (excluding providing gold, which is managed by `GameManager`).
+6. `Boss` is a subclass of `Unit` and is directly managed by `GameManager`. Boss also has a skill system similar to `Hero`, but `Boss` has complete pre-cast, casting, post-cast times. Boss is a Behavior-Based Robot with a simple set of behavioral logic, reacting differently based on its distance from the player and its current health.
+7. We have six different skill entities: `Missile`, `Projectile`, `Aura`, `Area`, `Guardian`, and `Tower`. Each is a subclass of `Entity` and possesses distinct attributes. `Missile` moves towards a specified unit, `Projectile` can only move in a straight line, `Aura` continuously affects other units within a certain radius, `Area` affects all units within its area, `Guardian` is a stationary entity that exists for a certain period and influences other units, and `Tower` is a `Guardian` that does not automatically expire.
+8. `Skill` is a separate class. Each specific skill is a subclass of `Skill`. `Skill` is responsible for managing the casting, activation, and cooldown of skills, such as retrieving the appropriate target from the `Input` based on the skill's target type (point, unit, or vector).
+9. `Buff` is a separate class. Each unit has its own list of buffs. The `GameManager` updates the duration and effects of each buff with each update. This affects the unit's attribute values and other elements, such as speed boost, armor reduction, and interval damage.
+
+Both Buff and Skill have a callback function used to affect units or the world.
+
+The `Worker` process only receives commands sent from the `Main` process and will not respond to other illegal commands.
+
+**`Main` Process**
+
+The `Main` process is responsible for UI, rendering, sound, and input. `Main` process will request a `snapshot` from `Worker`, which contains all information the UI and render require in each main loop. So the freshrate is not binding with Worker tick rate. The main process and worker processes communicate via postMessage.
+
+**UI**
+
+The UI will display the current game status, including hero attributes, wave information, target point attributes, boss information, etc. In some conditions, the UI will push a `Toast`, which contains some notifications about the input and game state.
+
+**Render**
+
+Render first reads the specified sprite, then determines which portion of the sprite to use based on the unit’s direction provided by the snapshot. Each texture is divided into eight directions; when a particular direction is detected, the corresponding sprite is rendered. During rendering, all entities are placed in a single collection and rendered in ascending order of position.y to correctly display the occlusion relationships between objects in front of and behind others under a 45-degree projection. Apart from heroes, objectives, bosses and minions, which are rendered according to fixed logic, all other entities are rendered by reading the entity’s ID and matching it against the Sprite database; the Sprite that meets the criteria will then be rendered.
+
+**Sound**
+
+We opened 2 tracks to play sounds: Background Music and Sound Effects. 
+
+To reduce memory usage, the BGM system utilises MIDI files to store the music scores, which are then imported into the MIDI [https://unpkg.com/@tonejs/midi@2.0.28/build/Midi.js] library for playback. To minimise the negative impact of harsh music on players, sine waves—which are softer than triangle and square waves—are used consistently for BGM playback.
+
+Multiple MIDI files cannot be played simultaneously on a single BGM track. Furthermore, the BGM system detects in-game events such as boss encounters, deaths and respawns, and switches to the appropriate BGM accordingly.
+
+To be completed...
+
+**Input**
+
+`Input` uses the keyboard and mouse input interfaces provided by the `p5.js` library to handle key press events. Different keys send different commands to the Worker; for example, the right mouse button sets the target point for movement, the ‘S’ key stops command execution, and the space bar pauses the game. After a command is sent, various return status values are received. If the Worker determines that the command is valid, it triggers a corresponding effect in the game logic; if it is invalid, it responds accordingly, such as by displaying a toast notification in the `UI`.
+
+**Execution sequence**
+// Menu part to be completed...
+
+The Menu passes three parameters to Main: Hero, Category and World. Main then initialises the UI, Sound and Render, calculates the assets to be loaded into memory based on the provided parameters, and once the assets have been loaded, creates a new process, sets up a new GameManager and starts the game. During gameplay, the GameManager can be terminated using the relevant command.
+
+Once the GameManager has been created, it will create the relevant tools (Clock and EventEmitter) and initialise the hero, target points and enemy spawn points. During this time, the GameManager will continuously update the movement status of each entity, and then enter a loop.
+
 #### Menu Navigation Class Diagram
 ![Menu Navigation UML Class Diagrams](images/MenuClassDiagramResized.svg)
 The above class diagrams demonstrate the game's menu system and class structure.`Sketch.js` acts as a controller class. It maintains a reference to the current `activeScene` and delegates behaviour to the active scene. Since the different scene classes share common behaviour and state, they were conceptually grouped under an abstract Scene type. Although an abstract Scene class was not explicitly implemented in the code,  this conceptual model of an abstract Scene 'type' provided a common interface which facilitated polymorphic behaviour in practice, thus enabling `Sketch.js` to treat all scenes uniformly.
