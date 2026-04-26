@@ -389,6 +389,11 @@ The game frontend handles UI, sound effects, rendering, and hardware input. UI, 
   <img src="Move.gif" width="700"/>
 </p>
 <p align="center"><em>MOVEMENT OF THE HERO</em>
+
+<p align="center">
+  <img src="Unit.gif" width="700"/>
+</p>
+<p align="center"><em>Spawning of Enemies</em>
   
 **Challenge 2: Skills and Buffs**
 
