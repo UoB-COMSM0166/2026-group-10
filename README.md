@@ -375,7 +375,7 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 ## STATE MACHINE DIAGRAM
 
 <p align="center">
-  <img src="statediagram.png" width="600"/>
+  <img src="statediagram.png" width="700"/>
 </p>
 
 
