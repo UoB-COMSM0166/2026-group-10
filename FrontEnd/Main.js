@@ -259,6 +259,7 @@ window.cursorImage = null;
 window.font = null;
 window.introMusic = null;
 window.introImages = [];
+window.instructionImages = [];
 window.introVoices = [];
 window.characterImages = [];
 window.characterVoices = [];
@@ -333,6 +334,11 @@ const sketch = (p) => {
         window.introImages[1] = loadImg("FrontEnd/Assert/Image/intro2.png");
         window.introImages[2] = loadImg("FrontEnd/Assert/Image/intro3.png");
         window.introImages[3] = loadImg("FrontEnd/Assert/Image/intro4.png");
+
+        window.instructionImages[0] = loadImg("FrontEnd/Assert/Image/how_to_play1.png");
+        window.instructionImages[1] = loadImg("FrontEnd/Assert/Image/how_to_play2.png");
+        window.instructionImages[2] = loadImg("FrontEnd/Assert/Image/how_to_play3.png");
+        window.instructionImages[3] = loadImg("FrontEnd/Assert/Image/how_to_play4.png");
         
         window.characterImages[0] = loadImg("FrontEnd/Assert/Image/Profile_Ranger.png");
         window.characterImages[1] = loadImg("FrontEnd/Assert/Image/Profile_Warrior.png");

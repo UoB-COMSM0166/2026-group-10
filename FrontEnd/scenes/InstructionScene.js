@@ -3,40 +3,38 @@ class InstructionScene {
         this.sketch = sketch;
         this.backgroundImage = backgroundImage;
         this.currentSlide = 0;
-        this.imageMovementSpeed = 0.014;  
+        this.imageMovementSpeed = 0.004;  
         this.imageMovementRange = 20;    
         const cx = sketch.width / 2;
         this.slides = [
             {
-                text: `The aim of the game? Protect the tree at all costs! Move around the map by
-                right clicking in the area you want to go to.`,
-                image: introImages[0],
-                x: cx - 200,
+                image: instructionImages[0],
+                narration: introVoices[0],
+                x: cx - 400,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 800,
+                height: 600,
             }, {
-                text: `Minions will try to attack the tree and deplete its health, stop the minions before
-                they reach the tree!`,
-                image: introImages[1],
-                x: cx - 200,
+                image: instructionImages[1],
+                narration: introVoices[1],
+                x: cx - 400,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 800,
+                height: 600
             }, {
-                text: `Use these buttons to attack`,
-                image: introImages[2],
-                x: cx - 200,
+                image: instructionImages[2],
+                narration: introVoices[2],
+                x: cx - 400,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 800,
+                height: 600
             }, {
-                text: `only you can stop them and protect the good people of Cinder...`,
-                image: introImages[3],
-                x: cx - 200,
+                image: instructionImages[3],
+                narration: introVoices[3],
+                x: cx - 400,
                 y: 200,
-                width: 400,
-                height: 300
+                width: 800,
+                height: 600
             }
         ]
 
@@ -51,6 +49,12 @@ class InstructionScene {
                 menuMusic.loop();
                 menuMusic.play();
             }
+            //stopping all narration tracks before returning to main menu
+            for(let i = 0; i < this.slides.length; i++) {
+               if(this.slides[i].narration.isPlaying()) {
+                this.slides[i].narration.stop();
+               }
+            }
             //returning to main menu
             window.activeScene = new MenuScene(sketch, window.menuBackground);
         });
@@ -59,8 +63,10 @@ class InstructionScene {
             //if this is not last slide then move to next slide
             if(this.currentSlide < this.slides.length - 1) {
                 this.currentSlide++;
+                this.playCurrentNarration();
             } else {
-                //if this is last slide then turn off intro_music before returning to main menu
+                this.stopAllNarration();
+                //if this is last slide then turn off intro_music and narration before returning to main menu
                 if(introMusic.isPlaying()) {
                     introMusic.stop();
                 }
@@ -85,9 +91,16 @@ class InstructionScene {
                     menuMusic.loop();
                     menuMusic.play();
                 }
+                //stopping all narration tracks before returning to main menu 
+               for(let i = 0; i < this.slides.length; i++) {
+                  if(this.slides[i].narration.isPlaying()) {
+                     this.slides[i].narration.stop();
+                    }
+                }
                 window.activeScene = new MenuScene(sketch, window.menuBackground);
             } else {
                 this.currentSlide--;
+                this.playCurrentNarration();
             }
         })
 
@@ -96,10 +109,26 @@ class InstructionScene {
         }
 
         if((introMusic.isPlaying() == false) && (gameState.settings.isMusic == true)) {
-            introMusic.amp(0.15);
-            introMusic.loop();
-            introMusic.play();
+            menuMusic.amp(0.15);
+            menuMusic.loop();
+             menuMusic.play();
         }
+
+       this.playCurrentNarration();
+    }
+
+    playCurrentNarration() {
+        //making sure all narration is stopped
+        for(let i = 0; i < this.slides.length; i++) {
+            if(this.slides[i].narration.isPlaying()) {
+                this.slides[i].narration.stop();
+            }
+        }
+        //then we start the new, current narration track
+        let currentNarration = this.slides[this.currentSlide].narration;
+        currentNarration.play();
+        currentNarration.amp(0);
+
     }
 
     display() {
@@ -121,17 +150,12 @@ class InstructionScene {
             this.sketch.drawingContext.drawImage(slide.image, bounceX, slide.y, slide.width, slide.height);
         }
 
-        //displaying the text
-        this.sketch.fill('orange');
-        this.sketch.textAlign(this.sketch.CENTER, this.sketch.CENTER);
-        this.sketch.textSize(40);
-
         // making the text bounce up and down
         let bounceRate = 0.02;
         let bounceHeight = 10;
         let bounceY = this.sketch.height/1.3 + this.sketch.sin(this.sketch.frameCount * bounceRate) * bounceHeight;
+        
 
-        this.sketch.text(slide.text, this.sketch.width/2, bounceY);
                 
         //displaying slide count in top right of screen
         this.displaySlideNumber();
@@ -144,6 +168,14 @@ class InstructionScene {
         this.backButton.wasIClicked();
     }
 
+    stopAllNarration() {
+        //stopping all narration tracks before returning to main menu
+        for(let i = 0; i < this.slides.length; i++) {
+               if(this.slides[i].narration.isPlaying()) {
+                this.slides[i].narration.stop();
+               }
+            }
+    }
 
     displaySlideNumber() {
         // push(); // isolate state
