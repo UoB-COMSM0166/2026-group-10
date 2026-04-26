@@ -351,9 +351,8 @@ The game logic runs on the Worker thread, maintaining a tick rate of 60 and hand
 The game frontend handles UI, sound effects, rendering, and hardware input. UI, sound effects, and rendering output require obtaining the current game state from the Worker thread, such as hero health and the position of each entity. The main thread requests snapshots of the game state from the Worker thread at a certain rate to update the output. The input part receives hardware input from the mouse and keyboard and converts it into commands that the Worker thread can understand.
 <p align="center">
   <img src="Move.gif" width="700"/>
-  <em>MOVEMENT OF THE HERO</em>
 </p>
-
+<p align="center"><em>MOVEMENT OF THE HERO</em>
 **Challenge 2: Skills and Buffs**
 
 Each hero possesses multiple skills, which players can change using the skill book system. Based on hotkey bindings, skill types include A, Q, W, E, R, and passive skills. Each skill is a subclass of the Skill class and has mana cost and cooldown time, among other things. Most skills generate skill entities that can move and trigger hit detection. When a hit is detected, a callback function within the skill is executed, which may deal damage or apply debuffs.
