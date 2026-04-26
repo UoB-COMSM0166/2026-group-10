@@ -16,7 +16,7 @@ function clamp(value, min, max) {
 export class BackgroundMusic {
     constructor(tracks, options = {}) {
         this.tracks = tracks;
-        this.waveforms = options.waveforms || ['sawtooth', 'sine', 'triangle', 'square'];
+        this.waveforms = options.waveforms || ['sine', 'triangle', 'square', 'sawtooth'];
         this.waveformIndex = options.waveformIndex || 0;
         this.defaultLoop = options.loop !== undefined ? options.loop : true;
         this.onTrackChange = options.onTrackChange || null;
@@ -280,13 +280,5 @@ export class BackgroundMusic {
                 this.onTrackEnded(this.currentTrack, this.currentTrackIndex);
             }
         }, this.durationSeconds);
-    }
-
-    getWaveformLabel() {
-        return this.waveforms[this.waveformIndex];
-    }
-
-    getTrackLabel() {
-        return this.currentTrack ? this.currentTrack.label : '';
     }
 }

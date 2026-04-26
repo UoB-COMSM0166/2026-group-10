@@ -194,8 +194,7 @@ class IceBolt extends BossSkill {
             }
 
             iceBolt.position = { x: destination.x, y: destination.y };
-            iceBolt.velocity.vx = 0;
-            iceBolt.velocity.vy = 0;
+            iceBolt.setVelocity(0, 0);
             iceBolt.impact(units);
             iceBolt.finished = true;
         };
@@ -305,8 +304,7 @@ class Blink extends BossSkill {
 
         caster.position.x = destination.x;
         caster.position.y = destination.y;
-        caster.velocity.vx = 0;
-        caster.velocity.vy = 0;
+        caster.setVelocity(0, 0);
         caster.nextBlinkDistance = null;
         caster.nextBlinkRandomDirection = false;
     }

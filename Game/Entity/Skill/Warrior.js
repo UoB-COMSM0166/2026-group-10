@@ -941,7 +941,7 @@ export class SheatheSword extends Skill {
 export class ForeSight extends Skill {
     constructor(events) {
         super(
-            'See Through', 'Long Sword',
+            'Fore Sight', 'Long Sword',
             'Blink away from a chosen point and counter if the original position is struck shortly after.',
             240, 20, 180, events, 'Point', false, 150
         );

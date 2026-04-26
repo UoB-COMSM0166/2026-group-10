@@ -697,8 +697,10 @@ export class Meteorite extends Skill {
                 meteorite.speed = this.rollSpeed;
                 meteorite.origin = { x: meteorite.position.x, y: meteorite.position.y };
                 meteorite.distanceTravelled = 0;
-                meteorite.velocity.vx = dx / distance * meteorite.speed;
-                meteorite.velocity.vy = dy / distance * meteorite.speed;
+                meteorite.setVelocity(
+                    dx / distance * meteorite.speed,
+                    dy / distance * meteorite.speed
+                );
                 meteorite.period = this.rollEffectPeriod;
                 meteorite.duration -= 1;
                 return;
@@ -1099,8 +1101,7 @@ export class BallLightning extends Skill {
 
             aura.position = { x: aura.source.position.x, y: aura.source.position.y };
             aura.hitbox = aura.source.hitbox;
-            aura.velocity.vx = 0;
-            aura.velocity.vy = 0;
+            aura.setVelocity(0, 0);
         };
 
         this.events.emit('skill_entity:created', { entity: aura });

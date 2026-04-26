@@ -2,7 +2,7 @@ import Hero from './Hero.js';
 import { ArrowTower, Demolish, FlameTower, FrostTower, Poverty, RockTower } from '../../Skill/Architect.js';
 
 export default class Architect extends Hero {
-    constructor(position, events, clock) {
+    constructor(position, events, _, clock) {
         super(
             'Architect', 'Rion Steelgear', position, 0, 0, 1, 200,
             'Manipulate magical elements to deal massive damage from a distance.',

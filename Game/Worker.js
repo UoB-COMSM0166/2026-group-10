@@ -1,9 +1,9 @@
 import GameManager from './GameManager.js';
 
-const game = new GameManager();
 const TICK_RATE = 60;
 const TICK_MS = 1000 / TICK_RATE;
 
+let game = null;
 let loopHandle = null;
 let heroTargetingState = createHeroTargetingState();
 
@@ -64,6 +64,7 @@ function buildUnitState(unit) {
             vx: Number(unit.velocity.vx) || 0,
             vy: Number(unit.velocity.vy) || 0,
         } : null,
+        angle: Number(unit.angle) || 0,
         hp: Number(unit.currentHP) || 0,
         maxHP: Number(unit.maxHP) || 0,
         mp: Number(unit.currentMP) || 0,
@@ -76,6 +77,7 @@ function buildUnitState(unit) {
         strength: Number(unit.strength) || 0,
         intelligence: Number(unit.intelligence) || 0,
         hitbox: Number(unit.hitbox) || 0,
+        isBoss: unit?.skills instanceof Map && typeof unit.castSkill === 'function',
         inFountain: false,
         alive: typeof unit.alive === 'function' ? unit.alive() : true,
         finished: Boolean(unit.finished),
@@ -175,6 +177,7 @@ function buildEntityState(entity) {
             vx: Number(entity.velocity.vx) || 0,
             vy: Number(entity.velocity.vy) || 0,
         } : null,
+        angle: Number(entity.angle) || 0,
         hitbox: Number(entity.hitbox) || 0,
         finished: Boolean(entity.finished),
         duration: Number(entity.duration) || 0,
@@ -182,6 +185,10 @@ function buildEntityState(entity) {
 }
 
 function buildStateSnapshot() {
+    if (!game) {
+        return null;
+    }
+
     return {
         tick: game.clock.now(),
         world: {
@@ -320,6 +327,10 @@ function clearHeroTargetingState() {
 }
 
 function registerEventBridge() {
+    if (!game?.events) {
+        return;
+    }
+
     const forwardedEvents = [
         'wave:start',
         'wave:end',
@@ -343,12 +354,78 @@ function registerEventBridge() {
 }
 
 function tick() {
+    if (!game) {
+        return;
+    }
+
     game.clock.tickCount += 1;
     game.update();
     emitState();
 }
 
+function createGame(payload = {}) {
+    const hero = String(payload.hero ?? '').trim();
+    const category = payload.category ?? null;
+    const world = String(payload.world ?? '').trim();
+
+    if (!hero) {
+        return { ok: false, code: 400, message: 'Hero is required.' };
+    }
+
+    if (!world) {
+        return { ok: false, code: 400, message: 'World is required.' };
+    }
+
+    stopLoop();
+    clearHeroTargetingState();
+
+    try {
+        game = new GameManager(hero, category, world);
+        registerEventBridge();
+        emitState();
+        return {
+            ok: true,
+            code: 200,
+            message: 'Game created.',
+            data: { hero, category, world },
+        };
+    } catch (error) {
+        game = null;
+        return {
+            ok: false,
+            code: 400,
+            message: error instanceof Error ? error.message : 'Failed to create game.',
+        };
+    }
+}
+
+function destroyGame() {
+    stopLoop();
+    clearHeroTargetingState();
+    game = null;
+    emitState();
+
+    return {
+        ok: true,
+        code: 200,
+        message: 'Game destroyed.',
+    };
+}
+
+function requireGame(command, requestId) {
+    if (game) {
+        return true;
+    }
+
+    emitResult(command, requestId, 409, 'Game has not been created. Send create:game first.');
+    return false;
+}
+
 function startLoop() {
+    if (!game) {
+        return false;
+    }
+
     if (loopHandle !== null) {
         return false;
     }
@@ -377,6 +454,10 @@ function normalizeKey(key) {
 }
 
 function isHeroControllable() {
+    if (!game) {
+        return { ok: false, code: 409, message: 'Game has not been created.' };
+    }
+
     if (!game.started) {
         return { ok: false, code: 400, message: 'Game has not started.' };
     }
@@ -393,11 +474,19 @@ function isHeroControllable() {
 }
 
 function isHeroInFountain() {
+    if (!game) {
+        return false;
+    }
+
     return typeof game.hero.inFountain === 'function'
         && game.hero.inFountain(game.objective.position);
 }
 
 function getHeroSkill(key) {
+    if (!game) {
+        return { key: normalizeKey(key), skill: null };
+    }
+
     const normalizedKey = normalizeKey(key);
     if (!normalizedKey) {
         return { key: normalizedKey, skill: null };
@@ -446,6 +535,10 @@ function canUseSkill(key, skill) {
 }
 
 function resolveUnitTarget(payload = {}, skill) {
+    if (!game) {
+        return null;
+    }
+
     const targetId = payload.targetId ?? payload.target?.id ?? null;
     if (targetId) {
         const explicitTarget = game.enemies.get(targetId) ?? null;
@@ -458,6 +551,10 @@ function resolveUnitTarget(payload = {}, skill) {
 }
 
 function resolveTowerTarget(payload = {}) {
+    if (!game) {
+        return null;
+    }
+
     const targetId = payload.targetId ?? payload.target?.id ?? null;
     if (targetId) {
         const explicitTarget = game.skillEntities.get(targetId) ?? null;
@@ -493,6 +590,10 @@ function resolveTowerTarget(payload = {}) {
 }
 
 function isTargetInRange(targetPosition, skill) {
+    if (!game) {
+        return false;
+    }
+
     if (!targetPosition || !skill) {
         return false;
     }
@@ -501,6 +602,10 @@ function isTargetInRange(targetPosition, skill) {
 }
 
 function castHeroSkill(skill, payload = {}) {
+    if (!game) {
+        return { ok: false, code: 409, message: 'Game has not been created.' };
+    }
+
     const tickNow = game.clock.now();
     const source = clonePosition(game.hero.position);
     const category = skill.targetCategory;
@@ -581,6 +686,10 @@ function armHeroSkill(key, skill) {
 }
 
 function handleGameCommand(command, requestId) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (command === 'game:start') {
         if (loopHandle !== null) {
             emitResult(command, requestId, 200, 'Game is already running.');
@@ -617,6 +726,10 @@ function handleGameCommand(command, requestId) {
 }
 
 function handleHeroMove(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     const heroState = isHeroControllable();
     if (!heroState.ok) {
         emitResult(command, requestId, heroState.code, heroState.message);
@@ -644,6 +757,10 @@ function handleHeroMove(command, requestId, payload = {}) {
 }
 
 function handleHeroStop(command, requestId) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
         return;
@@ -662,6 +779,10 @@ function handleHeroStop(command, requestId) {
 }
 
 function handleHeroPress(command, requestId) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     const heroState = isHeroControllable();
     if (!heroState.ok) {
         emitResult(command, requestId, heroState.code, heroState.message);
@@ -731,6 +852,10 @@ function handleHeroPress(command, requestId) {
 }
 
 function handleHeroCast(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     const heroState = isHeroControllable();
     if (!heroState.ok) {
         emitResult(command, requestId, heroState.code, heroState.message);
@@ -776,6 +901,10 @@ function handleHeroCast(command, requestId, payload = {}) {
 }
 
 function handleHeroUpgradeSkill(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
         return;
@@ -824,6 +953,10 @@ function handleHeroUpgradeSkill(command, requestId, payload = {}) {
 }
 
 function handleHeroUpgrade(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
         return;
@@ -860,6 +993,10 @@ function handleHeroUpgrade(command, requestId, payload = {}) {
 }
 
 function handleHeroSkillChange(command, requestId, payload = {}) {
+    if (!requireGame(command, requestId)) {
+        return;
+    }
+
     if (!game.started) {
         emitResult(command, requestId, 400, 'Game has not started.');
         return;
@@ -913,6 +1050,9 @@ function handleShopCommand(command, requestId) {
 
 function handleLegacyCommand(type, requestId) {
     if (type === 'tick') {
+        if (!requireGame(type, requestId)) {
+            return true;
+        }
         tick();
         emitResult(type, requestId, 200, 'Tick completed.');
         return true;
@@ -927,9 +1067,6 @@ function handleLegacyCommand(type, requestId) {
     return false;
 }
 
-registerEventBridge();
-emitState();
-
 self.onmessage = (event) => {
     const { command, type, payload, requestId } = event.data ?? {};
     const normalizedCommand = typeof command === 'string' ? command : (typeof type === 'string' ? type : '');
@@ -941,6 +1078,30 @@ self.onmessage = (event) => {
     }
 
     if (handleLegacyCommand(normalizedCommand, requestId, payload)) {
+        return;
+    }
+
+    if (normalizedCommand === 'create:game') {
+        const result = createGame(payload);
+        emitResult(
+            normalizedCommand,
+            requestId,
+            result.code,
+            result.message,
+            result.data ?? null
+        );
+        return;
+    }
+
+    if (normalizedCommand === 'destroy:game') {
+        const result = destroyGame();
+        emitResult(
+            normalizedCommand,
+            requestId,
+            result.code,
+            result.message,
+            result.data ?? null
+        );
         return;
     }
 
@@ -999,3 +1160,5 @@ self.onmessage = (event) => {
 
     emitResult(normalizedCommand, requestId, 400, `Unknown worker command: ${normalizedCommand}`);
 };
+
+emitState();

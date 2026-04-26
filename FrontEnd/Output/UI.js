@@ -1,64 +1,32 @@
 import View from './View.js';
+import { loadUIImage } from "../Assert/AssetSheet.js";
 
-const HERO = 'Archmage';
+// TODO: Connect this to Menu.
+
+const HERO = 'Warrior';
+const WORLD = 'Forest';
 const SKILL_ICON_SLOT_BY_NAME = {
-    'Ice Pick': 'A_1',
-    'Fire Ball': 'A_2',
-    'Lightning': 'A_3',
-    'Storm Blast': 'Q_1',
-    'Flame Wave': 'Q_2',
-    'Thunder Cloud': 'Q_3',
-    'Frost Shield': 'W_1',
-    'Burning': 'W_2',
-    'Chain Lightning': 'W_3',
-    'Chakra': 'E_1',
-    'Viper Guardian': 'E_2',
-    'Ball Lightning': 'E_3',
-    'Blizzard': 'R_1',
-    'Meteorite': 'R_2',
-    'Static Explosion': 'R_3',
-    'Mana Drain': 'P_1',
-    'Fiery Soul': 'P_2',
-    'Electromagnetic Field': 'P_3',
+    'Ice Pick': 'A_1', 'Fire Ball': 'A_2', 'Stick': 'A_3',
+    'Storm Blast': 'Q_1', 'Flame Wave': 'Q_2', 'Sword Energy': 'Q_3',
+    'Frost Shield': 'W_1', 'Burning': 'W_2', 'Sheathe Sword': 'W_3',
+    'Chakra': 'E_1', 'Viper Guardian': 'E_2', 'Fore Sight': 'E_3',
+    'Blizzard': 'R_1', 'Meteorite': 'R_2', 'Helm Breaker': 'R_3',
+    'Mana Drain': 'P_1', 'Fiery Soul': 'P_2', 'Electromagnetic Field': 'P_3',
+    'Slash': 'A_1', 'Stab': 'A_2', 'Lightning': 'A_3',
+    'BladeSpin': 'Q_1', 'Puncture': 'Q_2', 'Thunder Cloud': 'Q_3',
+    'Sacrifice': 'W_1', 'Parry': 'W_2', 'Chain Lightning': 'W_3',
+    'Jumping Slash': 'E_1', 'Stride': 'E_2', 'Ball Lightning': 'E_3',
+    'Earthquake Slash': 'R_1', 'Flaw': 'R_2', 'Static Explosion': 'R_3',
+    'Sanguivore': 'P_1', 'Focus': 'P_2', 'SpiritBlade': 'P_3',
+
 };
 const SKILL_ORDER = ['Q', 'W', 'E', 'R', 'Max'];
 
 export default class UI {
-    constructor(layer) {
+    constructor(layer, hero, world) {
         this.layer = layer;
-        this.art = this.loadImageAssets({
-            objectiveProfile: 'FrontEnd/Assert/Image/General/Profile_Tree.png',
-            heroProfile: `FrontEnd/Assert/Image/${HERO}/Profile.png`,
-            heroProfileDead: `FrontEnd/Assert/Image/${HERO}/Profile_Dead.png`,
-            heroSpellBookBackground: `FrontEnd/Assert/Image/${HERO}/Book_Background.png`,
-            skill_skillBook: `FrontEnd/Assert/Image/${HERO}/Skill_SkillBook.png`,
-            upgrade: 'FrontEnd/Assert/Image/General/Button_Upgrade.png',
-            statSpeed: 'FrontEnd/Assert/Image/General/Stats_Speed.png',
-            statArmor: 'FrontEnd/Assert/Image/General/Stats_Armor.png',
-            statStrength: 'FrontEnd/Assert/Image/General/Stats_Strength.png',
-            statIntelligence: 'FrontEnd/Assert/Image/General/Stats_Intelligence.png',
-            statSlot: 'FrontEnd/Assert/Image/General/Stats_Slot.png',
-            statGold: 'FrontEnd/Assert/Image/General/Stats_Gold.png',
+        this.art = loadUIImage(HERO, WORLD);
 
-            skill_A_1: `FrontEnd/Assert/Image/${HERO}/Skill_A_1.png`,
-            skill_A_2: `FrontEnd/Assert/Image/${HERO}/Skill_A_2.png`,
-            skill_A_3: `FrontEnd/Assert/Image/${HERO}/Skill_A_3.png`,
-            skill_Q_1: `FrontEnd/Assert/Image/${HERO}/Skill_Q_1.png`,
-            skill_Q_2: `FrontEnd/Assert/Image/${HERO}/Skill_Q_2.png`,
-            skill_Q_3: `FrontEnd/Assert/Image/${HERO}/Skill_Q_3.png`,
-            skill_W_1: `FrontEnd/Assert/Image/${HERO}/Skill_W_1.png`,
-            skill_W_2: `FrontEnd/Assert/Image/${HERO}/Skill_W_2.png`,
-            skill_W_3: `FrontEnd/Assert/Image/${HERO}/Skill_W_3.png`,
-            skill_E_1: `FrontEnd/Assert/Image/${HERO}/Skill_E_1.png`,
-            skill_E_2: `FrontEnd/Assert/Image/${HERO}/Skill_E_2.png`,
-            skill_E_3: `FrontEnd/Assert/Image/${HERO}/Skill_E_3.png`,
-            skill_R_1: `FrontEnd/Assert/Image/${HERO}/Skill_R_1.png`,
-            skill_R_2: `FrontEnd/Assert/Image/${HERO}/Skill_R_2.png`,
-            skill_R_3: `FrontEnd/Assert/Image/${HERO}/Skill_R_3.png`,
-            skill_P_1: `FrontEnd/Assert/Image/${HERO}/Skill_P_1.png`,
-            skill_P_2: `FrontEnd/Assert/Image/${HERO}/Skill_P_2.png`,
-            skill_P_3: `FrontEnd/Assert/Image/${HERO}/Skill_P_3.png`,
-        });
         this.font = this.loadFontAssets({
             number: 'FrontEnd/Assert/Font/Arial.ttf',
             text: 'FrontEnd/Assert/Font/Times New Roman.ttf',
@@ -310,7 +278,7 @@ export default class UI {
 
         layer.push();
         layer.noStroke();
-        this.drawPanelArtwork(this.art.objectiveProfile, x, y, width, height, 18);
+        this.drawPanelArtwork(this.art.profile.objectiveProfile, x, y, width, height, 18);
 
         View.text(layer, x + width / 2, y + 20, objective.name, 20, 255, false);
         View.meter(
@@ -330,7 +298,7 @@ export default class UI {
         const x = 316;
         const y = 630;
         const alive = hero?.alive !== false;
-        const portrait = alive ? this.art.heroProfile : this.art.heroProfileDead;
+        const portrait = alive ? this.art.profile.alive : this.art.profile.dead;
 
         layer.push();
         layer.noStroke();
@@ -382,7 +350,7 @@ export default class UI {
         View.liveSkillIcon(layer, x + 20 + 400, y + 20, 80, 80, 'R', skills.R, this.getSkillIcon(skills.R));
         const passiveSkill = this.getHeroSkillBySlot(skills, 'P');
         View.liveSkillIcon(layer, x + 20 + 500, y + 20 + 5, 70, 70, '', passiveSkill, this.getSkillIcon(passiveSkill));
-        View.liveSkillIcon(layer, x + 20 + 590, y + 20, 140, 80, 'B', null, this.art['skill_skillBook']);
+        View.liveSkillIcon(layer, x + 20 + 590, y + 20, 140, 80, 'B', null, this.art.profile.skill_book);
     }
 
     drawSkillDetail(hero, mouse = null) {
@@ -514,11 +482,11 @@ export default class UI {
         const x = 1486;
         const y = 630;
         const rows = [
-            { icon: this.art.statGold ,value: hero?.gold},
-            { icon: this.art.statSpeed, value: View.formatOutput(hero?.speed) },
-            { icon: this.art.statArmor, value: View.formatOutput(hero?.armor) },
-            { icon: this.art.statStrength, value: View.formatOutput(hero?.strength) },
-            { icon: this.art.statIntelligence, value: View.formatOutput(hero?.intelligence) },
+            { icon: this.art.general.statGold ,value: hero?.gold},
+            { icon: this.art.general.statSpeed, value: View.formatOutput(hero?.speed) },
+            { icon: this.art.general.statArmor, value: View.formatOutput(hero?.armor) },
+            { icon: this.art.general.statStrength, value: View.formatOutput(hero?.strength) },
+            { icon: this.art.general.statIntelligence, value: View.formatOutput(hero?.intelligence) },
         ];
 
         layer.push();
@@ -541,7 +509,7 @@ export default class UI {
         const y = 90;
 
         layer.push();
-        const portrait = this.art.heroSpellBookBackground;
+        const portrait = this.art.profile.book_background;
         this.drawPanelArtwork(portrait, x, y, width, height, 0);
         layer.fill(12, 18, 28, 220);
         layer.rect(x, y, width, height, 0);
@@ -566,7 +534,7 @@ export default class UI {
                 View.skillIcon(layer, x + deltaX, y + deltaY, 80, 80, skill, highLight, this.getSkillIcon(skill));
                 // layer.rect(x + deltaX + 120, y + deltaY, 120, 80);
                 View.upgradeSkillButton(layer, x + deltaX + 100, y + deltaY + 15, 80, 50,
-                    skill.upgrade, skill.upgradeCost, this.art.statGold, hero.gold, skill.upgraded)
+                    skill.upgrade, skill.upgradeCost, this.art.general.statGold, hero.gold, skill.upgraded)
                 deltaX += 240;
             }
             deltaY += 96;
@@ -578,19 +546,19 @@ export default class UI {
         for (const category of categories) {
             View.heroStateDetails(
                 layer, x + 840, y + 120 + deltaY,
-                this.art['stat'+category],
+                this.art.general['stat'+category],
                 this.getMapValue(hero.stats, category),
             );
             View.upgradeStatButton(
-                layer, x + 1040, y + 120 + deltaY, this.art.statGold, this.getMapValue(hero.upgradeCost, category), hero.gold,
+                layer, x + 1040, y + 120 + deltaY, this.art.general.statGold, this.getMapValue(hero.upgradeCost, category), hero.gold,
                 this.getMapValue(hero.statsGrowth, category));
             deltaY += 120;
         }
         View.heroStateDetails(
-            layer, x + 840, y + 120 + deltaY, this.art.statSlot, SKILL_ORDER[hero?.spellSlotLevel]
+            layer, x + 840, y + 120 + deltaY, this.art.general.statSlot, SKILL_ORDER[hero?.spellSlotLevel]
         );
         View.upgradeStatButton(
-            layer, x + 1040, y + 120 + deltaY, this.art.statGold, hero?.spellSlotUpgradeCost,
+            layer, x + 1040, y + 120 + deltaY, this.art.general.statGold, hero?.spellSlotUpgradeCost,
             hero?.gold, SKILL_ORDER[hero?.spellSlotLevel+1], hero?.spellSlotLevel >= 3
         );
 
@@ -974,7 +942,7 @@ export default class UI {
 
     getSkillIcon(skill) {
         const key = this.getSkillIconKey(skill?.name);
-        return key ? (this.art[key] ?? null) : null;
+        return key ? (this.art.skillIcon[key] ?? null) : null;
     }
 
     getSkillIconKey(skillName) {
@@ -983,11 +951,11 @@ export default class UI {
             return null;
         }
 
-        if (this.art[`skill_${name}`]) {
+        if (this.art.skillIcon[`skill_${name}`]) {
             return `skill_${name}`;
         }
 
-        if (this.art[name]) {
+        if (this.art.skillIcon[name]) {
             return name;
         }
 

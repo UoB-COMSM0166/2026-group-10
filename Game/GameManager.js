@@ -7,18 +7,31 @@ import Boss from './Entity/Unit/Enemy/Boss.js';
 import Clock from './Utils/Clock.js';
 import EventEmitter from './Utils/EventEmitter.js';
 
+const HERO_REGISTRY = {
+    Warrior,
+    Architect,
+    Archmage,
+};
+
+const WORLD_REGISTRY = {
+    Forest,
+};
+
 export default class GameManager {
-    constructor() {
+    constructor(hero, category, world) {
         this.clock = new Clock();
         this.events = new EventEmitter();
 
-        this.world = new Forest();
+        const WorldClass = WORLD_REGISTRY[world];
+        const HeroClass = HERO_REGISTRY[hero];
+
+        this.world = new WorldClass();
         const heroSpawn = this.world.getHeroSpawn();
         const objectiveConfig = this.world.buildObjectiveConfig();
-        this.hero = new Warrior(
+        this.hero = new HeroClass(
             heroSpawn,
             this.events,
-            'Long Sword',
+            category,
             this.clock
         );
         this.objective = new Objective(

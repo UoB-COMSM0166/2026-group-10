@@ -10,6 +10,13 @@ if (!p5Ctor) {
 
 const GAME_WIDTH = 1600;
 const GAME_HEIGHT = 900;
+// TODO: Connect this to the Menu.
+const DEFAULT_GAME_CONFIG = {
+    hero: 'Warrior',
+    category: 'Long Sword',
+    world: 'Forest',
+};
+
 const worker = new Worker(new URL('../Game/Worker.js', import.meta.url), { type: 'module' });
 const MUSIC_TRACKS = [
     { id: 'normal', label: 'Normal', url: 'FrontEnd/Assert/Sound/Normal.mid', loop: true },
@@ -26,12 +33,6 @@ let latestEvents = [];
 let latestResult = null;
 let uiMessageQueue = [];
 let bookPausedGame = false;
-const objectiveSprite = {
-    image: null,
-    loaded: false,
-    failed: false,
-    promise: null,
-};
 const music = new BackgroundMusic(MUSIC_TRACKS);
 const musicState = {
     desiredTrackId: null,
@@ -189,33 +190,9 @@ function drawWorld(sketch, state, vectorTargetStart = null) {
     }
 
     worldRender.layer = sketch;
-    drawObjective(sketch, state.objective);
-    worldRender.renderUnitsAndProjectiles(state);
+    worldRender.renderScene(state);
     drawTargetingOverlay(sketch, state, vectorTargetStart);
     drawStatusText(sketch, state);
-}
-
-function drawObjective(sketch, objective) {
-    if (!objective?.position) {
-        return;
-    }
-
-    worldRender.withWorldTransform(() => {
-        worldRender.renderBaseRing(objective);
-
-        if (objectiveSprite.loaded && objectiveSprite.image) {
-            worldRender.renderBillboardImage(
-                objectiveSprite.image,
-                objective,
-                4 / Render.ENTITY_SPRITE_BASE_SIZE
-            );
-            return;
-        }
-
-        sketch.noStroke();
-        sketch.fill('#f5f1df');
-        sketch.circle(objective.position.x, objective.position.y, objective.hitbox * 2.6);
-    });
 }
 
 function drawTargetingOverlay(sketch, state, vectorTargetStart = null) {
@@ -388,20 +365,10 @@ const sketch = (p) => {
         ui = new UI(uiLayer);
         sketchUi = ui;
 
-        objectiveSprite.promise = p.loadImage('FrontEnd/Assert/Image/General/Sprite_Tree.png')
-            .then((image) => {
-                objectiveSprite.image = image;
-                objectiveSprite.loaded = true;
-                return image;
-            })
-            .catch(() => {
-                objectiveSprite.failed = true;
-                return null;
-            });
-
         p.textFont('sans-serif');
         uiLayer.textFont('sans-serif');
 
+        postCommand('create:game', DEFAULT_GAME_CONFIG);
         postCommand('game:start');
         postCommand('snapshot');
         void unlockAudioAndSync();

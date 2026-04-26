@@ -53,30 +53,30 @@ export default class Warrior extends Hero {
         if (category === 'Axe') {
             this.skill.set('A', slash);
             this.skill.set('Q', bladeSpin);
-            this.skill.set('W', jumpingSlash);
-            this.skill.set('E', sacrifice);
-            this.skill.set('R', earthquakeSlash)
+            // this.skill.set('W', jumpingSlash);
+            // this.skill.set('E', sacrifice);
+            // this.skill.set('R', earthquakeSlash)
             this.skill.set('P', sanguivore);
         } else if (category === 'Rapier') {
             this.skill.set('A', stab);
             this.skill.set('Q', puncture);
-            this.skill.set('W', parry);
-            this.skill.set('E', stride);
-            this.skill.set('R', flaw);
+            // this.skill.set('W', parry);
+            // this.skill.set('E', stride);
+            // this.skill.set('R', flaw);
             this.skill.set('P', focus);
         } else if (category === 'Long Sword') {
             this.skill.set('A', stick);
             this.skill.set('Q', swordEnergy);
-            this.skill.set('W', sheatheSword);
-            this.skill.set('E', foreSight);
-            this.skill.set('R', helmBreaker);
+            // this.skill.set('W', sheatheSword);
+            // this.skill.set('E', foreSight);
+            // this.skill.set('R', helmBreaker);
             this.skill.set('P', spiritBlade);
         }
 
         this.applyPassiveSkills();
-        // this.skill.set('W', null);
-        // this.skill.set('E', null);
-        // this.skill.set('R', null);
+        this.skill.set('W', null);
+        this.skill.set('E', null);
+        this.skill.set('R', null);
     }
 
     respawn() {
@@ -129,6 +129,11 @@ export default class Warrior extends Hero {
         }
 
         for (const [skillSlot, nextSkill] of nextSkills.entries()) {
+            if (!this.isSkillSlotUnlocked(skillSlot)) {
+                this.skill.set(skillSlot, null);
+                continue;
+            }
+
             nextSkill.slot = skillSlot;
             this.skill.set(skillSlot, nextSkill);
         }

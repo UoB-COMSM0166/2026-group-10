@@ -73,8 +73,7 @@ export class Area extends Entity {
 
         if (directionDistance > 0 && this.speed > 0) {
             const scale = this.speed / directionDistance;
-            this.velocity.vx = dx * scale;
-            this.velocity.vy = dy * scale;
+            this.setVelocity(dx * scale, dy * scale);
         }
     }
 
@@ -98,8 +97,7 @@ export class Area extends Entity {
         }
 
         if (this.maxDistance > 0 && this.distanceTravelled >= this.maxDistance) {
-            this.velocity.vx = 0;
-            this.velocity.vy = 0;
+            this.setVelocity(0, 0);
             return;
         }
 
@@ -107,8 +105,7 @@ export class Area extends Entity {
         this.distanceTravelled = this.getDistance(this.origin);
 
         if (this.maxDistance > 0 && this.distanceTravelled >= this.maxDistance) {
-            this.velocity.vx = 0;
-            this.velocity.vy = 0;
+            this.setVelocity(0, 0);
         }
     }
 
@@ -165,8 +162,7 @@ export class Aura extends Entity {
         }
 
         this.position = { x: this.source.position.x, y: this.source.position.y };
-        this.velocity.vx = 0;
-        this.velocity.vy = 0;
+        this.setVelocity(0, 0);
     }
 
     hit(unit) {
@@ -235,8 +231,7 @@ export class Projectile extends Entity {
 
         if (distance > 0 && projectileSpeed > 0) {
             const scale = projectileSpeed / distance;
-            this.velocity.vx = dx * scale;
-            this.velocity.vy = dy * scale;
+            this.setVelocity(dx * scale, dy * scale);
         }
     }
 
