@@ -271,16 +271,46 @@ By considering the plethora of stakeholders around our game, we gained a better 
 <img width="1200" height="896" alt="chart" src="images/Use case.png" />
 The use case diagram illustrates the interaction of player with our game Gates of cinder.It illustrates the game lore,hero selection,difficulty level and various aspects of the game.It also defines the gameflow and objectives of the game.The below table summarizes above diagram.
 
-| Category            | Use Cases |
-|--------------------|----------|
-| Pre-Game Actions   | Start Game, View Lore, Select Hero (Hugo Fortis), Select Difficulty |
-| Core Gameplay      | Enter Battle (Play Game), Kill Enemies, Defend Corona Terrae |
-| Combat & Skills    | Use Hero Abilities, Build/Place Towers (Engineer Only) |
-| Progression        | Earn XP, Level Up (Spend Skill Points) |
-| Resources          | Earn Gold & Wood |
-| Upgrades           | Upgrade Skills / Equipment, Turret Blueprints |
-| Maintenance        | Repair Corona Terrae |
-| Outcomes           | Win Game (All Waves Cleared), Lose Game (Corona Terrae Destroyed) |
+<p align="center">
+  <table>
+    <tr>
+      <th>Category</th>
+      <th>Use Cases</th>
+    </tr>
+    <tr>
+      <td>Pre-Game Actions</td>
+      <td>Start Game, View Lore, Select Hero (Hugo Fortis), Select Difficulty</td>
+    </tr>
+    <tr>
+      <td>Core Gameplay</td>
+      <td>Enter Battle (Play Game), Kill Enemies, Defend Corona Terrae</td>
+    </tr>
+    <tr>
+      <td>Combat & Skills</td>
+      <td>Use Hero Abilities, Build/Place Towers (Engineer Only)</td>
+    </tr>
+    <tr>
+      <td>Progression</td>
+      <td>Earn XP, Level Up (Spend Skill Points)</td>
+    </tr>
+    <tr>
+      <td>Resources</td>
+      <td>Earn Gold & Wood</td>
+    </tr>
+    <tr>
+      <td>Upgrades</td>
+      <td>Upgrade Skills / Equipment, Turret Blueprints</td>
+    </tr>
+    <tr>
+      <td>Maintenance</td>
+      <td>Repair Corona Terrae</td>
+    </tr>
+    <tr>
+      <td>Outcomes</td>
+      <td>Win Game (All Waves Cleared), Lose Game (Corona Terrae Destroyed)</td>
+    </tr>
+  </table>
+</p>
 
 ---
 
