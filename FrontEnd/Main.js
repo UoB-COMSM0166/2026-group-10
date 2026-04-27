@@ -388,7 +388,9 @@ const sketch = (p) => {
 
         loadingComplete = true;
 
-        if (typeof MenuScene !== 'undefined') {
+        if (typeof LoadingScene !== 'undefined') {
+            window.activeScene = new LoadingScene(p);
+        } else if (typeof MenuScene !== 'undefined') {
             window.activeScene = new MenuScene(p, window.menuBackground);
         }
     };
