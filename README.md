@@ -433,12 +433,6 @@ The below state diagram tells the flow of our game which transits from one state
   <img src="statediagram.png" width="900"/>
 </p>
 
-### Class Diagram
-
-<p align="center">
-  <img src="class diagram.png" width="900"/>
-</p>
-
 
 ### Implementation
 
