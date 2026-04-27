@@ -436,7 +436,7 @@ The below state diagram tells the flow of our game which transits from one state
 ### Class Diagram
 
 <p align="center">
-  <img src="class diagram.png" width="700"/>
+  <img src="class diagram.png" width="900"/>
 </p>
 
 
