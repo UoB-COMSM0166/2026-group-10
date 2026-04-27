@@ -736,10 +736,17 @@ Team Contributions
 </div>
 
 ### References
-1.
-2.
-3.
 
+1. Unity Technologies (2026) *NavMesh for AI Pathfinding*. Unity Documentation. Available at: https://docs.unity3d.com/Manual/nav-NavigationSystem.html (Accessed: 27 April 2026).
+
+2. Reynolds, C.W. (1999) ‘Steering behaviors for autonomous characters’, *Game Developers Conference*, pp. 763–782.
+
+3. Millington, I. and Funge, J. (2016) *Artificial Intelligence for Games*. 3rd edn. Boca Raton: CRC Press.
+
+4. Unity Technologies (2026) *Animator Controller*. Unity Documentation. Available at: https://docs.unity3d.com/Manual/AnimatorControllers.html (Accessed: 27 April 2026).
+
+5. Rabin, S. (2015) *Game AI Pro 2*. Boca Raton: CRC Press.
+   
 ### Additional Marks
 
 You can delete this section in your own repo, it's just here for information. in addition to the marks above, we will be marking you on the following two points:
