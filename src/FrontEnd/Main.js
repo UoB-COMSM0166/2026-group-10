@@ -1,5 +1,5 @@
 import Input from './Input.js';
-import { getSoundResource } from './Assert/AssetSheet.js';
+import { getSoundResource } from './Asset/AssetSheet.js';
 import UI from './Output/UI.js';
 import Render from './Output/Render.js';
 import { BackgroundMusic, SoundEffect } from './Output/Sound.js';

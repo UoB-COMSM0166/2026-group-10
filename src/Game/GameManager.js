@@ -365,4 +365,13 @@ export default class GameManager {
             }
         }
     }
+
+    changeHero(hero) {
+        const category = (hero === 'Archmage') ? 'Ice' : 'Long Sword';
+
+        const HeroClass = HERO_REGISTRY[hero];
+        this.hero = new HeroClass(
+
+        )
+    }
 }

@@ -1,5 +1,5 @@
 import View from './View.js';
-import { loadUIImage } from "../Assert/AssetSheet.js";
+import { loadUIImage } from "../Asset/AssetSheet.js";
 
 // TODO: Connect this to Menu.
 

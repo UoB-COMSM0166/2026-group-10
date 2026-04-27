@@ -1,4 +1,4 @@
-import { loadSpriteImage } from "../Assert/AssetSheet.js";
+import { loadSpriteImage } from "../Asset/AssetSheet.js";
 
 // TODO: Connect to Menu
 const HERO = 'Warrior';
