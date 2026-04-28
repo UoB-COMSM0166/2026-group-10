@@ -94,6 +94,73 @@ export default class UI {
         this.drawSkillDetail(state.hero, mouse);
         this.drawToasts();
         this.drawCheatInput();
+        this.drawHint();
+    }
+
+    drawHint() {
+        const layer = this.layer;
+        const x = 0;
+        const y = 0;
+        const width = 200;
+        const height = 100;
+
+        layer.push();
+        layer.noStroke();
+        layer.fill(8, 12, 18, 225);
+        layer.rect(x, y, width, height, 0);
+
+        View.text(
+            layer,
+            x + width / 2,
+            y + 20,
+            `A/Q/W/E/R: Cast Skills`,
+            15,
+            255,
+            true,
+            0,
+            0,
+            'Arial',
+            2
+        );
+        View.text(
+            layer,
+            x + width / 2,
+            y + 20,
+            `B: Skill Book`,
+            15,
+            255,
+            true,
+            0,
+            0,
+            'Arial',
+            2
+        );
+        View.text(
+            layer,
+            x + width / 2,
+            y + 60,
+            `Space: Pause Menu`,
+            15,
+            255,
+            true,
+            0,
+            0,
+            'Arial',
+            2
+        );
+        View.text(
+            layer,
+            x + width / 2,
+            y + 80,
+            `Enter: Cheat Code`,
+            15,
+            255,
+            true,
+            0,
+            0,
+            'Arial',
+            2
+        );
     }
 
     drawBossStatusPanel(boss) {

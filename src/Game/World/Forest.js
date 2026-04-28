@@ -9,7 +9,7 @@ export default class Forest extends World {
             mode: 'Defense',
             heroPosition: { x: 400, y: 675 },
             objective: {
-                position: { x: 400, y: 675 },
+                position: { x: 250, y: 675 },
                 hitbox: 50,
                 hp: 500
             },
@@ -25,17 +25,19 @@ export default class Forest extends World {
                         'A', 'Zombie', 180, 10,
                         [
                             { x: 1000, y: 112.5 },
-                            { x: 800, y: 225 },
-                            { x: 800, y: 450 },
-                            { x: 400, y: 675 }
+                            { x: 944, y: 288 },
+                            { x: 616, y: 360 },
+                            { x: 250, y: 675 }
                         ]
                     ),
                     new Lane(
                         'B', 'Boomer', 240, 13,
                         [
                             { x: 1400, y: 562.5 },
-                            { x: 800, y: 450 },
-                            { x: 400, y: 675 }
+                            { x: 1168, y: 460 },
+                            { x: 944, y: 288 },
+                            { x: 616, y: 360 },
+                            { x: 250, y: 675 }
                         ]
                     )
                 ]),
@@ -44,17 +46,19 @@ export default class Forest extends World {
                         'A', 'Boomer', 240, 15,
                         [
                             { x: 1000, y: 112.5 },
-                            { x: 800, y: 225 },
-                            { x: 800, y: 450 },
-                            { x: 400, y: 675 }
+                            { x: 944, y: 288 },
+                            { x: 616, y: 360 },
+                            { x: 250, y: 675 }
                         ]
                     ),
                     new Lane(
                         'B', 'Necromancer', 300, 16,
                         [
                             { x: 1400, y: 562.5 },
-                            { x: 800, y: 450 },
-                            { x: 400, y: 675 }
+                            { x: 1168, y: 460 },
+                            { x: 944, y: 288 },
+                            { x: 616, y: 360 },
+                            { x: 250, y: 675 }
                         ]
                     )
                 ]),
