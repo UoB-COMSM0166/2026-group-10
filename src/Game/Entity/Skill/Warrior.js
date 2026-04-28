@@ -119,7 +119,7 @@ export class BladeSpin extends Skill {
         super(
             'Blade Spin', 'Axe',
             'Hugo Fortis spins his battle axe, damaging all nearby enemies for a short duration.',
-            180, 0, 0, events, null, false, 150
+            600, 40, 0, events, null, false, 150
         );
         this.duration = 120;
         this.hitbox = 50;
@@ -171,7 +171,7 @@ export class Sacrifice extends Skill {
         super(
             'Sacrifice', 'Axe',
             'Consume 50 health to gain 10 attack amplification for a short duration.',
-            180, 0, 0, events, null, false, 150
+            180, 50, 0, events, null, false, 150
         );
         this.healthCost = 50;
         this.attackAmpBonus = 10;
@@ -217,7 +217,7 @@ export class JumpingSlash extends Skill {
         super(
             'Jumping Slash', 'Axe',
             'Leap to a target point and slam all enemies in the landing area.',
-            240, 0, 180, events, 'Point', false, 150
+            360, 30, 180, events, 'Point', false, 150
         );
         this.jumpSpeed = 12;
         this.damage = 30;
@@ -301,7 +301,7 @@ export class EarthquakeSlash extends Skill {
         super(
             'Earthquake Slash', 'Axe',
             'Charge briefly, then smash the ground to damage and slow nearby enemies.',
-            360, 0, 0, events, null, false, 250
+            2400, 100, 0, events, null, false, 250
         );
         this.castDuration = 120;
         this.hitbox = 240;
@@ -425,7 +425,7 @@ export class Stab extends Skill {
         super(
             'Stab', 'Rapier',
             'Stab a nearby enemy unit for heavy damage.',
-            90, 0, 40, events, 'Unit', false, 100
+            60, 0, 40, events, 'Unit', false, 100
         );
         this.damage = 30;
         this.bleedDamage = 5;
@@ -472,7 +472,7 @@ export class Puncture extends Skill {
         super(
             'Puncture', 'Rapier',
             'Strike forward in a narrow line, damaging enemies in front of Hugo Fortis.',
-            120, 0, 180, events, 'Point', false, 150
+            600, 50, 180, events, 'Point', false, 150
         );
         this.length = 100;
         this.width = 30;
@@ -554,7 +554,7 @@ export class Parry extends Skill {
         super(
             'Parry', 'Rapier',
             'Become invulnerable for a brief moment.',
-            180, 0, 0, events, null, false, 150
+            180, 40, 0, events, null, false, 150
         );
         this.duration = 30;
     }
@@ -600,7 +600,7 @@ export class Stride extends Skill {
         super(
             'Stride', 'Rapier',
             'Rush to a nearby target and strike it.',
-            150, 0, 180, events, 'Unit', false, 150
+            300, 30, 180, events, 'Unit', false, 150
         );
         this.damage = 40;
         this.moveSpeed = 14;
@@ -660,7 +660,7 @@ export class Flaw extends Skill {
         super(
             'Flaw', 'Rapier',
             'Expose weaknesses in an area, reducing enemy armor for a long duration.',
-            240, 0, 240, events, 'Point', false, 250
+            2400, 100, 240, events, 'Point', false, 250
         );
         this.hitbox = 100;
         this.duration = 600;
@@ -802,7 +802,7 @@ export class Stick extends Skill {
         super(
             'Stick', 'Long Sword',
             'Thrust at a nearby enemy unit.',
-            90, 0, 40, events, 'Unit', false, 100
+            60, 0, 40, events, 'Unit', false, 100
         );
         this.damage = 30;
         this.attackAmpBonus = 10;
@@ -847,7 +847,7 @@ export class SwordEnergy extends Skill {
         super(
             'Sword Energy', 'Long Sword',
             'Release a sword wave toward a target point.',
-            120, 0, 240, events, 'Point', false, 150
+            600, 40, 240, events, 'Point', false, 150
         );
         this.damage = 30;
         this.projectileSpeed = 8;
@@ -907,7 +907,7 @@ export class SheatheSword extends Skill {
         super(
             'Sheathe Sword', 'Long Sword',
             'Sheathe the sword to trade attack power for speed.',
-            0, 0, 0, events, null, false, 150
+            10, 0, 0, events, null, false, 150
         );
         this.attackAmpPenaltyRatio = 0.2;
         this.moveSpeedBonusRatio = 0.3;
@@ -943,7 +943,7 @@ export class ForeSight extends Skill {
         super(
             'Fore Sight', 'Long Sword',
             'Blink away from a chosen point and counter with a brief aura around yourself if the original position is struck shortly after.',
-            240, 20, 180, events, 'Point', false, 150
+            300, 40, 180, events, 'Point', false, 150
         );
         this.triggerWindow = 30;
         this.damage = 40;
@@ -1032,7 +1032,7 @@ export class HelmBreaker extends Skill {
         super(
             'Helm Breaker', 'Long Sword',
             'Disappear, then crash down at a target point after a short delay.',
-            360, 0, 99999, events, 'Point', false, 250
+            2400, 120, 99999, events, 'Point', false, 250
         );
         this.delay = 60;
         this.hitbox = 100;

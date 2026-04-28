@@ -187,6 +187,11 @@ export default class Render {
             return true;
         }
 
+        const overrideSprite = this.getHeroOverrideSprite(hero);
+        if (overrideSprite?.image) {
+            return this.renderDirectionalSkillEntitySprite(overrideSprite, hero, tick);
+        }
+
         const sprite = this.getHeroSprite(hero);
         if (!sprite?.image) {
             return false;
@@ -244,7 +249,7 @@ export default class Render {
         }
 
         const drawWidth = Math.max(1, hitbox * Render.ENTITY_SPRITE_BASE_SIZE * scaleMultiplier);
-        const drawHeight = drawWidth;
+        const drawHeight = Math.max(1, hitbox * Render.ENTITY_SPRITE_BASE_SIZE * scaleMultiplier);
         const feetY = hitbox * footOffset;
 
         sketch.push();
@@ -448,6 +453,9 @@ export default class Render {
         }
 
         if (item.kind === 'skillEntity') {
+            if (this.isBallLightningEntity(entity)) {
+                return;
+            }
             this.renderFlameTowerLockLine(entity);
             this.renderBaseRing(entity, item.color);
             this.renderEntity(entity, tick);
@@ -486,6 +494,15 @@ export default class Render {
 
     getHeroDeathSprite() {
         return this.buildHeroDeathSprite(this.sprites?.death ?? null);
+    }
+
+    getHeroOverrideSprite(hero) {
+        if (!this.isBallLightningHero(hero)) {
+            return null;
+        }
+
+        const image = this.sprites?.skillEntity?.ball_lightning ?? null;
+        return this.buildSkillEntitySprite(image, 'ball_lightning');
     }
 
     getEnemySkillEntitySprite(entity) {
@@ -563,6 +580,15 @@ export default class Render {
         return String(entity?.id ?? '').toLowerCase().includes('flame_tower');
     }
 
+    isBallLightningEntity(entity) {
+        return String(entity?.id ?? '').toLowerCase().includes('ball_lightning');
+    }
+
+    isBallLightningHero(hero) {
+        return Array.isArray(hero?.buffs)
+            && hero.buffs.some((buff) => buff?.name === 'Ball Lightning');
+    }
+
     buildEnemySprite(image) {
         if (!image?.complete) {
             return null;
@@ -582,6 +608,26 @@ export default class Render {
     buildSkillEntitySprite(image, key) {
         if (!image?.complete || !key) {
             return null;
+        }
+
+        if (key === 'storm_blast' || key === 'fore_sight_aura' || key === 'blade_spin') {
+            return {
+                image,
+                frameCount: 1,
+                directionCount: 1,
+                frameWidth: 64,
+                frameHeight: 32,
+            };
+        }
+
+        if (key === 'lightning' || key === 'thunder_cloud' || key === 'pure_lightning') {
+            return {
+                image,
+                frameCount: 8,
+                directionCount: 1,
+                frameWidth: 96,
+                frameHeight: 96,
+            };
         }
 
         if (key === 'viper_guardian') {
@@ -621,7 +667,9 @@ export default class Render {
             'flame_wave',
             'viper_guardian',
             'meteorite',
-            'lightning',
+            'ice_pick',
+            'ball_lightning',
+            'sword_energy',
         ].includes(key);
     }
 

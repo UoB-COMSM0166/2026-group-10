@@ -854,7 +854,7 @@ export class Lightning extends Skill {
         );
 
         const area = new Area(
-            `${casterId}_lightning_${tick}`,
+            `${casterId}_pure_lightning_${tick}`,
             { x: target.x, y: target.y },
             0,
             this.hitbox,
@@ -882,7 +882,7 @@ export class ThunderCloud extends Skill {
         super(
             'Thunder Cloud', 'Lightning',
             'Summon a thunder cloud that slowly drifts forward, periodically damaging enemies and applying Static Field.',
-            600, 100, 240, events, 'Point', false, 300
+            600, 70, 240, events, 'Point', false, 300
         );
         this.speed = 1.5;
         this.hitbox = 80;
@@ -1018,7 +1018,7 @@ export class BallLightning extends Skill {
         super(
             'Ball Lightning', 'Lightning',
             'Transform into a ball of lightning, gaining speed, becoming immune to damage, and shocking enemies you pass through.',
-            900, 140, 0, events, null, false, 300
+            900, 100, 0, events, null, false, 300
         );
         this.duration = 120;
         this.damage = 18;
@@ -1113,7 +1113,7 @@ export class StaticExplosion extends Skill {
         super(
             'Static Explosion', 'Lightning',
             'Detonate Static Field on all affected enemies, dealing damage and stunning them.',
-            30, 100, 0, events, null, false, 400
+            30, 50, 0, events, null, false, 400
         );
         this.damage = 20;
         this.stunDuration = 45;

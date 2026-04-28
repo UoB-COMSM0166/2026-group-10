@@ -37,9 +37,17 @@ export function loadSpriteImage(hero, enemies, map) {
             skillEntity.fire_ball = `src/FrontEnd/Asset/Image/Archmage/FireBall_Layout.png`;
             skillEntity.flame_wave = `src/FrontEnd/Asset/Image/Archmage/FlameWave_Layout.png`;
             skillEntity.viper_guardian = `src/FrontEnd/Asset/Image/Archmage/Guardian_Layout.png`;
-            skillEntity.lightning = `src/FrontEnd/Asset/Image/Archmage/Lightning_Layout.png`;
+            skillEntity.pure_lightning = `src/FrontEnd/Asset/Image/Archmage/Lightning_Layout.png`;
+            skillEntity.thunder_cloud = `src/FrontEnd/Asset/Image/Archmage/Lightning_Layout.png`;
             skillEntity.meteorite = `src/FrontEnd/Asset/Image/Archmage/Meteorite_Layout.png`;
+            skillEntity.storm_blast = `src/FrontEnd/Asset/Image/Archmage/StormBlast_Layout.png`;
+            skillEntity.ice_pick = `src/FrontEnd/Asset/Image/Archmage/IcePick_Layout.png`;
+            skillEntity.ball_lightning = `src/FrontEnd/Asset/Image/Archmage/BallLightning_Layout.png`;
             break;
+        case 'Warrior':
+            skillEntity.fore_sight_aura = `src/FrontEnd/Asset/Image/Warrior/Blade.png`;
+            skillEntity.blade_spin = `src/FrontEnd/Asset/Image/Warrior/Spin.png`;
+            skillEntity.sword_energy = `src/FrontEnd/Asset/Image/Warrior/SwordEnergy_Layout.png`;
     }
 
     return {
@@ -105,7 +113,16 @@ export function loadUIImage(hero, map) {
             skillEntity.flame_wave = `src/FrontEnd/Asset/Image/Archmage/FlameWave_Layout.png`;
             skillEntity.viper_guardian = `src/FrontEnd/Asset/Image/Archmage/Guardian_Layout.png`;
             skillEntity.lightning = `src/FrontEnd/Asset/Image/Archmage/Lightning_Layout.png`;
+            skillEntity.thunder_cloud = `src/FrontEnd/Asset/Image/Archmage/Lightning_Layout.png`;
             skillEntity.meteorite = `src/FrontEnd/Asset/Image/Archmage/Meteorite_Layout.png`;
+            skillEntity.storm_blast = `src/FrontEnd/Asset/Image/Archmage/StormBlast_Layout.png`;
+            skillEntity.ice_pick = `src/FrontEnd/Asset/Image/Archmage/IcePick_Layout.png`;
+            skillEntity.ball_lightning = `src/FrontEnd/Asset/Image/Archmage/BallLightning_Layout.png`;
+            break;
+        case 'Warrior':
+            skillEntity.fore_sight_aura = `src/FrontEnd/Asset/Image/Warrior/Blade.png`;
+            skillEntity.blade_spin = `src/FrontEnd/Asset/Image/Warrior/Spin.png`;
+            skillEntity.sword_energy = `src/FrontEnd/Asset/Image/Warrior/SwordEnergy_Layout.png`;
             break;
     }
 
