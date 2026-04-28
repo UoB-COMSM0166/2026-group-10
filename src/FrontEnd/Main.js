@@ -667,7 +667,7 @@ const sketch = (p) => {
 
         window.menuBackground = loadImg("src/FrontEnd/Asset/Image/newMenuBG.png");
         window.generalBackground = loadImg("src/FrontEnd/Asset/Image/generalBGZelda.png");
-        window.selectDifficultyBg = loadImg("src/FrontEnd/Asset/Image/newSelectDifficultyBG.png");
+        window.selectDifficultyBg = loadImg("src/FrontEnd/Asset/Image/newSelectDifficultyBG.jpg");
         window.cursorImage = loadImg("src/FrontEnd/Asset/Image/cursor.png");
 
         window.introImages[0] = loadImg("src/FrontEnd/Asset/Image/intro1.png");
