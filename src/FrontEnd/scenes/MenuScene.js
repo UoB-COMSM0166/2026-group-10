@@ -6,27 +6,27 @@ class MenuScene {
         const cx = sketch.width / 2;
         const cy = sketch.height / 2;
         
-        this.startButton = new Button(sketch, cx - 100, cy - 50, 200, 75, "Start Game", () => {
+        this.startButton = new Button(sketch, cx - 100, cy - 50, 200, 75, "New Game", () => {
             activeScene = new SelectDifficultyScene(sketch, selectDifficultyBg);
         });
-        this.introButton = new Button(sketch, cx - 100, cy + 40, 200, 50, 'Intro', () => {
+        this.introButton = new Button(sketch, cx - 100, cy + 50, 200, 50, 'Intro', () => {
             activeScene = new IntroScene(sketch, generalBackground);
         });
-        this.instructionButton = new Button(sketch, cx - 100, cy + 120, 200, 50, 'How to play', () => {
+        this.instructionButton = new Button(sketch, cx - 100, cy + 125, 200, 50, 'Controls', () => {
             activeScene = new InstructionScene(sketch, generalBackground);
         });
-        this.soundButton = new Button(sketch, cx - 100, cy + 205, 200, 50, 'Sound', () => {
+        this.soundButton = new Button(sketch, cx - 100, cy + 200, 200, 50, 'Sound', () => {
             this.soundActive = !this.soundActive;
             //updating global sound variable (global variable is called isSound)
             window.gameState.settings.isSound = this.soundActive;
             if(!this.soundActive) {
-                window.audioMessage = "Sound is switched off!";
+                window.audioMessage = "Sound is switched off";
             } else {
-                window.audioMessage = "Sound is switched on!";
+                window.audioMessage = "Sound is switched on";
             }
             window.msgTimer = window.MESSAGE_DURATION;
         });
-        this.musicButton = new Button(sketch, cx - 100, cy + 255, 200, 50, 'Music', () => {
+        this.musicButton = new Button(sketch, cx - 100, cy + 275, 200, 50, 'Music', () => {
          this.musicActive = !this.musicActive;
          window.gameState.settings.isMusic = this.musicActive;
             if(!this.musicActive) {
@@ -64,11 +64,22 @@ class MenuScene {
         this.musicButton.display();
 
         if(window.msgTimer > 0) {
+            const msgCx = this.sketch.width / 2;
+            const msgCy = this.sketch.height / 2 + 385;
+            
+            // draw UI box matching button style
+            this.sketch.stroke('rgba(201, 162, 74, 0.35)');
+            this.sketch.strokeWeight(1);
+            this.sketch.fill('rgba(15, 12, 10, 0.8)');
+            this.sketch.rect(msgCx - 250, msgCy - 35, 500, 70, 15);
+
             //display message to screen
-            this.sketch.fill('orange');
+            this.sketch.noStroke();
+            this.sketch.fill('#F5E6C8');
             this.sketch.textAlign(this.sketch.CENTER, this.sketch.CENTER);
-            this.sketch.textSize(40);
-            this.sketch.text(window.audioMessage, this.sketch.width / 2, 100);
+            this.sketch.textSize(30);
+            this.sketch.textStyle(this.sketch.BOLD);
+            this.sketch.text(window.audioMessage, msgCx, msgCy);
             window.msgTimer--;
         }
     }

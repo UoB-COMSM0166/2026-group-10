@@ -5,19 +5,23 @@ class SelectDifficultyScene {
         const cx = sketch.width / 2;
         const cy = sketch.height / 2;
         
-        this.easyButton = new Button(sketch, cx - 100, cy - 130, 200, 75, "Easy", () => {
+        this.easyButton = new Button(sketch, cx - 100, cy - 50, 200, 75, "Easy", () => {
             window.gameState.selectedDifficulty = "easy";
             window.activeScene = new SelectCharacterScene(sketch, window.generalBackground);
         });
-        this.mediumButton = new Button(sketch, cx - 100, cy - 40, 200, 75, "Medium", () => {
+        this.mediumButton = new Button(sketch, cx - 100, cy + 40, 200, 75, "Medium", () => {
             window.gameState.selectedDifficulty = "medium";
             window.activeScene = new SelectCharacterScene(sketch, window.generalBackground);
         });
-        this.HardButton = new Button(sketch, cx - 100, cy + 50, 200, 75, "Hard", () => {
+        this.HardButton = new Button(sketch, cx - 100, cy + 130, 200, 75, "Hard", () => {
             window.gameState.selectedDifficulty = "hard";
             window.activeScene = new SelectCharacterScene(sketch, window.generalBackground);
         });
         this.backButton = new Button(sketch, 20, sketch.height - 70, 100, 50, "Back", () => {
+            window.activeScene = new MenuScene(sketch, window.menuBackground);
+        });
+        
+        this.mainMenuButton = new Button(sketch, 20, 50, 160, 50, "Main Menu", () => {
             window.activeScene = new MenuScene(sketch, window.menuBackground);
         });
     }
@@ -30,6 +34,7 @@ class SelectDifficultyScene {
         this.mediumButton.display();
         this.HardButton.display();
         this.backButton.display();
+        this.mainMenuButton.display();
      }
 
      mousePressed() {
@@ -37,6 +42,7 @@ class SelectDifficultyScene {
         this.mediumButton.wasIClicked();
         this.HardButton.wasIClicked();
         this.backButton.wasIClicked();
+        this.mainMenuButton.wasIClicked();
      }
 
 

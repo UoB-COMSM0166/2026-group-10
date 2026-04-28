@@ -33,14 +33,14 @@ class SelectCharacterScene {
             height: 400
         }];
 
-        this.mainMenuButton = new Button(sketch, 20, 50, 130, 50, "Main Menu", () => {
+        this.mainMenuButton = new Button(sketch, 20, 50, 160, 50, "Main Menu", () => {
            //stopping all narration tracks before returning to main menu
             this.stopAllNarration();
             //returning to main menu
             window.activeScene = new MenuScene(sketch, window.menuBackground);
         });
 
-        this.nextButton = new Button(sketch, sketch.width - 220, sketch.height - 70, 200, 50, "Next Character", () => {
+        this.nextButton = new Button(sketch, sketch.width - 300, sketch.height - 70, 280, 50, "Next Character", () => {
             //if this is not the last character then load next character, else do nothing
             if(this.currentSlide < this.slides.length - 1) {
                 this.currentSlide++;
@@ -59,7 +59,7 @@ class SelectCharacterScene {
             }
         });
 
-        this.backButton = new Button(sketch, 40, sketch.height - 70, 200, 50, "Previous Character", () => {
+        this.backButton = new Button(sketch, 20, sketch.height - 70, 280, 50, "Previous Character", () => {
             //if user clicks back when viewing first character do nothing, else load previous character
             if(this.currentSlide > 0) {
                 this.currentSlide--;
@@ -67,7 +67,7 @@ class SelectCharacterScene {
             } 
         })
 
-        this.SelectCharacterButton = new Button(sketch, cx - 55, sketch.height - 130, 110, 50, "SELECT", () => {
+        this.SelectCharacterButton = new Button(sketch, cx - 55, sketch.height - 130, 110, 50, "Select", () => {
             window.gameState.selectedCharacter = this.slides[this.currentSlide].heroClass;
             //stop character narration
             this.slides[this.currentSlide].narration.stop();

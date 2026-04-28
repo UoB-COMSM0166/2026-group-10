@@ -42,7 +42,7 @@ class IntroScene {
             }
         ]
 
-        this.mainMenuButton = new Button(sketch, 20, 50, 130, 50, "Main Menu", () => {
+        this.mainMenuButton = new Button(sketch, 20, 50, 160, 50, "Main Menu", () => {
             //stopping intro music before returning to main menu
             if(introMusic.isPlaying()) {
                 introMusic.stop();
