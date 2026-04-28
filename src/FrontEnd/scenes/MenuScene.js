@@ -16,7 +16,7 @@ class MenuScene {
             this.soundActive = !this.soundActive;
             //updating global sound variable (global variable is called isSound)
             window.gameState.settings.isSound = this.soundActive;
-            if(this.soundActive == false) {
+            if(!this.soundActive) {
                 window.audioMessage = "Sound is switched off!";
             } else {
                 window.audioMessage = "Sound is switched on!";
@@ -26,7 +26,7 @@ class MenuScene {
         this.musicButton = new Button(sketch, cx + 50, cy + 105, 50, 50, 'M', () => {
          this.musicActive = !this.musicActive;
          window.gameState.settings.isMusic = this.musicActive;
-            if(this.musicActive == false) {
+            if(!this.musicActive) {
                 if (window.menuMusic) window.menuMusic.pause();
                 window.audioMessage = "Music is switched off!";
             } else {
