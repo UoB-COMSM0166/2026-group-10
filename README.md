@@ -359,6 +359,8 @@ The use case diagram illustrates the interaction of player with our game Gates o
 ### Design
 - System architecture. Class diagrams, behavioural diagrams.
 
+![Class diagram](images/classdiagram.svg)
+
 **System Architecture**
 
 This game runs on 2 processes: `Main` and `Worker`. The `Main` process is responsible for rendering, UI, input, and sound. `Worker` processes are responsible for executing the game logic.
@@ -736,10 +738,16 @@ Team Contributions
 </div>
 
 ### References
-1.
-2.
-3.
 
+
+1. Reynolds, C.W. (1999) ‘Steering behaviors for autonomous characters’, *Game Developers Conference*, pp. 763–782.
+
+2. Millington, I. and Funge, J. (2016) *Artificial Intelligence for Games*. 3rd edn. Boca Raton: CRC Press.
+
+3. Unity Technologies (2026) *Animator Controller*. Unity Documentation. Available at: https://docs.unity3d.com/Manual/AnimatorControllers.html (Accessed: 27 April 2026).
+
+4. Rabin, S. (2015) *Game AI Pro 2*. Boca Raton: CRC Press.
+   
 ### Additional Marks
 
 You can delete this section in your own repo, it's just here for information. in addition to the marks above, we will be marking you on the following two points:
