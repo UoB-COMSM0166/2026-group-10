@@ -31,13 +31,13 @@ class MenuScene {
          window.gameState.settings.isMusic = this.musicActive;
             if(!this.musicActive) {
                 if (window.menuMusic) window.menuMusic.pause();
-                window.audioMessage = "Music is switched off!";
+                window.audioMessage = "Music is switched off";
             } else {
                 if (window.menuMusic) {
                     window.menuMusic.loop();
                     window.menuMusic.play();
                 }
-                window.audioMessage = "Music is switched on!";
+                window.audioMessage = "Music is switched on";
             }
             window.msgTimer = window.MESSAGE_DURATION;
         });
