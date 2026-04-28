@@ -44,11 +44,11 @@ class IntroScene {
 
         this.mainMenuButton = new Button(sketch, 20, 50, 130, 50, "Main Menu", () => {
             //stopping intro music before returning to main menu
-            if(introMusic.isPlaying() == true) {
+            if(introMusic.isPlaying()) {
                 introMusic.stop();
             }
             //starting main menu music
-            if(gameState.settings.isMusic == true) {
+            if(gameState.settings.isMusic) {
                 menuMusic.amp(0.15);
                 menuMusic.loop();
                 menuMusic.play();
@@ -76,7 +76,7 @@ class IntroScene {
                     introMusic.stop();
                 }
                 //before returning to main menu turn on menu music if global varialbe is true
-                if(gameState.settings.isMusic == true) {
+                if(gameState.settings.isMusic) {
                     menuMusic.amp(0.15);
                     menuMusic.loop();
                     menuMusic.play();
@@ -91,7 +91,7 @@ class IntroScene {
                 if(introMusic.isPlaying()) {
                     introMusic.stop();
                 }
-                if(gameState.settings.isMusic == true) {
+                if(gameState.settings.isMusic) {
                     menuMusic.amp(0.15);
                     menuMusic.loop();
                     menuMusic.play();
@@ -109,11 +109,11 @@ class IntroScene {
             }
         })
 
-        if(menuMusic.isPlaying() == true) {
+        if(menuMusic.isPlaying()) {
             menuMusic.stop();
         }
 
-        if((introMusic.isPlaying() == false) && (gameState.settings.isMusic == true)) {
+        if((!introMusic.isPlaying()) && (gameState.settings.isMusic)) {
             introMusic.amp(0.15);
             introMusic.loop();
             introMusic.play();

@@ -56,6 +56,13 @@ export default class Input {
         }
 
         if (!targeting || targeting.status !== 'targeting') {
+            if (sketch.mouseButton.left && !sketch.mouseButton.right) {
+                this.setVectorTargetStart(null);
+                this.vectorTargetingActive = false;
+                this.postCommand('hero:move', {
+                    position: this.getMouseWorldPosition(sketch),
+                });
+            }
             return;
         }
 

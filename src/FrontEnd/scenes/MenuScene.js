@@ -12,7 +12,10 @@ class MenuScene {
         this.introButton = new Button(sketch, cx - 100, cy + 40, 200, 50, 'Intro', () => {
             activeScene = new IntroScene(sketch, generalBackground);
         });
-        this.soundButton = new Button(sketch, cx - 100, cy + 105, 50, 50, 'S', () => {
+        this.instructionButton = new Button(sketch, cx - 100, cy + 120, 200, 50, 'How to play', () => {
+            activeScene = new InstructionScene(sketch, generalBackground);
+        });
+        this.soundButton = new Button(sketch, cx - 100, cy + 205, 200, 50, 'Sound', () => {
             this.soundActive = !this.soundActive;
             //updating global sound variable (global variable is called isSound)
             window.gameState.settings.isSound = this.soundActive;
@@ -23,7 +26,7 @@ class MenuScene {
             }
             window.msgTimer = window.MESSAGE_DURATION;
         });
-        this.musicButton = new Button(sketch, cx + 50, cy + 105, 50, 50, 'M', () => {
+        this.musicButton = new Button(sketch, cx - 100, cy + 255, 200, 50, 'Music', () => {
          this.musicActive = !this.musicActive;
          window.gameState.settings.isMusic = this.musicActive;
             if(!this.musicActive) {
@@ -56,6 +59,7 @@ class MenuScene {
         //displaying the buttons
         this.startButton.display();
         this.introButton.display();
+        this.instructionButton.display();
         this.soundButton.display();
         this.musicButton.display();
 
@@ -73,6 +77,7 @@ class MenuScene {
     mousePressed() {
         this.startButton.wasIClicked();
         this.introButton.wasIClicked();
+        this.instructionButton.wasIClicked();
         this.soundButton.wasIClicked();
         this.musicButton.wasIClicked();
     }
