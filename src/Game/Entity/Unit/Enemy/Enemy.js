@@ -1,8 +1,11 @@
 import Unit from "../Unit.js";
 
 export default class Enemy extends Unit {
-    constructor(id, name, position, speed, hitbox, hp, mp, events, waypoint, damage, gold) {
-        super(id, position, speed, hitbox, hp, mp);
+    constructor(
+        id, name, position, speed, hitbox, hp, mp,
+        events, waypoint, damage, gold, difficulty
+    ) {
+        super(id, position, speed + difficulty*0.1, hitbox, hp, mp);
         this.name = String(name);
         this.finished = false;
         this.events = events;
@@ -14,6 +17,7 @@ export default class Enemy extends Unit {
         this.gold = Number(gold);
         this.diecry = null;
         this.onReachedObjective = null;
+        this.armor = difficulty;
     }
 
     checkReachedObjective() {

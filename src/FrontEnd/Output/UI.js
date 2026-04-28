@@ -3,7 +3,6 @@ import { loadUIImage } from "../Asset/AssetSheet.js";
 
 // TODO: Connect this to Menu.
 
-const HERO = 'Architect';
 const WORLD = 'Forest';
 const SKILL_ICON_SLOT_BY_NAME = {
     'Ice Pick': 'A_1', 'Fire Ball': 'A_2', 'Stick': 'A_3',
@@ -24,9 +23,9 @@ const SKILL_ICON_SLOT_BY_NAME = {
 const SKILL_ORDER = ['Q', 'W', 'E', 'R', 'Max'];
 
 export default class UI {
-    constructor(layer, hero, world) {
+    constructor(layer, hero) {
         this.layer = layer;
-        this.art = loadUIImage(HERO, WORLD);
+        this.art = loadUIImage(hero, WORLD);
 
         this.font = this.loadFontAssets({
             number: 'FrontEnd/Assert/Font/Arial.ttf',
@@ -56,6 +55,10 @@ export default class UI {
             active: false,
             content: '',
         };
+        this.over = false;
+        this.win = null;
+        this.resultWindowMenuButtonBounds = null;
+        this.pauseWindowButtonBounds = null;
     }
 
     draw(state, mouse = null) {
@@ -77,6 +80,16 @@ export default class UI {
 
         if (this.showBook) {
             this.drawSkillBookWindow(state.hero);
+        }
+        if (state.flags?.paused && !this.over && !this.showBook) {
+            this.drawPauseWindow();
+        } else {
+            this.pauseWindowButtonBounds = null;
+        }
+        if (this.over) {
+            this.drawResultWindow(this.win);
+        } else {
+            this.resultWindowMenuButtonBounds = null;
         }
         this.drawSkillDetail(state.hero, mouse);
         this.drawToasts();
@@ -611,6 +624,118 @@ export default class UI {
         layer.pop();
     }
 
+    drawResultWindow(win) {
+        const layer = this.layer;
+        const width = 1280;
+        const height = 720;
+        const x = 160;
+        const y = 90;
+
+        const portrait = win ? this.art.profile.win : this.art.profile.lose;
+        this.drawPanelArtwork(portrait, x, y, width, height, 0);
+
+        layer.fill(0xa5, 0x2a, 0x2a, 225);
+        layer.noStroke();
+        const buttonX = x + width / 2 - 80;
+        const buttonY = y + height / 2 - 45;
+        const buttonWidth = 160;
+        const buttonHeight = 90;
+        this.resultWindowMenuButtonBounds = {
+            x: buttonX,
+            y: buttonY,
+            width: buttonWidth,
+            height: buttonHeight,
+        };
+        layer.rect(buttonX, buttonY, buttonWidth, buttonHeight);
+        View.text(layer, x + width / 2, y + height / 2, 'Menu', 40, 255, true, 0, 0, 'Arial', 4);
+    }
+
+    drawPauseWindow() {
+        const layer = this.layer;
+        const x = 640;
+        const y = 300;
+        const width = 320;
+        const height = 300;
+        const buttonWidth = 240;
+        const buttonHeight = 56;
+        const buttonX = x + (width - buttonWidth) / 2;
+        const topButtonY = y + 72;
+        const buttonGap = 24;
+
+        const portrait = this.art.profile.win;
+        this.drawPanelArtwork(portrait, x, y, width, height, 0);
+
+        layer.push();
+        layer.noStroke();
+        layer.fill(12, 18, 28, 230);
+        layer.rect(x, y, width, height, 18);
+
+        View.text(layer, x + width / 2, y + 34, 'Paused', 30, 255, true, 0, 0, 'Arial', 3);
+
+        const buttons = [
+            { id: 'main_menu', y: topButtonY, label: 'Main Menu' },
+            { id: 'toggle_sound', y: topButtonY + buttonHeight + buttonGap, label: window.gameState?.settings?.isSound ? 'Sound: On' : 'Sound: Off' },
+            { id: 'toggle_music', y: topButtonY + (buttonHeight + buttonGap) * 2, label: window.gameState?.settings?.isMusic ? 'Music: On' : 'Music: Off' },
+        ];
+        this.pauseWindowButtonBounds = Object.fromEntries(
+            buttons.map((button) => [
+                button.id,
+                { x: buttonX, y: button.y, width: buttonWidth, height: buttonHeight },
+            ])
+        );
+
+        for (const button of buttons) {
+            layer.fill(165, 42, 42, 225);
+            layer.rect(buttonX, button.y, buttonWidth, buttonHeight, 14);
+            View.text(
+                layer,
+                x + width / 2,
+                button.y + buttonHeight / 2,
+                button.label,
+                24,
+                255,
+                true,
+                0,
+                0,
+                'Arial',
+                3
+            );
+        }
+
+        layer.pop();
+    }
+
+    handleResultWindowClick(mouse) {
+        if (!this.over || !mouse || !this.resultWindowMenuButtonBounds) {
+            return false;
+        }
+
+        const { x, y, width, height } = this.resultWindowMenuButtonBounds;
+        return mouse.x >= x
+            && mouse.x <= x + width
+            && mouse.y >= y
+            && mouse.y <= y + height;
+    }
+
+    handlePauseWindowClick(mouse) {
+        if (!mouse || !this.pauseWindowButtonBounds || this.over) {
+            return null;
+        }
+
+        for (const [action, bounds] of Object.entries(this.pauseWindowButtonBounds)) {
+            if (
+                mouse.x >= bounds.x
+                && mouse.x <= bounds.x + bounds.width
+                && mouse.y >= bounds.y
+                && mouse.y <= bounds.y + bounds.height
+            ) {
+                return action;
+            }
+        }
+
+        return null;
+    }
+
     handleSkillClick(hero, mouse, postCommand) {
         if (!this.showBook || !hero || !mouse || typeof postCommand !== 'function') {
             return false;
@@ -1055,5 +1180,11 @@ export default class UI {
         }
 
         return mapLike?.[key];
+    }
+
+    getResult(win) {
+        this.over = true;
+        this.win = win;
+        console.log('State changed');
     }
 }

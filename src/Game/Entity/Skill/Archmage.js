@@ -7,7 +7,7 @@ export class IcePick extends Skill {
         super(
             'Ice Pick', 'Ice',
             'Lyra\'Gotha generate a ice pick that moving towards a enemy and deals damage.',
-            10, 0, 150, events, 'Unit', false, 200
+            40, 0, 150, events, 'Unit', false, 200
         );
     }
 
@@ -55,7 +55,7 @@ export class StormBlast extends Skill {
         super(
             'Storm Blast', 'Ice',
             'Lyra\'Gotha manipulates air currents in an area, summoning a storm that damages enemies in it.',
-            450, 20, 200, events, 'Point', false, 300
+            450, 90, 200, events, 'Point', false, 300
         );
         this.hitbox = 70;
     }
@@ -110,7 +110,7 @@ export class FrostShield extends Skill {
             'Lyra\'Gotha’ summons the surrounding cold air, casting a frost shield around herself to reduce ' +
             'damage taken. While the shield is active, it casts frost magic every second on nearby enemy units, ' +
             'dealing minor damage and slowing them.',
-            600, 50, 0, events, null, false, 300
+            600, 100, 0, events, null, false, 300
         );
         this.duration = 300;
         this.hitbox = 150;
@@ -194,7 +194,7 @@ export class Chakra extends Skill {
     constructor(events) {
         super(
             'Chakra', 'Ice', 'Lyra\'Gotha channels her inner energy, restoring a portion of her mana.',
-            420, 0, 0, events, null, false, 300
+            900, 0, 0, events, null, false, 300
         )
     }
 
@@ -220,7 +220,7 @@ export class Blizzard extends Skill {
             'Blizzard', 'Ice',
             'Lyra\'Gotha controls all ice elements across the entire map, summoning a Blizzard that Freezes ' +
             'all enemies. During the chanting, the hero cannot be affected by negative effects or perform other actions.',
-            30, 80, 0, events, null, false, 400
+            1800, 200, 0, events, null, false, 400
         );
         this.castDuration = 60;
         this.size = { width: 1280, height: 720 };
@@ -328,7 +328,7 @@ export class FireBall extends Skill {
         super(
             'Fire Ball', 'Fire',
             'Lyra\'Gotha generate a fire ball that moving in straight.',
-            10, 0, 200, events, 'Point', false, 200
+            30, 0, 200, events, 'Point', false, 200
         );
         this.baseDamage = 15;
         this.upgradedDamage = 20;
@@ -388,7 +388,7 @@ export class FlameWave extends Skill {
             'Flame Wave', 'Fire',
             'Lyra\'Gotha Channeled the dragon\'s breath, unleashing a wave of flames that damage and ignite ' +
             'all the enemies caught in its path.',
-            18, 20, 260, events, 'Point', false, 300
+            360, 50, 260, events, 'Point', false, 300
         );
         this.speed = 8;
         this.hitbox = 35;
@@ -459,7 +459,7 @@ export class Burning extends Skill {
         super(
             'Burning', 'Fire',
             'Ignite the air around Lyra\'Gotha, burning nearby enemies while increasing her movement speed.',
-            60, 20, 0, events, null, false, 300
+            480, 90, 0, events, null, false, 300
         );
         this.duration = 120;
         this.hitbox = 100;
@@ -513,7 +513,7 @@ export class ViperGuardian extends Skill {
         super(
             'Viper Guardian', 'Fire',
             'Summon a guardian that automatically attacks the nearest enemy in range.',
-            30, 35, 250, events, 'Point', false, 300
+            660, 120, 250, events, 'Point', false, 300
         );
         this.duration = 600;
         this.attackRange = 100;
@@ -572,7 +572,7 @@ export class Meteorite extends Skill {
         super(
             'Meteorite', 'Fire',
             'Summon a meteorite at the target point after a short delay, damaging and stunning enemies on impact.',
-            24, 40, 250, events, 'Point', false, 400
+            2100, 200, 250, events, 'Point', false, 400
         );
         this.delay = 30;
         this.hitbox = 35;
@@ -821,9 +821,9 @@ export class Lightning extends Skill {
         super(
             'Lightning', 'Lightning',
             'Lyra\'Gotha summons a lightning strike that hits a area, dealing magic damage and apply a static field buff to enemies hit.',
-            10, 0, 200, events, 'Point', false, 200
+            90, 0, 200, events, 'Point', false, 200
         );
-        this.hitbox = 70;
+        this.hitbox = 40;
         this.damage = 15;
         this.staticFieldDuration = 120;
     }
@@ -882,7 +882,7 @@ export class ThunderCloud extends Skill {
         super(
             'Thunder Cloud', 'Lightning',
             'Summon a thunder cloud that slowly drifts forward, periodically damaging enemies and applying Static Field.',
-            20, 30, 240, events, 'Point', false, 300
+            600, 100, 240, events, 'Point', false, 300
         );
         this.speed = 1.5;
         this.hitbox = 80;
@@ -945,7 +945,7 @@ export class ChainLightning extends Skill {
         super(
             'Chain Lightning', 'Lightning',
             'Strike a target with lightning, then chain to nearby enemies, damaging and applying Static Field to each one hit.',
-            16, 25, 220, events, 'Unit', false, 300
+            60, 60, 220, events, 'Unit', false, 300
         );
         this.damage = 14;
         this.maxTargets = 4;
@@ -1018,7 +1018,7 @@ export class BallLightning extends Skill {
         super(
             'Ball Lightning', 'Lightning',
             'Transform into a ball of lightning, gaining speed, becoming immune to damage, and shocking enemies you pass through.',
-            24, 35, 0, events, null, false, 300
+            900, 140, 0, events, null, false, 300
         );
         this.duration = 120;
         this.damage = 18;
@@ -1113,7 +1113,7 @@ export class StaticExplosion extends Skill {
         super(
             'Static Explosion', 'Lightning',
             'Detonate Static Field on all affected enemies, dealing damage and stunning them.',
-            30, 40, 0, events, null, false, 400
+            30, 100, 0, events, null, false, 400
         );
         this.damage = 20;
         this.stunDuration = 45;

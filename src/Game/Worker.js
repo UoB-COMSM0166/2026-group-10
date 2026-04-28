@@ -1,10 +1,12 @@
 import GameManager from './GameManager.js';
 
-const TICK_RATE = 60;
-const TICK_MS = 1000 / TICK_RATE;
+const DEFAULT_TICK_RATE = 60;
+const MIN_TICK_RATE = 30;
+const MAX_TICK_RATE = 120;
 
 let game = null;
 let loopHandle = null;
+let currentTickRate = DEFAULT_TICK_RATE;
 let heroTargetingState = createHeroTargetingState();
 let lastGameConfig = null;
 
@@ -178,6 +180,7 @@ function buildEntityState(entity) {
         id: entity.id,
         category: entity.category ?? 'Entity',
         position: clonePosition(entity.position),
+        targetPosition: clonePosition(entity?.target?.position),
         velocity: entity.velocity ? {
             vx: Number(entity.velocity.vx) || 0,
             vy: Number(entity.velocity.vy) || 0,
@@ -250,8 +253,6 @@ function buildStateSnapshot() {
         enemySkillEntities: [...game.enemySkillEntities.values()].map((entity) => buildEntityState(entity)),
         flags: {
             started: game.started,
-            gameOver: game.gameOver,
-            gameWon: game.gameWon,
             paused: loopHandle === null,
         },
     };
@@ -393,6 +394,7 @@ function createGame(payload = {}) {
     const hero = String(payload.hero ?? '').trim();
     const category = payload.category ?? null;
     const world = String(payload.world ?? '').trim();
+    const difficulty = normalizeDifficulty(payload.difficulty);
 
     if (!hero) {
         return { ok: false, code: 400, message: 'Hero is required.' };
@@ -406,15 +408,16 @@ function createGame(payload = {}) {
     clearHeroTargetingState();
 
     try {
-        game = new GameManager(hero, category, world);
-        lastGameConfig = { hero, category, world };
+        game = new GameManager(hero, category, world, difficulty);
+        game.clock.setTickRate?.(currentTickRate);
+        lastGameConfig = { hero, category, world, difficulty };
         registerEventBridge();
         emitState();
         return {
             ok: true,
             code: 200,
             message: 'Game created.',
-            data: { hero, category, world },
+            data: { hero, category, world, difficulty },
         };
     } catch (error) {
         game = null;
@@ -463,7 +466,7 @@ function startLoop() {
         game.startWave();
     }
 
-    loopHandle = setInterval(tick, TICK_MS);
+    loopHandle = setInterval(tick, 1000 / currentTickRate);
     return true;
 }
 
@@ -719,12 +722,20 @@ function armHeroSkill(key, skill) {
     });
 }
 
-function handleGameCommand(command, requestId) {
-    if (!requireGame(command, requestId)) {
-        return;
-    }
-
+function handleGameCommand(command, requestId, payload = {}) {
     if (command === 'game:start') {
+        const hero = String(payload.hero ?? '').trim();
+        const world = String(payload.world ?? '').trim();
+        if (hero || world) {
+            const result = createGame(payload);
+            if (!result.ok) {
+                emitResult(command, requestId, result.code, result.message, result.data ?? null);
+                return;
+            }
+        } else if (!requireGame(command, requestId)) {
+            return;
+        }
+
         if (loopHandle !== null) {
             emitResult(command, requestId, 200, 'Game is already running.');
             return;
@@ -733,6 +744,10 @@ function handleGameCommand(command, requestId) {
         startLoop();
         emitState();
         emitResult(command, requestId, 200, 'Game started.');
+        return;
+    }
+
+    if (!requireGame(command, requestId)) {
         return;
     }
 
@@ -1093,12 +1108,13 @@ function clearEnemiesWithoutEvents() {
     }
 
     game.enemies.clear();
+    game.enemySkillEntities.clear();
     game.boss = null;
     return enemyIds.length;
 }
 
 function parseCheatMoneyAmount(command, payload = {}) {
-    const payloadAmount = Number(payload.amount);
+    const payloadAmount = Number(payload?.amount);
     if (Number.isFinite(payloadAmount)) {
         return payloadAmount;
     }
@@ -1110,6 +1126,86 @@ function parseCheatMoneyAmount(command, payload = {}) {
 
     const parsedAmount = Number(match[1]);
     return Number.isFinite(parsedAmount) ? parsedAmount : null;
+}
+
+function normalizeHeroName(hero) {
+    const normalized = String(hero ?? '').trim().toLowerCase();
+    const aliases = {
+        architect: 'Architect',
+        engineer: 'Architect',
+        ranger: 'Architect',
+        warrior: 'Warrior',
+        archmage: 'Archmage',
+        mage: 'Archmage',
+    };
+
+    return aliases[normalized] ?? '';
+}
+
+function parseCheatChangeHero(command) {
+    const match = String(command).match(/^cheat:change\(([^)]+)\)$/i);
+    if (!match) {
+        return '';
+    }
+
+    return normalizeHeroName(match[1]);
+}
+
+function parseCheatDifficulty(command, payload = {}) {
+    const payloadDifficulty = payload?.difficulty ?? payload?.value ?? payload?.amount;
+    if (payloadDifficulty !== undefined && payloadDifficulty !== null && payloadDifficulty !== '') {
+        const normalized = normalizeDifficulty(payloadDifficulty);
+        return Number.isFinite(normalized) ? normalized : null;
+    }
+
+    const match = String(command).match(/^cheat:difficulty\(([-+]?\d+(?:\.\d+)?)\)$/i);
+    if (!match) {
+        return null;
+    }
+
+    return normalizeDifficulty(match[1]);
+}
+
+function parseCheatTickRate(command, payload = {}) {
+    const payloadTickRate = payload?.tickRate ?? payload?.value ?? payload?.amount;
+    if (payloadTickRate !== undefined && payloadTickRate !== null && payloadTickRate !== '') {
+        const parsedTickRate = Number(payloadTickRate);
+        return Number.isFinite(parsedTickRate) ? parsedTickRate : null;
+    }
+
+    const match = String(command).match(/^cheat:tickrate\(([-+]?\d+(?:\.\d+)?)\)$/i);
+    if (!match) {
+        return null;
+    }
+
+    const parsedTickRate = Number(match[1]);
+    return Number.isFinite(parsedTickRate) ? parsedTickRate : null;
+}
+
+function normalizeDifficulty(value) {
+    const normalized = String(value ?? '').trim().toLowerCase();
+    switch (normalized) {
+        case 'hard':
+        case '2':
+            return 2;
+        case 'medium':
+        case '1':
+            return 1;
+        case 'easy':
+        case '0':
+        default:
+            return 0;
+    }
+}
+
+function applyTickRate(nextTickRate) {
+    currentTickRate = nextTickRate;
+    game?.clock?.setTickRate?.(nextTickRate);
+
+    if (loopHandle !== null) {
+        clearInterval(loopHandle);
+        loopHandle = setInterval(tick, 1000 / currentTickRate);
+    }
 }
 
 function resetCurrentGame() {
@@ -1126,7 +1222,13 @@ function resetCurrentGame() {
     clearHeroTargetingState();
 
     try {
-        game = new GameManager(lastGameConfig.hero, lastGameConfig.category, lastGameConfig.world);
+        game = new GameManager(
+            lastGameConfig.hero,
+            lastGameConfig.category,
+            lastGameConfig.world,
+            lastGameConfig.difficulty
+        );
+        game.clock.setTickRate?.(currentTickRate);
         registerEventBridge();
         if (wasRunning) {
             startLoop();
@@ -1224,6 +1326,63 @@ function handleCheatCommand(command, requestId, payload = {}) {
         return;
     }
 
+    const nextTickRate = parseCheatTickRate(command, payload);
+    if (nextTickRate !== null) {
+        if (nextTickRate < MIN_TICK_RATE || nextTickRate > MAX_TICK_RATE) {
+            emitResult(
+                command,
+                requestId,
+                400,
+                `Tick rate must be between ${MIN_TICK_RATE} and ${MAX_TICK_RATE}.`
+            );
+            return;
+        }
+
+        applyTickRate(nextTickRate);
+        emitState();
+        emitResult(command, requestId, 200, `Tick rate changed to ${nextTickRate}.`, {
+            tickRate: nextTickRate,
+        });
+        return;
+    }
+
+    const nextDifficulty = parseCheatDifficulty(command, payload);
+    if (nextDifficulty !== null) {
+        game.changeDifficulty(nextDifficulty);
+        if (lastGameConfig) {
+            lastGameConfig.difficulty = nextDifficulty;
+        }
+        emitState();
+        emitResult(command, requestId, 200, `Difficulty changed to ${nextDifficulty}.`, {
+            difficulty: nextDifficulty,
+            affects: 'future_spawns',
+        });
+        return;
+    }
+
+    const nextHero = parseCheatChangeHero(command);
+    if (nextHero) {
+        try {
+            const changedHero = game.changeHero(nextHero);
+            if (lastGameConfig) {
+                lastGameConfig.hero = nextHero;
+            }
+            clearHeroTargetingState();
+            emitState();
+            emitResult(command, requestId, 200, `Hero changed to ${nextHero}.`, {
+                hero: changedHero?.id ?? nextHero,
+            });
+        } catch (error) {
+            emitResult(
+                command,
+                requestId,
+                400,
+                error instanceof Error ? error.message : 'Failed to change hero.'
+            );
+        }
+        return;
+    }
+
     emitResult(command, requestId, 400, `Unknown cheat command: ${command}`);
 }
 
@@ -1289,7 +1448,7 @@ self.onmessage = (event) => {
         normalizedCommand === 'game:pause' ||
         normalizedCommand === 'game:resume'
     ) {
-        handleGameCommand(normalizedCommand, requestId);
+        handleGameCommand(normalizedCommand, requestId, payload ?? {});
         return;
     }
 

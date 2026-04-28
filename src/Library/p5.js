@@ -1449,7 +1449,7 @@ var p5 = (function () {
      * <a href="#/p5/translate">translate()</a>,
      * <a href="#/p5/rotate">rotate()</a>, and
      * <a href="#/p5/scale">scale()</a>
-     * use matrix-vector multiplication behind the scenes. A table of numbers,
+     * use matrix-vector multiplication behind the Scenes. A table of numbers,
      * called a matrix, encodes each transformation. The values in the matrix
      * then multiply each point on the canvas, which is represented by a vector.
      *
@@ -47638,7 +47638,7 @@ var p5 = (function () {
      *
      * In a perspective projection, shapes that are further from the camera appear
      * smaller than shapes that are near the camera. This technique, called
-     * foreshortening, creates realistic 3D scenes. It’s applied by default in new
+     * foreshortening, creates realistic 3D Scenes. It’s applied by default in new
      * `p5.Camera` objects.
      *
      * `myCamera.perspective()` changes the camera’s perspective by changing its
@@ -48047,7 +48047,7 @@ var p5 = (function () {
      *
      * In a frustum projection, shapes that are further from the camera appear
      * smaller than shapes that are near the camera. This technique, called
-     * foreshortening, creates realistic 3D scenes.
+     * foreshortening, creates realistic 3D Scenes.
      *
      * `myCamera.frustum()` changes the camera’s perspective by changing its
      * viewing frustum. The frustum is the volume of space that’s visible to the
@@ -49816,7 +49816,7 @@ var p5 = (function () {
      *
      * In a perspective projection, shapes that are further from the camera appear
      * smaller than shapes that are near the camera. This technique, called
-     * foreshortening, creates realistic 3D scenes. It’s applied by default in
+     * foreshortening, creates realistic 3D Scenes. It’s applied by default in
      * WebGL mode.
      *
      * `perspective()` changes the camera’s perspective by changing its viewing
@@ -50183,7 +50183,7 @@ var p5 = (function () {
      *
      * In a frustum projection, shapes that are further from the camera appear
      * smaller than shapes that are near the camera. This technique, called
-     * foreshortening, creates realistic 3D scenes.
+     * foreshortening, creates realistic 3D Scenes.
      *
      * `frustum()` changes the default camera’s perspective by changing its
      * viewing frustum. The frustum is the volume of space that’s visible to the
@@ -66844,7 +66844,7 @@ var p5 = (function () {
      *
      * Each `p5.Graphics` object provides a dedicated drawing surface called a
      * *graphics buffer*. Graphics buffers are helpful when drawing should happen
-     * offscreen. For example, separate scenes can be drawn offscreen and
+     * offscreen. For example, separate Scenes can be drawn offscreen and
      * displayed only when needed.
      *
      * `p5.Graphics` objects have nearly all the drawing features of the main
@@ -72104,7 +72104,7 @@ var p5 = (function () {
    * ```
    *
    * This is often called the "draw loop" because p5.js calls the code in
-   * `draw()` in a loop behind the scenes. By default, `draw()` tries to run
+   * `draw()` in a loop behind the Scenes. By default, `draw()` tries to run
    * 60 times per second. The actual rate depends on many factors. The
    * drawing rate, called the "frame rate", can be controlled by calling
    * <a href="#/p5/frameRate">frameRate()</a>. The number of times `draw()`
@@ -72194,7 +72194,7 @@ var p5 = (function () {
    *
    * The <a href="https://github.com/processing/p5.js/blob/main/contributor_docs/friendly_error_system.md" target="_blank">FES</a>
    * can cause sketches to draw slowly because it does extra work behind the
-   * scenes. For example, the FES checks the arguments passed to functions,
+   * Scenes. For example, the FES checks the arguments passed to functions,
    * which takes time to process. Disabling the FES can significantly improve
    * performance by turning off these checks.
    *

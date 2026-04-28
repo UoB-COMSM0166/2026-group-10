@@ -1,6 +1,6 @@
 import Skill from './Skill.js';
 import Buff from './Buff.js';
-import { Tower } from './SkillEntity.js';
+import { Aura, Tower } from './SkillEntity.js';
 
 const MAX_ACTIVE_TOWERS = 9;
 
@@ -29,8 +29,8 @@ function failTowerPlacement() {
 }
 
 class FlameTowerEntity extends Tower {
-    constructor(id, position, hitbox, events, duration, attackRange, damage, armorReduction, source = null) {
-        super(id, position, hitbox, events, duration, attackRange, 1, 0, 0, damage, source);
+    constructor(id, position, hitbox, events, duration, attackRange, attackInterval, damage, armorReduction, source = null) {
+        super(id, position, hitbox, events, duration, attackRange, attackInterval, 0, 0, damage, source);
         this.armorReduction = Number(armorReduction);
         this.projectileName = 'flame';
     }
@@ -57,8 +57,11 @@ class FlameTowerEntity extends Tower {
         }
 
         const target = this.updateTarget(enemies, this.attackRange, this.attackRange);
-        if (target) {
+        if (this.attackCooldown > 0) {
+            this.attackCooldown -= 1;
+        } else if (target) {
             this.attack(target);
+            this.attackCooldown = this.attackInterval;
         }
 
         this.duration -= 1;
@@ -87,28 +90,6 @@ class FrostTowerEntity extends Tower {
         );
     }
 
-    pulse(enemies) {
-        if (!(enemies instanceof Map)) {
-            return;
-        }
-
-        const slowBuff = this.createSlowBuff();
-        for (const enemy of enemies.values()) {
-            if (!enemy?.alive || !enemy.alive()) {
-                continue;
-            }
-
-            if (this.getDistance(enemy.position) > this.auraRadius) {
-                continue;
-            }
-
-            enemy.takeDamage(this.damage, this.source);
-            if (enemy?.alive && enemy.alive()) {
-                enemy.addBuff(slowBuff);
-            }
-        }
-    }
-
     update(_, enemies) {
         if (this.finished) {
             return;
@@ -117,13 +98,6 @@ class FrostTowerEntity extends Tower {
         if (this.duration <= 0) {
             this.finished = true;
             return;
-        }
-
-        if (this.attackCooldown > 0) {
-            this.attackCooldown -= 1;
-        } else {
-            this.pulse(enemies);
-            this.attackCooldown = this.attackInterval;
         }
 
         this.duration -= 1;
@@ -140,8 +114,8 @@ export class ArrowTower extends Skill {
         this.duration = Number.MAX_SAFE_INTEGER;
         this.attackRange = 150;
         this.attackInterval = 40;
-        this.damage = 15;
-        this.towerHitbox = 12;
+        this.damage = 7;
+        this.towerHitbox = 20;
         this.arrowSpeed = 8;
         this.arrowHitbox = 4;
     }
@@ -171,7 +145,7 @@ export class ArrowTower extends Skill {
             caster,
             this.attackRange,
             false,
-            'arrow',
+            'flying_arrow',
             true
         );
 
@@ -189,9 +163,9 @@ export class RockTower extends Skill {
         );
         this.duration = Number.MAX_SAFE_INTEGER;
         this.attackRange = 130;
-        this.attackInterval = 90;
-        this.damage = 60;
-        this.towerHitbox = 12;
+        this.attackInterval = 120;
+        this.damage = 20;
+        this.towerHitbox = 20;
         this.rockSpeed = 2;
         this.rockHitbox = 30;
         this.rockMaxDistance = 130;
@@ -222,7 +196,7 @@ export class RockTower extends Skill {
             caster,
             this.rockMaxDistance,
             true,
-            'rock',
+            'rolling_rock',
             false
         );
 
@@ -240,9 +214,10 @@ export class FlameTower extends Skill {
         );
         this.duration = Number.MAX_SAFE_INTEGER;
         this.attackRange = 160;
-        this.damage = 0.3;
-        this.armorReduction = 0.1;
-        this.towerHitbox = 12;
+        this.attackInterval = 10;
+        this.damage = 0.5;
+        this.armorReduction = 0.3;
+        this.towerHitbox = 20;
     }
 
     casted(target, caster, _, tick) {
@@ -263,6 +238,7 @@ export class FlameTower extends Skill {
             this.events,
             this.duration,
             this.attackRange,
+            this.attackInterval,
             this.damage,
             this.armorReduction,
             caster
@@ -286,7 +262,7 @@ export class FrostTower extends Skill {
         this.damage = 5;
         this.slowRatio = 0.3;
         this.slowDuration = 90;
-        this.towerHitbox = 12;
+        this.towerHitbox = 20;
     }
 
     casted(target, caster, _, tick) {
@@ -313,8 +289,28 @@ export class FrostTower extends Skill {
             this.slowDuration,
             caster
         );
+        const aura = new Aura(
+            `${casterId}_frost_aura_${tick}`,
+            tower,
+            this.auraRadius,
+            this.damage,
+            null,
+            this.duration,
+            this.attackInterval
+        );
+        aura.hit = (unit) => {
+            if (!unit?.alive || !unit.alive()) {
+                return;
+            }
+
+            unit.takeDamage(this.damage, caster);
+            if (unit?.alive && unit.alive()) {
+                unit.addBuff(tower.createSlowBuff());
+            }
+        };
 
         this.events.emit('skill_entity:created', { entity: tower });
+        this.events.emit('skill_entity:created', { entity: aura });
         return { ok: true };
     }
 }
@@ -349,5 +345,22 @@ export class Poverty extends Skill {
             'Objective gains 0.1 HP regeneration per frame. When there are no defensive towers on the field and current MP is below 40, Architect commits suicide.',
             0, 0, 0, events, null, true
         );
+    }
+
+    updatePassive(hero) {
+        if (!hero?.alive || !hero.alive()) {
+            return;
+        }
+
+        if (getActiveTowerCount(this.events) > 0) {
+            return;
+        }
+
+        if ((Number(hero.currentMP) || 0) >= 40) {
+            return;
+        }
+
+        hero.currentHP = 0;
+        hero.die();
     }
 }

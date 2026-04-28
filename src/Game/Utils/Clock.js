@@ -56,6 +56,16 @@ export default class Clock {
         return this.tickCount;
     }
 
+    setTickRate(tickRate) {
+        const normalizedTickRate = Number(tickRate);
+        if (!Number.isFinite(normalizedTickRate) || normalizedTickRate <= 0) {
+            return false;
+        }
+
+        this.dt = 1000 / normalizedTickRate;
+        return true;
+    }
+
     resume() {
         this.paused = false;
         this.lastTime = performance.now();

@@ -20,6 +20,9 @@ export default class Render {
     static ENTITY_SPRITE_BASE_SIZE = 10;
     static HERO_SPRITE_SCALE = 0.3;
     static ENTITY_SPRITE_FOOT_OFFSET = 0.35;
+    static SKILL_LAYOUT_DIRECTION_COUNT = 8;
+    static SKILL_TOWER_FRAME_WIDTH = 64;
+    static SKILL_TOWER_FRAME_HEIGHT = 96;
 
     constructor(layer, hero = HERO, map = WORLD, enemies = ENEMIES) {
         this.layer = layer;
@@ -285,6 +288,11 @@ export default class Render {
     }
 
     renderSprite(sprite, entity, tick = 0, n = 0) {
+        if (this.findSpriteKeyByEntityId(entity, this.sprites?.skillEntity)) {
+            this.renderDirectionalSkillEntitySprite(sprite, entity, tick);
+            return;
+        }
+
         const scaleExponent = Number.isFinite(Number(n)) ? Number(n) : 0;
         const baseScaleMultiplier = entity?.isBoss
             ? Render.HERO_SPRITE_SCALE
@@ -309,6 +317,25 @@ export default class Render {
         sketch.stroke(color);
         sketch.strokeWeight(2);
         sketch.circle(entity.position.x, entity.position.y, hitbox * 2);
+        sketch.pop();
+    }
+
+    renderFlameTowerLockLine(entity) {
+        const sketch = this.layer;
+        if (!this.isFlameTowerEntity(entity) || !entity?.position || !entity?.targetPosition) {
+            return;
+        }
+
+        sketch.push();
+        sketch.noFill();
+        sketch.stroke('#ff8c1a');
+        sketch.strokeWeight(3);
+        sketch.line(
+            entity.position.x,
+            entity.position.y,
+            entity.targetPosition.x,
+            entity.targetPosition.y
+        );
         sketch.pop();
     }
 
@@ -382,7 +409,7 @@ export default class Render {
             }
 
             queue.push({
-                kind: 'skillEntity',
+                kind: 'enemySkillEntity',
                 entity,
                 color: '#ffb199',
             });
@@ -398,7 +425,6 @@ export default class Render {
     }
 
     renderQueueItem(item, tick = 0) {
-        const sketch = this.layer;
         const entity = item?.entity;
         if (!entity?.position) {
             return;
@@ -411,38 +437,40 @@ export default class Render {
 
         if (item.kind === 'hero') {
             this.renderBaseRing(entity);
-
-            if (!this.renderHeroSprite(entity, tick)) {
-                sketch.noStroke();
-                sketch.fill(entity.alive ? '#8cd3ff' : '#5f6f82');
-                sketch.circle(entity.position.x, entity.position.y, entity.hitbox);
-            }
+            this.renderHeroSprite(entity, tick);
             return;
         }
 
         if (item.kind === 'enemy') {
             this.renderBaseRing(entity);
-
-            if (!this.renderEntity(entity, tick, 0)) {
-                sketch.noStroke();
-                sketch.fill(this.getEnemyColor(entity.name));
-                sketch.circle(entity.position.x, entity.position.y, entity.hitbox * 2.1);
-            }
+            this.renderEntity(entity, tick, 0);
             return;
         }
 
         if (item.kind === 'skillEntity') {
-            sketch.noFill();
-            sketch.stroke(item.color);
-            sketch.strokeWeight(2);
+            this.renderFlameTowerLockLine(entity);
+            this.renderBaseRing(entity, item.color);
+            this.renderEntity(entity, tick);
+            return;
+        }
 
-            if (!this.renderEntity(entity, tick)) {
-                sketch.circle(entity.position.x, entity.position.y, entity.hitbox * 2);
-            }
+        if (item.kind === 'enemySkillEntity') {
+            this.renderBaseRing(entity, item.color);
+            this.renderEnemySkillEntity(entity);
         }
     }
 
     getSprite(entity) {
+        const enemySkillEntitySprite = this.getEnemySkillEntitySprite(entity);
+        if (enemySkillEntitySprite) {
+            return enemySkillEntitySprite;
+        }
+
+        const skillEntitySprite = this.getSkillEntitySprite(entity);
+        if (skillEntitySprite) {
+            return skillEntitySprite;
+        }
+
         const key = this.getSpriteKey(entity);
         if (!key) {
             return null;
@@ -452,7 +480,7 @@ export default class Render {
         return this.buildEnemySprite(image);
     }
 
-    getHeroSprite(hero) {
+    getHeroSprite() {
         return this.buildHeroSprite(this.sprites?.hero ?? null);
     }
 
@@ -460,9 +488,79 @@ export default class Render {
         return this.buildHeroDeathSprite(this.sprites?.death ?? null);
     }
 
+    getEnemySkillEntitySprite(entity) {
+        const key = this.findSpriteKeyByEntityId(entity, this.sprites?.enemySkillEntity);
+        if (!key) {
+            return null;
+        }
+
+        const image = this.sprites?.enemySkillEntity?.[key] ?? null;
+        return this.buildSkillEntitySprite(image, key);
+    }
+
+    renderEnemySkillEntity(entity) {
+        const key = this.findSpriteKeyByEntityId(entity, this.sprites?.enemySkillEntity);
+        if (!key) {
+            return false;
+        }
+
+        const image = this.sprites?.enemySkillEntity?.[key] ?? null;
+        const sketch = this.layer;
+        const hitbox = Number(entity?.hitbox) || 0;
+        if (!image?.complete || !entity?.position || hitbox <= 0) {
+            return false;
+        }
+
+        const drawWidth = hitbox * 2;
+        const drawHeight = hitbox * 2 * Render.WORLD_Y_SCALE;
+
+        sketch.push();
+        sketch.translate(entity.position.x, entity.position.y);
+        sketch.scale(1, 1 / Render.WORLD_Y_SCALE);
+        this.drawImage(
+            sketch,
+            image,
+            -drawWidth / 2,
+            -drawHeight / 2,
+            drawWidth,
+            drawHeight
+        );
+        sketch.pop();
+        return true;
+    }
+
+    getSkillEntitySprite(entity) {
+        const key = this.findSpriteKeyByEntityId(entity, this.sprites?.skillEntity);
+        if (!key) {
+            return null;
+        }
+
+        const image = this.sprites?.skillEntity?.[key] ?? null;
+        return this.buildSkillEntitySprite(image, key);
+    }
+
     getSpriteKey(entity) {
         const key = entity?.name ?? entity?.category ?? '';
         return String(key).trim();
+    }
+
+    findSpriteKeyByEntityId(entity, spriteMap) {
+        const entityId = String(entity?.id ?? '').toLowerCase();
+        if (!entityId) {
+            return null;
+        }
+
+        for (const key of Object.keys(spriteMap ?? {})) {
+            if (entityId.includes(key)) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    isFlameTowerEntity(entity) {
+        return String(entity?.id ?? '').toLowerCase().includes('flame_tower');
     }
 
     buildEnemySprite(image) {
@@ -479,6 +577,52 @@ export default class Render {
             frameWidth: Math.floor((Number(image.width) || 0) / frameCount),
             frameHeight: Math.floor((Number(image.height) || 0) / Render.ENEMY_DIRECTION_COUNT),
         };
+    }
+
+    buildSkillEntitySprite(image, key) {
+        if (!image?.complete || !key) {
+            return null;
+        }
+
+        if (key === 'viper_guardian') {
+            return {
+                image,
+                frameCount: 1,
+                directionCount: Render.SKILL_LAYOUT_DIRECTION_COUNT,
+                frameWidth: 32,
+                frameHeight: 64,
+            };
+        }
+
+        if (this.isDirectionalSkillEntitySprite(key)) {
+            return {
+                image,
+                frameCount: 1,
+                directionCount: Render.SKILL_LAYOUT_DIRECTION_COUNT,
+                frameWidth: Math.floor(Number(image.width) || 0),
+                frameHeight: Math.floor((Number(image.height) || 0) / Render.SKILL_LAYOUT_DIRECTION_COUNT),
+            };
+        }
+
+        return {
+            image,
+            frameCount: 1,
+            directionCount: 1,
+            frameWidth: Render.SKILL_TOWER_FRAME_WIDTH,
+            frameHeight: Render.SKILL_TOWER_FRAME_HEIGHT,
+        };
+    }
+
+    isDirectionalSkillEntitySprite(key) {
+        return [
+            'flying_arrow',
+            'rolling_rock',
+            'fire_ball',
+            'flame_wave',
+            'viper_guardian',
+            'meteorite',
+            'lightning',
+        ].includes(key);
     }
 
     buildHeroSprite(image) {
@@ -550,6 +694,36 @@ export default class Render {
         );
     }
 
+    renderDirectionalSkillEntitySprite(sprite, entity, tick = 0) {
+        const hitbox = Number(entity?.hitbox) || 0;
+        if (!sprite?.image || !entity?.position || hitbox <= 0) {
+            return false;
+        }
+
+        const vx = Number(entity?.velocity?.vx) || 0;
+        const vy = Number(entity?.velocity?.vy) || 0;
+        const isMoving = vx !== 0 || vy !== 0;
+        const moveSpeed = Math.sqrt(vx * vx + vy * vy);
+        const animationFps = moveSpeed * 6 + 24;
+        const frameCount = Math.max(1, Number(sprite.frameCount) || 1);
+        const directionCount = Math.max(1, Number(sprite.directionCount) || 1);
+        const frameIndex = isMoving
+            ? Math.floor(((Number(tick) || 0) * animationFps) / Render.GAME_TICK_RATE) % frameCount
+            : 0;
+        const angle = Number.isFinite(Number(entity?.angle)) ? Number(entity.angle) : 0;
+        const directionRow = directionCount > 1
+            ? Math.max(0, Math.min(directionCount - 1, Math.floor(angle)))
+            : 0;
+
+        return this.renderAnimationSpriteAtWidth(
+            sprite,
+            entity,
+            frameIndex,
+            hitbox * 2,
+            directionRow
+        );
+    }
+
     renderAnimationSprite(sprite, entity, frameIndex = 0, scaleMultiplier = 1, hitboxMultiplier = 1, directionRow = 0) {
         const sketch = this.layer;
         const hitbox = (Number(entity?.hitbox) || 0) * hitboxMultiplier;
@@ -566,6 +740,40 @@ export default class Render {
         const aspectRatio = sprite.frameWidth > 0 ? sprite.frameHeight / sprite.frameWidth : 1;
         const drawHeight = drawWidth * aspectRatio;
         const feetY = hitbox * Render.ENTITY_SPRITE_FOOT_OFFSET;
+
+        sketch.push();
+        sketch.translate(entity.position.x, entity.position.y);
+        sketch.scale(1, 1 / Render.WORLD_Y_SCALE);
+        this.drawImage(
+            sketch,
+            sprite.image,
+            -drawWidth / 2,
+            -drawHeight + feetY,
+            drawWidth,
+            drawHeight,
+            clampedFrameIndex * sprite.frameWidth,
+            sourceY,
+            sprite.frameWidth,
+            sprite.frameHeight
+        );
+        sketch.pop();
+        return true;
+    }
+
+    renderAnimationSpriteAtWidth(sprite, entity, frameIndex = 0, drawWidth = 1, directionRow = 0) {
+        const sketch = this.layer;
+        if (!sprite?.image || !entity?.position || drawWidth <= 0) {
+            return false;
+        }
+
+        const frameCount = Math.max(1, Number(sprite.frameCount) || 1);
+        const directionCount = Math.max(1, Number(sprite.directionCount) || 1);
+        const clampedFrameIndex = Math.max(0, Math.min(frameCount - 1, Math.floor(Number(frameIndex) || 0)));
+        const clampedDirectionRow = Math.max(0, Math.min(directionCount - 1, Math.floor(Number(directionRow) || 0)));
+        const sourceY = clampedDirectionRow * sprite.frameHeight;
+        const aspectRatio = sprite.frameWidth > 0 ? sprite.frameHeight / sprite.frameWidth : 1;
+        const drawHeight = drawWidth * aspectRatio;
+        const feetY = (Number(entity?.hitbox) || 0) * Render.ENTITY_SPRITE_FOOT_OFFSET;
 
         sketch.push();
         sketch.translate(entity.position.x, entity.position.y);

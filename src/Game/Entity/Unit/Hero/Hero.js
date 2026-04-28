@@ -73,6 +73,7 @@ export default class Hero extends Unit {
 
     collectCoin(amount) {
         this.gold += Number(amount);
+        console.log(`${this.name} collected ${amount} gold. Total gold: ${this.gold}`);
     }
 
     takeDamage(amount, source = null, options = {}) {
@@ -280,6 +281,18 @@ export default class Hero extends Unit {
 
             if (skill?.passive && typeof skill.applyTo === 'function') {
                 skill.applyTo(this);
+            }
+        }
+    }
+
+    updatePassiveSkills() {
+        for (const [slot, skill] of this.skill.entries()) {
+            if (!this.isSkillSlotUnlocked(slot)) {
+                continue;
+            }
+
+            if (skill?.passive && typeof skill.updatePassive === 'function') {
+                skill.updatePassive(this);
             }
         }
     }

@@ -22,7 +22,7 @@ export default class Forest extends World {
             waves: [
                 new Wave(300, [
                     new Lane(
-                        'A', 'Zombie', 180, 20,
+                        'A', 'Zombie', 180, 10,
                         [
                             { x: 1000, y: 112.5 },
                             { x: 800, y: 225 },
@@ -31,7 +31,7 @@ export default class Forest extends World {
                         ]
                     ),
                     new Lane(
-                        'B', 'Boomer', 240, 17,
+                        'B', 'Boomer', 240, 13,
                         [
                             { x: 1400, y: 562.5 },
                             { x: 800, y: 450 },
@@ -41,7 +41,7 @@ export default class Forest extends World {
                 ]),
                 new Wave(120, [
                     new Lane(
-                        'A', 'Boomer', 240, 25,
+                        'A', 'Boomer', 240, 15,
                         [
                             { x: 1000, y: 112.5 },
                             { x: 800, y: 225 },
@@ -50,7 +50,7 @@ export default class Forest extends World {
                         ]
                     ),
                     new Lane(
-                        'B', 'Necromancer', 300, 18,
+                        'B', 'Necromancer', 300, 16,
                         [
                             { x: 1400, y: 562.5 },
                             { x: 800, y: 450 },

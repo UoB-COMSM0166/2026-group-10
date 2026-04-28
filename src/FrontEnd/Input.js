@@ -16,18 +16,6 @@ export default class Input {
     }
 
     bind(sketch) {
-        sketch.mousePressed = () => {
-            this.handleMousePressed(sketch);
-        };
-
-        sketch.mouseReleased = () => {
-            this.handleMouseReleased(sketch);
-        };
-
-        sketch.keyPressed = () => {
-            this.handleKeyPressed(sketch);
-        };
-
         sketch.keyTyped = () => {
             this.handleKeyTyped(sketch);
         };
@@ -231,7 +219,12 @@ export default class Input {
             return;
         }
 
-        this.postCommand(`cheat:${content}`);
+        const normalizedContent = String(content).trim().replace(/^cheat:/i, '');
+        if (!normalizedContent) {
+            return;
+        }
+
+        this.postCommand(`cheat:${normalizedContent}`);
     }
 
     syncCheatInputState() {

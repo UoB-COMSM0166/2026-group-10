@@ -5,10 +5,10 @@ import Buff from "../../Skill/Buff.js";
 import BossSkill from "../../Skill/BossSkill.js";
 
 export class Zombie extends Enemy {
-    constructor(id, position, events, waypoint, tick) {
+    constructor(id, position, events, waypoint, tick, difficulty = 0) {
         super(
             id, 'Zombie', position, 0.8, 10, 50, 0,
-            events, waypoint, 15, 10
+            events, waypoint, 15, 10, difficulty
         )
 
         const buff = new Buff(
@@ -29,7 +29,7 @@ export class Zombie extends Enemy {
                 this.position, 0, 20,
                 this.position,
                 (unit) => {
-                    unit.takeDamage(2, this);
+                    unit.takeDamage(9, this);
                     unit.addBuff(buff);
                 },
                 60,
@@ -44,10 +44,10 @@ export class Zombie extends Enemy {
 }
 
 export class Boomer extends Enemy {
-    constructor(id, position, events, waypoint, tick) {
+    constructor(id, position, events, waypoint, tick, difficulty = 0) {
         super(
             id, 'Boomer', position, 1, 9, 40, 0,
-            events, waypoint, 15, 10
+            events, waypoint, 15, 10, difficulty
         )
 
         this.diecry = () => {
@@ -74,20 +74,20 @@ export class Boomer extends Enemy {
 }
 
 export class Necromancer extends Enemy {
-    constructor(id, position, events, waypoint, tick) {
+    constructor(id, position, events, waypoint, tick, difficulty = 0) {
         super(
             id, 'Necromancer', position, 0.7, 10, 55, 0,
-            events, waypoint, 15, 15
+            events, waypoint, 15, 15, difficulty
         );
 
         this.aura = new Aura(
             `${this.id}_death_aura_${tick}`,
             this,
             40,
-            1,
+            9,
             null,
             Number.POSITIVE_INFINITY,
-            1
+            10
         );
 
         this.onReachedObjective = () => {

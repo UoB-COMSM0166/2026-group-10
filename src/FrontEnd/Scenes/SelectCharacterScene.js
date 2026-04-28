@@ -5,15 +5,17 @@ class SelectCharacterScene {
         this.currentSlide = 0;
         const cx = sketch.width / 2;
         this.slides = [{
-            text: "Elf Ranger",
-            image: characterImages[0],
-            narration: characterVoices[0],
+            heroClass: "Archmage",
+            text: "Lyra'Gotha the Archmage",
+            image: characterImages[2],
+            narration: characterVoices[2],
             x: cx - 150,
             y: 150,
             width: 300,
             height: 400
         }, {
-            text: "Human Warrior",
+            heroClass: "Warrior",
+            text: "Hugo 'Warrior' Fortis",
             image: characterImages[1],
             narration: characterVoices[1],
             x: cx - 150,
@@ -21,9 +23,10 @@ class SelectCharacterScene {
             width: 300,
             height: 400
         }, {
-            text: "Dracthyr Mage",
-            image: characterImages[2],
-            narration: characterVoices[2],
+            heroClass: "Architect",
+            text: "Rion 'Architect' Steelgear",
+            image: characterImages[0],
+            narration: characterVoices[0],
             x: cx - 150,
             y: 150,
             width: 300,
@@ -65,7 +68,7 @@ class SelectCharacterScene {
         })
 
         this.SelectCharacterButton = new Button(sketch, cx - 55, sketch.height - 130, 110, 50, "SELECT", () => {
-            window.gameState.selectedCharacter = this.slides[this.currentSlide].text;
+            window.gameState.selectedCharacter = this.slides[this.currentSlide].heroClass;
             //stop character narration
             this.slides[this.currentSlide].narration.stop();
             window.GameController.startGame();
@@ -109,7 +112,7 @@ class SelectCharacterScene {
         }
 
         //displaying text for current slide
-        this.sketch.fill('orange');
+        this.sketch.fill('#FFFFFF');
         this.sketch.textAlign(this.sketch.CENTER, this.sketch.CENTER);
         this.sketch.textSize(40);
         this.sketch.text(slide.text, this.sketch.width/2, this.sketch.height - 160);

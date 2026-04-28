@@ -18,20 +18,29 @@ const WORLD_REGISTRY = {
 };
 
 export default class GameManager {
-    constructor(hero, category, world) {
+    constructor(hero, category, world, difficulty = 0) {
         this.clock = new Clock();
         this.events = new EventEmitter();
 
         const WorldClass = WORLD_REGISTRY[world];
         const HeroClass = HERO_REGISTRY[hero];
+        const resolvedCategory = category ?? this.getDefaultHeroCategory(hero);
+        this.difficulty = Math.max(0, Number(difficulty) || 0);
 
-        this.world = new WorldClass();
+        if (!WorldClass) {
+            throw new Error(`Unknown world: ${world}`);
+        }
+        if (!HeroClass) {
+            throw new Error(`Unknown hero: ${hero}`);
+        }
+
+        this.world = new WorldClass(this.difficulty);
         const heroSpawn = this.world.getHeroSpawn();
         const objectiveConfig = this.world.buildObjectiveConfig();
         this.hero = new HeroClass(
             heroSpawn,
             this.events,
-            category,
+            resolvedCategory,
             this.clock
         );
         this.objective = new Objective(
@@ -185,14 +194,15 @@ export default class GameManager {
                 enemyId,
                 { x: spawnPoint.x, y: spawnPoint.y },
                 this.events,
-                this.hero
+                this.hero,
             )
             : new EnemyClass(
                 enemyId,
                 { x: spawnPoint.x, y: spawnPoint.y },
                 this.events,
                 lane.waypoint,
-                this.spawnCounter
+                this.spawnCounter,
+                this.difficulty
             );
 
         if (newEnemy instanceof Boss) {
@@ -275,6 +285,10 @@ export default class GameManager {
         this.hero.updateRegeneration();
         this.hero.updateCasting();
         this.hero.updateSkill();
+        this.hero.updatePassiveSkills();
+        if (!this.hero.alive()) {
+            return;
+        }
         this.hero.updateMovement();
     }
 
@@ -366,12 +380,70 @@ export default class GameManager {
         }
     }
 
+    getDefaultHeroCategory(hero) {
+        switch (hero) {
+            case 'Archmage':
+                return 'Ice';
+            case 'Warrior':
+                return 'Long Sword';
+            case 'Architect':
+            default:
+                return null;
+        }
+    }
+
+    replaceHeroReferences(previousHero, nextHero) {
+        if (!previousHero || !nextHero) {
+            return;
+        }
+
+        const collections = [
+            this.enemies,
+            this.skillEntities,
+            this.enemySkillEntities,
+            this.alliedDecoys,
+        ];
+
+        for (const collection of collections) {
+            for (const entity of collection.values()) {
+                if (entity?.target === previousHero) {
+                    entity.target = nextHero;
+                }
+            }
+        }
+
+        if (this.boss?.target === previousHero) {
+            this.boss.target = nextHero;
+        }
+    }
+
     changeHero(hero) {
-        const category = (hero === 'Archmage') ? 'Ice' : 'Long Sword';
-
         const HeroClass = HERO_REGISTRY[hero];
-        this.hero = new HeroClass(
+        if (!HeroClass) {
+            throw new Error(`Unknown hero: ${hero}`);
+        }
 
-        )
+        const previousHero = this.hero;
+        const category = this.getDefaultHeroCategory(hero);
+        const preservedGold = Number(previousHero?.gold) || 0;
+
+        this.hero = new HeroClass(
+            this.world.getHeroSpawn(),
+            this.events,
+            category,
+            this.clock
+        );
+        this.hero.gold = preservedGold;
+
+        if (previousHero?.id) {
+            this.units.delete(previousHero.id);
+        }
+        this.units.set(this.hero.id, this.hero);
+        this.replaceHeroReferences(previousHero, this.hero);
+        return this.hero;
+    }
+
+    changeDifficulty(difficulty) {
+        this.difficulty = Math.max(0, Number(difficulty) || 0);
     }
 }

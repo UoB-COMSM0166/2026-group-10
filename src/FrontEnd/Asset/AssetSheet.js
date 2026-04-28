@@ -15,14 +15,41 @@ export function loadSpriteImage(hero, enemies, map) {
         enemySprites[enemy] = `src/FrontEnd/Asset/Image/${map}/${enemy}_Layout.png`
     }
 
-    const load = loadImageAssets(enemySprites);
+    const enemySkillEntity = {};
+    if (map === 'Forest') {
+        enemySkillEntity['diecry_poison'] = `src/FrontEnd/Asset/Image/${map}/Poison.png`;
+        enemySkillEntity['diecry_explosion'] = `src/FrontEnd/Asset/Image/${map}/Explosion.png`;
+    }
+
+
+    const skillEntity = {};
+
+    switch (hero) {
+        case 'Architect':
+            skillEntity.arrow_tower = `src/FrontEnd/Asset/Image/Architect/ArrowTower.png`;
+            skillEntity.rock_tower = `src/FrontEnd/Asset/Image/Architect/RockTower.png`;
+            skillEntity.flame_tower = `src/FrontEnd/Asset/Image/Architect/FlameTower.png`;
+            skillEntity.frost_tower = `src/FrontEnd/Asset/Image/Architect/FrostTower.png`;
+            skillEntity.flying_arrow = `src/FrontEnd/Asset/Image/Architect/Arrow_Layout.png`;
+            skillEntity.rolling_rock = `src/FrontEnd/Asset/Image/Architect/Rock_Layout.png`;
+            break;
+        case 'Archmage':
+            skillEntity.fire_ball = `src/FrontEnd/Asset/Image/Archmage/FireBall_Layout.png`;
+            skillEntity.flame_wave = `src/FrontEnd/Asset/Image/Archmage/FlameWave_Layout.png`;
+            skillEntity.viper_guardian = `src/FrontEnd/Asset/Image/Archmage/Guardian_Layout.png`;
+            skillEntity.lightning = `src/FrontEnd/Asset/Image/Archmage/Lightning_Layout.png`;
+            skillEntity.meteorite = `src/FrontEnd/Asset/Image/Archmage/Meteorite_Layout.png`;
+            break;
+    }
 
     return {
         hero: loadImageAsset(`src/FrontEnd/Asset/Image/${hero}/Walk_Layout.png`),
         death: loadImageAsset(`src/FrontEnd/Asset/Image/${hero}/Death_Layout.png`),
         background: loadImageAsset(`src/FrontEnd/Asset/Image/${map}/background.png`),
         objective: loadImageAsset(`src/FrontEnd/Asset/Image/${map}/Sprite_Tree.png`),
-        enemies: load,
+        enemies: loadImageAssets(enemySprites),
+        enemySkillEntity: loadImageAssets(enemySkillEntity),
+        skillEntity: loadImageAssets(skillEntity),
         casting: loadImageAsset(`src/FrontEnd/Asset/Image/${map}/Casting.png`),
     }
 }
@@ -63,6 +90,25 @@ export function loadUIImage(hero, map) {
         };
     }
 
+    const skillEntity = {};
+    switch (hero) {
+        case 'Architect':
+            skillEntity['arrow_tower'] = `src/FrontEnd/Asset/Image/${hero}/ArrowTower.png`;
+            skillEntity['rock_tower'] = `src/FrontEnd/Asset/Image/${hero}/RockTower.png`;
+            skillEntity['flame_tower'] = `src/FrontEnd/Asset/Image/${hero}/FlameTower.png`;
+            skillEntity['frost_tower'] = `src/FrontEnd/Asset/Image/${hero}/FrostTower.png`;
+            skillEntity['flying_arrow'] = `src/FrontEnd/Asset/Image/${hero}/Arrow_Layout.png`;
+            skillEntity['rolling_rock'] = `src/FrontEnd/Asset/Image/${hero}/Rock_Layout.png`;
+            break;
+        case 'Archmage':
+            skillEntity.fire_ball = `src/FrontEnd/Asset/Image/Archmage/FireBall_Layout.png`;
+            skillEntity.flame_wave = `src/FrontEnd/Asset/Image/Archmage/FlameWave_Layout.png`;
+            skillEntity.viper_guardian = `src/FrontEnd/Asset/Image/Archmage/Guardian_Layout.png`;
+            skillEntity.lightning = `src/FrontEnd/Asset/Image/Archmage/Lightning_Layout.png`;
+            skillEntity.meteorite = `src/FrontEnd/Asset/Image/Archmage/Meteorite_Layout.png`;
+            break;
+    }
+
     // To UI
     const profile = {
         alive: `src/FrontEnd/Asset/Image/${hero}/Profile.png`,
@@ -70,6 +116,8 @@ export function loadUIImage(hero, map) {
         book_background: `src/FrontEnd/Asset/Image/${hero}/Book_Background.png`,
         objectiveProfile: `src/FrontEnd/Asset/Image/${map}/Profile_Tree.png`,
         skill_book: `src/FrontEnd/Asset/Image/${hero}/Skill_SkillBook.png`,
+        win: `src/FrontEnd/Asset/Image/General/Win.png`,
+        lose: `src/FrontEnd/Asset/Image/General/Lose.png`,
     }
 
     const general = {
@@ -87,6 +135,7 @@ export function loadUIImage(hero, map) {
         profile: loadImageAssets(profile),
         skillIcon: loadImageAssets(skillIcon),
         general: loadImageAssets(general),
+        skillEntity: loadImageAssets(skillEntity),
     }
 }
 

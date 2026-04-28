@@ -70,9 +70,10 @@ export class Area extends Entity {
         const dx = this.destination.x - this.origin.x;
         const dy = this.destination.y - this.origin.y;
         const directionDistance = Math.sqrt(dx * dx + dy * dy);
+        const moveSpeed = Number(this.stats.get('Speed')) || 0;
 
-        if (directionDistance > 0 && this.speed > 0) {
-            const scale = this.speed / directionDistance;
+        if (directionDistance > 0 && moveSpeed > 0) {
+            const scale = moveSpeed / directionDistance;
             this.setVelocity(dx * scale, dy * scale);
         }
     }
@@ -92,7 +93,8 @@ export class Area extends Entity {
     }
 
     updateMovement() {
-        if (this.finished || this.speed <= 0) {
+        const moveSpeed = Number(this.stats.get('Speed')) || 0;
+        if (this.finished || moveSpeed <= 0) {
             return;
         }
 
@@ -413,7 +415,7 @@ export class Tower extends Unit {
 
         const projectile = this.projectileTracksTarget
             ? new Missile(
-                `${this.id}_${this.projectileName}_${this.duration}`,
+                `${this.projectileName}_${this.duration}`,
                 { x: this.position.x, y: this.position.y },
                 this.projectileSpeed,
                 this.projectileHitbox,
@@ -423,7 +425,7 @@ export class Tower extends Unit {
                 this.source
             )
             : new Projectile(
-                `${this.id}_${this.projectileName}_${this.duration}`,
+                `${this.projectileName}_${this.duration}`,
                 { x: this.position.x, y: this.position.y },
                 this.projectileSpeed,
                 this.projectileHitbox,
