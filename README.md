@@ -354,7 +354,95 @@ The use case diagram illustrates the interaction of player with our game Gates o
 **Testing Feedback** 
 
 - 15% ~750 words
-- Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories. 
+- Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories.
+
+- ## 1. Game Scene Switching Test
+
+| Test Case | Input | Expected Output | Observed Output | Status |
+|---|---|---|---|---|
+| 1.1 | Player enters Main Menu and clicks START | Game switches to Hero Selection page | Behaves as expected | Pass |
+| 1.2 | Player selects Hero and confirms | Game switches to Difficulty Selection page | Behaves as expected | Pass |
+| 1.3 | Player selects EASY / NORMAL / HARD difficulty | Game starts with selected difficulty | Behaves as expected | Pass |
+| 1.4 | Player presses SPACE during gameplay | Game switches to Pause Screen and logic halts | Behaves as expected | Pass |
+| 1.5 | Player presses SPACE again while paused | Game resumes from paused state | Behaves as expected | Pass |
+| 1.6 | Player loses all HP of Corona Terrae | Game transitions to Defeat Screen | Behaves as expected | Pass |
+| 1.7 | Player clears all enemy waves | Game transitions to Victory Screen | Behaves as expected | Pass |
+
+**Table 1: Game Scene Switching Test**
+
+---
+
+## 2. Hero Control and Movement Test
+
+| Test Case | Input | Expected Output | Observed Output | Status |
+|---|---|---|---|---|
+| 2.1 | Player right-clicks valid ground tile | Hero moves to selected target point | Behaves as expected | Pass |
+| 2.2 | Player right-clicks unreachable location | Hero remains in valid path area | Behaves as expected | Pass |
+| 2.3 | Player presses S while moving | Hero stops immediately | Behaves as expected | Pass |
+| 2.4 | Player rapidly issues movement commands | Hero updates to latest valid command | Behaves as expected | Pass |
+| 2.5 | Player clicks while hero is stunned | Movement command ignored until stun ends | Behaves as expected | Pass |
+
+**Table 2: Hero Control and Movement Test**
+
+---
+
+## 3. Combat, Skills and Upgrade System Test
+
+| Test Case | Input | Expected Output | Observed Output | Status |
+|---|---|---|---|---|
+| 3.1 | Hero attacks enemy unit | Enemy HP decreases | Behaves as expected | Pass |
+| 3.2 | Enemy HP reaches 0 | Enemy dies and rewards granted | Behaves as expected | Pass |
+| 3.3 | Player gains enough XP | Hero levels up | Behaves as expected | Pass |
+| 3.4 | Player spends gold on skill upgrade | Skill level increases and gold deducted | Behaves as expected | Pass |
+| 3.5 | Player activates targeted skill | Skill effect triggers on valid target | Behaves as expected | Pass |
+| 3.6 | Player attempts upgrade without enough gold | Upgrade denied and toast shown | Behaves as expected | Pass |
+
+**Table 3: Combat, Skills and Upgrade System Test**
+
+---
+
+## 4. Tower Building, Objective and Resource Test
+
+| Test Case | Input | Expected Output | Observed Output | Status |
+|---|---|---|---|---|
+| 4.1 | Engineer hero builds tower on valid tile | Tower created successfully | Behaves as expected | Pass |
+| 4.2 | Player attempts tower on invalid tile | Placement rejected | Behaves as expected | Pass |
+| 4.3 | Enemy attacks Corona Terrae | Objective HP decreases | Behaves as expected | Pass |
+| 4.4 | Player repairs Corona Terrae with resources | Objective HP restored | Behaves as expected | Pass |
+| 4.5 | Player collects gold/wood rewards | Resource counters increase | Behaves as expected | Pass |
+
+**Table 4: Tower Building, Objective and Resource Test**
+
+---
+
+## 5. UI, Visual Feedback and Audio Test
+
+| Test Case | Input | Expected Output | Observed Output | Status |
+|---|---|---|---|---|
+| 5.1 | Player hovers over menu button | Button visually highlighted | Behaves as expected | Pass |
+| 5.2 | Player clicks menu button | Selection sound plays | Behaves as expected | Pass |
+| 5.3 | Boss appears in game | Boss BGM starts | Behaves as expected | Pass |
+| 5.4 | Boss defeated | Music returns to standard BGM | Behaves as expected | Pass |
+| 5.5 | Player receives invalid command | Toast notification displayed | Behaves as expected | Pass |
+| 5.6 | Hero takes damage | HP UI updates immediately | Behaves as expected | Pass |
+
+**Table 5: UI, Visual Feedback and Audio Test**
+
+---
+
+## 6. Boundary Value Analysis (BVA) Test
+
+| Test Case | Input | Expected Output | Observed Output | Status |
+|---|---|---|---|---|
+| 6.1 | Hero HP = 1 and receives 1 damage | HP reaches 0 and death triggers | HP reached 0; death triggered | Pass |
+| 6.2 | Hero gains healing at maximum HP | HP remains capped at max | HP capped correctly | Pass |
+| 6.3 | Gold exactly equals upgrade cost | Upgrade succeeds and gold becomes 0 | Behaves as expected | Pass |
+| 6.4 | Gold is 1 below upgrade cost | Upgrade denied | Behaves as expected | Pass |
+| 6.5 | Player spams movement keys rapidly | Hero remains controllable without crash | Behaves as expected | Pass |
+| 6.6 | No target selected for targeted skill | Skill does not cast safely | Behaves as expected | Pass |
+| 6.7 | Corona Terrae HP reaches exactly 0 | Defeat state triggers immediately | Behaves as expected | Pass |
+
+**Table 6: Boundary Value Analysis Test**
 
 ### Design
 - System architecture. Class diagrams, behavioural diagrams.
