@@ -356,15 +356,15 @@ The use case diagram illustrates the interaction of player with our game Gates o
 - 15% ~750 words
 - Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories. 
 
-### Design
+**Design**
 - System architecture. Class diagrams, behavioural diagrams.
 
 ![Class diagram](images/classdiagram.svg)
 
-#### Skill Cast Sequence Diagram
+**Skill Cast Sequence Diagram**
 ![Class diagram](images/SkillCastingSequence.svg)
 
-#### Communication Architecture
+**Communication Architecture**
 ![Class diagram](images/CommunicationArchitecture.svg)
 
 All diagram were made using PlantUML.
@@ -411,14 +411,19 @@ To reduce memory usage, the BGM system utilises MIDI files to store the music sc
 
 Multiple MIDI files cannot be played simultaneously on a single BGM track. Furthermore, the BGM system detects in-game events such as boss encounters, deaths and respawns, and switches to the appropriate BGM accordingly.
 
-To be completed...
+The sound effects are modelled on the design of the Nintendo Entertainment System, featuring two square waves, one triangle wave and one noise wave. The system then evaluates events such as the creation of a skill entity, an entity hitting a unit, and a unit’s death, playing different sound effects for each.
 
 **Input**
 
 `Input` uses the keyboard and mouse input interfaces provided by the `p5.js` library to handle key press events. Different keys send different commands to the Worker; for example, the right mouse button sets the target point for movement, the ‘S’ key stops command execution, and the space bar pauses the game. After a command is sent, various return status values are received. If the Worker determines that the command is valid, it triggers a corresponding effect in the game logic; if it is invalid, it responds accordingly, such as by displaying a toast notification in the `UI`.
 
 **Execution sequence**
-// Menu part to be completed...
+
+The menu is divided into several scenes; clicking a button allows you to navigate between the different `Scene`s. Clicking ‘Start Game’ will:
+
+1. pass the configured hero as a parameter to the `Worker`process
+2. load the required assets, initialise the `UI`, `Sound`and `Render`
+3. create a new `GameManager`and send the `game:start`command
 
 The Menu passes three parameters to Main: Hero, Category and World. Main then initialises the UI, Sound and Render, calculates the assets to be loaded into memory based on the provided parameters, and once the assets have been loaded, creates a new process, sets up a new GameManager and starts the game. During gameplay, the GameManager can be terminated using the relevant command.
 
