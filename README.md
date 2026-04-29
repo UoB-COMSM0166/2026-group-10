@@ -356,6 +356,13 @@ The use case diagram illustrates the interaction of player with our game Gates o
 - 15% ~750 words
 - Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories.
 
+- BLACK BOX TESTING
+
+- ## 5.3 Black Box Testing
+
+Black box testing was conducted to test the external functionality of our game. This testing approach focuses on validating user interactions, system responses, and expected outputs based solely on given inputs.
+The objective of black box testing was to ensure that all major gameplay systems behaved correctly from the player’s perspective. Test cases were designed around key features such as scene transitions, hero movement, combat mechanics, tower placement, resource management, user interface feedback, audio responses, and win/lose conditions.
+
 - ## 1. Game Scene Switching Test
 
 | Test Case | Input | Expected Output | Observed Output | Status |
