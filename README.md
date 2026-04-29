@@ -998,6 +998,53 @@ If we had more time, the first thing we would focus on would be adding more enem
 
 After that, it would make sense to finish the systems we already started, such as the shop and full hero selection. Since the groundwork for these features is already there, completing them would be a logical next step and would significantly improve the overall experience.
 
+# 8. Sustainability, Ethics, and Accessibility
+
+**8.1 Sustainability Awareness Framework (SusAF)**
+
+Our analysis of Gates of Cinder's broader impact is structured across three dimensions of the Sustainability Awareness Framework that were most directly influenced by our architectural and design decisions: environmental, social, and individual.
+
+**Environmental**
+
+Gates of Cinder is a fully client side browser application hosted on GitHub Pages. Following initial asset load, the game performs no further network requests and maintains no communication with external servers or third party services. This eliminates backend compute overhead entirely during active play sessions, which represents a meaningful reduction in transport and infrastructure costs compared to server dependent games.
+
+However, we acknowledge clear inefficiencies in the current implementation. The most significant is that our Web Worker thread which handles all core game logic including collision detection, entity movement, damage calculations, and state management executes at a fixed rate of 60 ticks per second regardless of whether active gameplay is occurring. During menu navigation, hero selection, difficulty configuration, or paused states, the Worker continues processing at full capacity. This constitutes unnecessary computational load that translates directly into wasted energy consumption on the player's device. Implementing state aware tick rate throttling, reducing Worker execution frequency during non gameplay states, would be a technically straightforward optimisation and a clear priority in future development.
+
+Our asset pipeline also loads the complete set of sprites, audio, and map data at startup. While this improves runtime performance once gameplay begins, it results in every player downloading content they may not reach within a given session. Transitioning to demand based lazy loading, combined with converting sprite assets from PNG to WebP format, would reduce both initial bandwidth requirements and active memory usage without any perceptible quality degradation.
+
+One efficiency that emerged from an unrelated decision is our audio implementation. Background music is stored as MIDI files and synthesised at runtime using Tone.js with sine wave oscillators. MIDI files are substantially smaller than compressed audio formats, and sine wave synthesis carries a lower computational cost than square or triangle wave alternatives. This approach was chosen primarily for sound quality and memory management reasons, but it coincidentally produces a more resource efficient audio pipeline.
+
+**Social**
+
+Accessibility considerations became a development priority following our Think Aloud usability evaluation, during which several participants demonstrated significant difficulty engaging with core game mechanics. Prior to those sessions, the game provided no onboarding, no contextual guidance, and no explanation of objectives. In response, we implemented a mandatory tutorial screen presenting controls and objectives before gameplay begins, a persistent instruction page accessible via the Escape key during play, and contextual tooltip overlays on the action bar and skill shop displaying skill cooldowns, mana costs, targeting types, and functional descriptions.
+
+Three difficulty tiers — Easy, Normal, and Hard were introduced after evaluation participants consistently reported that default enemy wave pacing exceeded comfortable engagement thresholds. This tiering ensures the game remains approachable for players without prior tower defence experience while still offering meaningful challenge to experienced players. Broadening the accessible difficulty range is a direct improvement to inclusivity.
+
+Acknowledged gaps in the current build include the absence of a colourblind safe rendering mode, no UI scaling functionality for players with visual impairments, and no support for keyboard remapping. These represent concrete accessibility extensions that would be addressed in subsequent development iterations.
+
+**Individual**
+
+Gates of Cinder implements no form of personal data collection. The application requires no user account, integrates no analytics framework, sets no cookies, and writes nothing to local or session storage. A player's entire interaction with the game exists within browser memory and is discarded completely when the session ends. This decision was made at the outset of development, as no gameplay feature justified introducing data collection infrastructure, particularly within the context of an academic project.
+
+Player autonomy is supported throughout the game's design. The spacebar pauses execution at any point, death results in a respawn mechanic rather than session termination, and no penalty is incurred for exiting mid-session. The game contains no streak systems, no score based social comparisons, and no engagement mechanics designed to extend session duration beyond the player's intent. These choices reflect a deliberate alignment with casual, low commitment play patterns that respect user agency and avoid the compulsive engagement loops common in commercially motivated game design.
+
+**8.2 Green Software Foundation Patterns**
+
+**Patterns Present**
+
+Avoid Tracking Unnecessary Data: No analytics, cookies, or storage mechanisms of any kind are used. All sessions remain entirely local.
+Keep Request Counts Low: All assets are self-hosted. No external CDN dependencies exist beyond p5.js and Tone.js library imports.
+Defer Work: The snapshot architecture ensures the Main thread only retrieves game state from the Worker on demand rather than receiving continuous data pushes.
+
+**Identified Optimisation Opportunities**
+
+Minimise Background Thread Work: Worker execution continues at full tick rate during paused and menu states. Suspending or reducing this would eliminate redundant CPU usage.
+
+Serve Images in Modern Formats: Migrating sprite sheets from PNG to WebP would reduce asset payload while preserving visual fidelity.
+Optimise Asset Dimensions: Several sprites are stored at resolutions exceeding their rendered display size, contributing unnecessary memory overhead.
+
+Minify JavaScript Dependencies: Replacing development builds of p5.js and Tone.js with their minified equivalents would reduce the initial script payload delivered on first load.
+
 ### Contribution to Development Process
 
 <div align="center">
