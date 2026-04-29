@@ -915,7 +915,7 @@ The primary objective was to ensure that all core gameplay systems operated corr
 
 **Overview**
 
-Our development process evolved considerably across the fourteen weeks of the project. We began with the intention of following a structured Scrum-based agile methodology, but adapted toward a lighter coordination model as the project progressed. The result was a workflow that was informal in structure but consistent in communication — and ultimately sufficient to deliver a complete, playable game.
+Our development process evolved considerably across the fourteen weeks of the project. We began with the intention of following a structured Scrum-based agile methodology, but adapted toward a lighter coordination model as the project progressed. The result was a workflow that was informal in structure but consistent in communication and ultimately sufficient to deliver a complete, playable game.
 
 **Methodology**
 
@@ -924,9 +924,9 @@ At the outset, we planned two formal sprints. The first ran for two weeks and fo
 
 **Communication and Meeting Cadence**
 
-Communication was one of the stronger aspects of our process. The team met at least three times per week, either in person after scheduled sessions or remotely via Microsoft Teams. These calls included the full team — Dhanitha Rajapaksa, Rajmugundhan Nagappan, Ayush Raizada, James Crossley, Yiyuan Lu, and Jinhao Han — and served as the primary forum for progress updates, integration decisions, and resolving blockers.
+Communication was one of the stronger aspects of our process. The team met at least three times per week, either in person after scheduled sessions or remotely via Microsoft Teams. These calls included the full team — Dhanitha Rajapaksa, Rajmugundhan Nagappan, Ayush Raizada, James Crossley, Yiyuan Lu, and Jinhao Han and served as the primary forum for progress updates, integration decisions, and resolving blockers.
 
-Between meetings, WhatsApp was used for real-time coordination, quick questions, and sharing progress updates. It worked well because it was immediate, familiar, and required no additional tooling. Although our formal process frameworks were inconsistently applied, our communication habits remained reliable throughout the project, which helped compensate for weaknesses in other areas.
+Between meetings, WhatsApp was used for real time coordination, quick questions, and sharing progress updates. It worked well because it was immediate, familiar, and required no additional tooling. Although our formal process frameworks were inconsistently applied, our communication habits remained reliable throughout the project, which helped compensate for weaknesses in other areas.
 
 **Tools & Methods**
 
