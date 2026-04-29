@@ -911,7 +911,22 @@ The primary objective was to ensure that all core gameplay systems operated corr
 
 </div>
 
-### Process 
+# Process 
+
+**Overview**
+
+Our development process evolved considerably across the fourteen weeks of the project. We began with the intention of following a structured Scrum-based agile methodology, but adapted toward a lighter coordination model as the project progressed. The result was a workflow that was informal in structure but consistent in communication — and ultimately sufficient to deliver a complete, playable game.
+
+**Methodology**
+
+At the outset, we planned two formal sprints. The first ran for two weeks and focused on establishing the core architecture, translating epics into GitHub issues, and populating the Kanban board. The second ran for three weeks and covered the majority of active feature implementation. In practice, neither sprint was executed strictly. Most team members had not worked in an agile or Scrum context previously, and under the pressure of the project timeline, we found that tracking what needed to be done was more achievable than enforcing when it had to be done. Sprint reviews and retrospectives were not conducted formally, though the Kanban board remained a useful reference for shared visibility into task status throughout.
+
+
+**Communication and Meeting Cadence**
+
+Communication was one of the stronger aspects of our process. The team met at least three times per week, either in person after scheduled sessions or remotely via Microsoft Teams. These calls included the full team — Dhanitha Rajapaksa, Rajmugundhan Nagappan, Ayush Raizada, James Crossley, Yiyuan Lu, and Jinhao Han — and served as the primary forum for progress updates, integration decisions, and resolving blockers.
+
+Between meetings, WhatsApp was used for real-time coordination, quick questions, and sharing progress updates. It worked well because it was immediate, familiar, and required no additional tooling. Although our formal process frameworks were inconsistently applied, our communication habits remained reliable throughout the project, which helped compensate for weaknesses in other areas.
 
 **Tools & Methods**
 
@@ -934,7 +949,6 @@ Our game is set in a fantasy world similar to ***World of Warcraft***, which is 
 For the animation, we manually copied sprite textures from some older games using **Aseprite**. After obtaining some keyframes, we manually modified the textures, such as replacing their clothing or colors. In short, we only obtained the animation and skeleton textures from other games. For example, most of the hero's animations came from ***Persona 2*** because that game used a free-view top-down perspective, which matched our game visual design, so we didn't need to make many changes to the textures.
 
 <img width="1864" height="892" alt="Aseprite" src="https://github.com/user-attachments/assets/43593dde-4c75-4a7a-86d7-5592454c7000" />
-
 
 > Using Aseprite to create Animation.
 
