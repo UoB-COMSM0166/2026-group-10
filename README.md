@@ -362,10 +362,16 @@ The use case diagram illustrates the interaction of player with our game Gates o
 ![Class diagram](images/classdiagram.svg)
 
 **Skill Cast Sequence Diagram**
-![Class diagram](images/SkillCastingSequence.svg)
+![Skill Cast diagram](images/SkillCastingSequence.svg)
 
 **Communication Architecture**
-![Class diagram](images/CommunicationArchitecture.svg)
+![Communication diagram](images/CommunicationArchitecture.svg)
+
+**Front-End Class Diagram**
+![Front-End](images/FrontEnd.svg)
+
+**Back-End Class Diagram**
+![Back-End](images/BackEnd.svg)
 
 All diagram were made using PlantUML.
 
