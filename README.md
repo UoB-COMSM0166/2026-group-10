@@ -962,6 +962,7 @@ Heroes can be upgraded by acquiring and spending gold, rather than through exper
 
 <p align="center">
   <img src="images/whatsappBlurred.png" alt="Screenshot" width="500">
+  <em>We used whatsapp to arrange regular in-person meetings and facilitate sharing of real-time updates on development</em>
 </p>
 
 
