@@ -921,7 +921,19 @@ Our development process evolved considerably across the fourteen weeks of the pr
 
 At the outset, we planned two formal sprints. The first ran for two weeks and focused on establishing the core architecture, translating epics into GitHub issues, and populating the Kanban board. The second ran for three weeks and covered the majority of active feature implementation. In practice, neither sprint was executed strictly. Most team members had not worked in an agile or Scrum context previously, and under the pressure of the project timeline, we found that tracking what needed to be done was more achievable than enforcing when it had to be done. Sprint reviews and retrospectives were not conducted formally, though the Kanban board remained a useful reference for shared visibility into task status throughout.
 
-![GitHub Graph](images/github.jpeg)
+<p align="center">
+  <img src="images/Kanban.jpeg" alt="Kanban Board" width="500">
+</p>
+<p align="center">
+  <em>The Kanban board was used to organise tasks, track progress, and manage the team’s workflow throughout the project</em>
+</p>
+
+<p align="center">
+  <img src="images/Github.jpeg" alt="GitHub Graph" width="500">
+</p>
+<p align="center">
+  <em>GitHub was used to manage version control, and monitor the team’s development progress and collaboration</em>
+</p>
 
 
 **Communication and Meeting Cadence**
@@ -929,6 +941,20 @@ At the outset, we planned two formal sprints. The first ran for two weeks and fo
 Communication was one of the stronger aspects of our process. The team met at least three times per week, either in person after scheduled sessions or remotely via Microsoft Teams. These calls included the full team — Dhanitha Rajapaksa, Rajmugundhan Nagappan, Ayush Raizada, James Crossley, Yiyuan Lu, and Jinhao Han and served as the primary forum for progress updates, integration decisions, and resolving blockers.
 
 Between meetings, WhatsApp was used for real time coordination, quick questions, and sharing progress updates. It worked well because it was immediate, familiar, and required no additional tooling. Although our formal process frameworks were inconsistently applied, our communication habits remained reliable throughout the project, which helped compensate for weaknesses in other areas.
+
+<p align="center">
+  <img src="images/whatsappBlurred.png" alt="Screenshot" width="500">
+</p>
+<p align="center">
+  <em>We used whatsapp to arrange regular in-person meetings and facilitate real-time updates on code development</em>
+</p>
+
+<p align="center">
+  <img src="images/Teams.jpeg" alt="Team Meeting" width="500">
+</p>
+<p align="center">
+  <em>Microsoft Teams was used to conduct regular online meetings, enabling collaboration, discussion, and progress updates among team members</em>
+</p>
 
 **Tools & Methods**
 
@@ -981,14 +1007,6 @@ We didn't include a pathfinding system in the map. The presence of enemy bosses 
 **RPG Level system**
 
 Heroes can be upgraded by acquiring and spending gold, rather than through experience points as in traditional RPGs. Because each skill only has two levels, most skill upgrades result in mechanic-based rather than numerical improvements. Therefore, experience points become useless once a hero has maxed out all their skills. That's why we've eliminated the experience point system.
-
-<p align="center">
-  <img src="images/whatsappBlurred.png" alt="Screenshot" width="500">
-</p>
-<p align="center">
-  <em>We used whatsapp to arrange regular in-person meetings and facilitate real-time updates on code development</em>
-</p>
-
 
 
 ### Conclusion
