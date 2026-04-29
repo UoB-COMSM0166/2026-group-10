@@ -843,7 +843,7 @@ classDiagram
     Boomer ..> Area
     IceBolt ..> Area
     FrostBlast ..> Aura
-...
+```
 
 
 **System Architecture**
