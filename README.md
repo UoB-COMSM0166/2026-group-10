@@ -361,6 +361,11 @@ The use case diagram illustrates the interaction of player with our game Gates o
 
 ![Class diagram](images/classdiagram.svg)
 
+### Communication Architecture
+![Class diagram](images/CommunicationArchitecture.svg)
+
+
+
 **System Architecture**
 
 This game runs on 2 processes: `Main` and `Worker`. The `Main` process is responsible for rendering, UI, input, and sound. `Worker` processes are responsible for executing the game logic.
