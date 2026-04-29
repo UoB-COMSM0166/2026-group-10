@@ -960,6 +960,8 @@ We didn't include a pathfinding system in the map. The presence of enemy bosses 
 
 Heroes can be upgraded by acquiring and spending gold, rather than through experience points as in traditional RPGs. Because each skill only has two levels, most skill upgrades result in mechanic-based rather than numerical improvements. Therefore, experience points become useless once a hero has maxed out all their skills. That's why we've eliminated the experience point system.
 
+![Screenshot](images/whatsappBlurred.png)
+
 
 
 ### Conclusion
