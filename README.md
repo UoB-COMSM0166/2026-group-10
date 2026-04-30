@@ -335,7 +335,9 @@ The use case diagram illustrates the interaction of player with our game Gates o
 
 ![Inital Game Layout](images/initalPrototype.jpg)
 
+
 ![Inital Game Layout](images/sketch2.jpeg)
+
 
 **skill parameter sketch**
 
