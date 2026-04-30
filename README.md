@@ -399,7 +399,7 @@ The UI will display the current game status, including hero attributes, wave inf
 
 **Render**
 
-Render first reads the specified sprite, then determines which portion of the sprite to use based on the unit’s direction provided by the snapshot. Each texture is divided into eight directions; when a particular direction is detected, the corresponding sprite is rendered. During rendering, all entities are placed in a single collection and rendered in ascending order of position.y to correctly display the occlusion relationships between objects in front of and behind others under a 45-degree projection. Apart from heroes, objectives, bosses and minions, which are rendered according to fixed logic, all other entities are rendered by reading the entity’s ID and matching it against the Sprite database; the Sprite that meets the criteria will then be rendered.
+Render first reads the specified sprite, then determines which portion of the sprite to use based on the unit’s direction provided by the snapshot. Each texture is divided into eight directions, when a particular direction is detected, the corresponding sprite is rendered. During rendering, all entities are placed in a single collection and rendered in ascending order of position.y to correctly display the occlusion relationships between objects in front of and behind others under a 45-degree projection. Apart from heroes, objectives, bosses and minions, which are rendered according to fixed logic, all other entities are rendered by reading the entity’s ID and matching it against the Sprite database, the Sprite that meets the criteria will then be rendered.
 
 ## 4.2. Class Diagram
 
