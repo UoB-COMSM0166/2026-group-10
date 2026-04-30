@@ -272,7 +272,7 @@ EPIC 2: PROGESSIVE MAP EXPERIENCE
 USER STORY: As a passionate gamer, I want to be able to progress from one map to the next map as if the game is a progressive story so that the game feels exciting and fulfilling
 Acceptance criteria: Given that I am playing the game, when I have successfully completed the first map, then I should be able to play on a second map which is different to the first
 
-EPIC 3: Dynamic Strategic Combat System
+EPIC 3: DYNAMIC STRATEGIC COMBAT SYSTEM
 
 USER STORY: As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement
 
