@@ -262,17 +262,27 @@ The process of producing acceptance criteria helped to give precise, actionable 
 
 By considering the plethora of stakeholders around our game, we gained a better understanding of the diverse range of people who may have interests in our game and the importance of considering these people when making decisions regarding the development of our game.
 
-Epic 1: Varied and exciting gameplay experience
-User Story: As a casual gamer, I want the game to have a variety of heroes available to me so that the game is interesting for me and holds my attention
+EPIC 1: VARIED AND EXCITING GAMEPLAY
+
+USER STORY: As a casual gamer, I want the game to have a variety of heroes available to me so that the game is interesting for me and holds my attention
 Acceptance Criteria: Given that I am playing on a map in the game, when I choose which hero to play, then I should be able to choose from different types of abilities.
 
-Epic 2: Progressive Map Experience
+EPIC 2: PROGESSIVE MAP EXPERIENCE
 
-User story: As a passionate gamer, I want to be able to progress from one map to the next map as if the game is a progressive story so that the game feels exciting and fulfilling
+USER STORY: As a passionate gamer, I want to be able to progress from one map to the next map as if the game is a progressive story so that the game feels exciting and fulfilling
 Acceptance criteria: Given that I am playing the game, when I have successfully completed the first map, then I should be able to play on a second map which is different to the first
 
-Epic 3: Dynamic Strategic Combat System
-User story: As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement
+EPIC 3: Dynamic Strategic Combat System
+
+USER STORY: As a gamer, I want to have to adapt my strategy to account for different enemies, so that I am rewarded for strategic planning and tactical tower placement
+
+EPIC 4: SCALABILITY AND READABILITY
+
+USER STORY: As a developer,I dont want to waste time in reading the code,so the code  is commented throught so that any developer can read the code and scale the code or improve the current one so that the system need not be bulid ground up.
+
+EPIC 5: XP SYSTEM AND GOLD
+
+USER STORY: As a player,according to the selected hero must purchase the correct abilities and use gold gained from defeating enemies mindfully to defend the objective.If the abilties are not bought or used before hand,it becomes hard to defend the objective.
 
 ## 3.4. Use Case Diagram
 
