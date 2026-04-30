@@ -29,6 +29,15 @@
 </p>
 
 https://github.com/user-attachments/assets/e5714464-b8fa-4128-9a1e-358c666b6158
+<p align="center">
+  <sub>
+    Music: Sakura Breeze by Roa<br>
+    https://soundcloud.com/roa_music1031<br>
+    License: Creative Commons — Attribution 3.0 Unported — CC BY 3.0<br>
+    Free Download / Stream: https://links.al/5RD<br>
+    Music promoted by Audio Library: https://links.al/youtube
+  </sub>
+</p>
 <h1 align="center">🎮 How to Play </h1>
 
 ### Play Online 
