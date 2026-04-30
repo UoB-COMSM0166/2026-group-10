@@ -391,7 +391,7 @@ Both Buff and Skill have a callback function used to affect units or the world. 
 
 **`Main` Process**
 
-The `Main` process is responsible for UI, rendering, sound, and input. `Main` process will request a `snapshot` from `Worker`, which contains all information the UI and render require in each main loop. So the freshrate is not binding with Worker tick rate. The main process and worker processes communicate via postMessage.
+The `Main` process is responsible for UI, rendering, sound, and input. `Main` process will request a `snapshot` from `Worker`, which contains all information about the UI and render require in each main loop. So the freshrate is not binding with Worker tick rate. The Main process and worker processes communicate via postMessage.
 
 **UI**
 
