@@ -303,7 +303,7 @@ The use case diagram illustrates the interaction of player with our game Gates o
     </tr>
     <tr>
       <td>Resources</td>
-      <td>Earn Gold & Wood</td>
+      <td>Earn Gold </td>
     </tr>
     <tr>
       <td>Upgrades</td>
