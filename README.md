@@ -217,7 +217,7 @@ With this direction established, we divided the research effort. Each team membe
   </tr>
 </table>
 
-### Game Mechanics (merge this section (keep the gifs but merge with UI/UX into one))
+### Game Mechanics 
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively. The game is in a pixelated art style and the story takes place in a forest to defeat the final boss.
 
 <table width="100%">
