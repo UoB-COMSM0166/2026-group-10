@@ -489,7 +489,7 @@ The game’s logic and front-end are completely decoupled and run independently 
 
 The game logic runs on this Worker thread at a fixed tick rate of 60 updates per second. It is responsible for all core simulations, including entity movement, collision detection, damage calculations, and state management. Importantly, the Worker does not handle any input or output directly. Instead, it receives messages from the main thread and executes the appropriate functions to modify the game state accordingly.
 
-The front-end (main thread) is responsible for all user-facing operations: rendering the scene, playing sound effects, managing the user interface, and processing hardware input from the mouse and keyboard. To display the game correctly, the front-end periodically requests snapshots of the current game state from the Worker thread. These snapshots contain essential information such as the hero’s health, the position of every entity, and other dynamic elements. Meanwhile, player input is captured on the main thread, translated into structured commands, and sent to the Worker for processing.
+The front-end (main thread) is responsible for all user facing operations: rendering the scene, playing sound effects, managing the user interface, and processing hardware input from the mouse and keyboard. To display the game correctly, the front-end periodically requests snapshots of the current game state from the Worker thread. These snapshots contain essential information such as the hero’s health, the position of every entity, and other dynamic elements. Meanwhile, player input is captured on the main thread, translated into structured commands, and sent to the Worker for processing.
 
 Each game instance is managed by a `GameManager` class, which provides two essential tools: a `Clock` and an `EventEmitter`. The Clock handles timing-related functionality for the game logic, including manual updates, starting, pausing, and resuming the simulation. The `EventEmitter` enables clean communication between different parts of the codebase by broadcasting events, each consisting of an `id` and an optional `payload`. This system allows classes to listen for specific events and respond accordingly in a decoupled manner.
 
@@ -952,15 +952,15 @@ At the starting of the project, we planned two formal sprints. The first ran for
 
 ## 8.3. **Communication and Meeting Cadence**
 
-Communication was one of the stronger aspects of our process. The team met at least three times per week, either in person after scheduled sessions or remotely via Microsoft Teams. These calls included the full team — Dhanitha Rajapaksa, Rajmugundhan Nagappan, Ayush Raizada, James Crossley, Yiyuan Lu, and Jinhao Han and served as the primary forum for progress updates, integration decisions, and resolving blockers.
+Communication was one of the stronger aspects of our process. The team met at least three times per week, either in person after scheduled sessions or remotely via Microsoft Teams. These calls included the full team - Dhanitha Rajapaksa, Rajmugundhan Nagappan, Ayush Raizada, James Crossley, Yiyuan Lu, and Jinhao Han served as the primary forum for progress updates, integration decisions, and resolving blockers.
 
-Between meetings, WhatsApp was used for real time coordination, quick questions, and sharing progress updates. It worked well because it was immediate, familiar, and required no additional tooling. Although our formal process frameworks were inconsistently applied, our communication habits remained reliable throughout the project, which helped compensate for weaknesses in other areas.
+Between meetings, WhatsApp was used for real time coordination, quick questions, and sharing progress updates. It worked well because it was immediate, familiar, and required no additional tooling. Our formal process frameworks were inconsistently applied but our communication habits remained reliable throughout the project, which helped compensate for weaknesses in other areas.
 
 <p align="center">
   <img src="images/whatsappBlurred.png" alt="Screenshot" width="500">
 </p>
 <p align="center">
-  <em>We used whatsapp to arrange regular in-person meetings and facilitate real-time updates on code development</em>
+  <em>We used whatsapp to arrange regular in-person meetings and facilitate real time updates on code development</em>
 </p>
 
 <p align="center">
