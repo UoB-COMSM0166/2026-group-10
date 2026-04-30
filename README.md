@@ -11,7 +11,7 @@
 
 ---
 
-https://github.com/user-attachments/assets/e5714464-b8fa-4128-9a1e-358c666b6158
+
 
 
 
@@ -22,11 +22,8 @@ https://github.com/user-attachments/assets/e5714464-b8fa-4128-9a1e-358c666b6158
   &nbsp;
   <a href="https://github.com/orgs/UoB-COMSM0166/projects/153"><img src="https://img.shields.io/badge/📌%20KANBAN%20BOARD-7C4DFF?style=for-the-badge"></a>
 </p>
-<p align="center">
-  <a href="videos/CinderVideo.mp4">
-    <img src="images/video_thumbnail.png" width="600">
-  </a>
-</p>
+
+https://github.com/user-attachments/assets/e5714464-b8fa-4128-9a1e-358c666b6158
 <h1 align="center">🎮 How to Play </h1>
 
 ### Play Online 
