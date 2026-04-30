@@ -910,11 +910,11 @@ The primary objective was to ensure that all core gameplay systems operated corr
 
 ## 8.1. **Overview**
 
-Our development process evolved considerably across the fourteen weeks of the project. We began with the intention of following a structured Scrum based agile methodology, but adapted toward a lighter coordination model as the project progressed. The result was a workflow that was informal in structure but consistent in communication and ultimately sufficient to deliver a complete, playablr game.
+Our development process evolved considerably across the fourteen weeks of the project. We began with the intention of following a structured Scrum based agile methodology, but adapted toward a lighter coordination model as the project progressed. The result was a workflow that was informal in structure but consistent in communication and ultimately sufficient to deliver a complete, playable game.
 
 ## 8.2. **Methodology**
 
-At the outset, we planned two formal sprints. The first ran for two weeks and focused on establishing the core architecture, translating epics into GitHub issues, and populating the Kanban board. The second ran for three weeks and covered the majority of active feature implementation. In practice, neither sprint was executed strictly. Most team members had not worked in an agile or Scrum context previously, and under the pressure of the project timeline, we found that tracking what needed to be done was more achievable than enforcing when it had to be done. Sprint reviews and retrospectives were not conducted formally, though the Kanban board remained a useful reference for shared visibility into task status throughout.
+At the starting of the project, we planned two formal sprints. The first ran for two weeks and focused on establishing the core architecture, translating epics into GitHub issues, and populating the Kanban board. The second ran for three weeks and covered the majority of active feature implementation. In practice, neither sprint was executed strictly. Most team members had not worked in an agile or Scrum context previously, and under the pressure of the project timeline, we found that tracking what needed to be done was more achievable than enforcing when it had to be done. Sprint reviews and retrospectives were not conducted formally, though the Kanban board remained a useful reference for shared visibility into task status throughout.
 
 <p align="center">
   <img src="images/Kanban.jpeg" alt="Kanban Board" width="500">
