@@ -275,8 +275,7 @@ USER STORY: As a player,according to the selected hero must purchase the correct
 
 ## 3.4. Use Case Diagram
 
-**Check USE CASE DIAGRAM - (WOOD????)**
-<img width="1200" height="896" alt="chart" src="images/Use case.png" />
+<img width="1200" height="896" alt="chart" src="images/usecase.png" />
 The use case diagram illustrates the interaction of player with our game Gates of cinder.It illustrates the game lore,hero selection,difficulty level and various aspects of the game.It also defines the gameflow and objectives of the game.The below table summarizes above diagram.
 
 <p align="center">
