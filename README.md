@@ -1023,50 +1023,68 @@ After that, it would make sense to finish the systems we already started, such a
 
 <h1 id="sustainability-ethics-and-accessibility" align="center">Sustainability, Ethics, and Accessibility</h1>
 
-## **9.1. Sustainability Awareness Framework (SusAF)**
+## 9.1 Sustainability Awareness Framework (SusAF)
 
-Our analysis of Gates of Cinder's broader impact is structured across three dimensions of the Sustainability Awareness Framework that were most directly influenced by our architectural and design decisions: environmental, social, and individual.
+The impact of *Gates of Cinder* has been looked at using three main areas of the Sustainability Awareness Framework: environmental, social, and individual. These were chosen because they are the parts most affected by how the game was designed and built. The idea is to reflect on how our design decisions can affect sustainability in a simple and realistic way.
 
-## 9.2. **Environmental**
+---
 
-Gates of Cinder is a fully client side browser application hosted on GitHub Pages. Following initial asset load, the game performs no further network requests and maintains no communication with external servers or third party services. This eliminates backend compute overhead entirely during active play sessions, which represents a meaningful reduction in transport and infrastructure costs compared to server dependent games.
+## 9.2 Environmental
 
-However, we acknowledge clear inefficiencies in the current implementation. The most significant is that our Web Worker thread which handles all core game logic including collision detection, entity movement, damage calculations, and state management executes at a fixed rate of 60 ticks per second regardless of whether active gameplay is occurring. During menu navigation, hero selection, difficulty configuration, or paused states, the Worker continues processing at full capacity. This constitutes unnecessary computational load that translates directly into wasted energy consumption on the player's device. Implementing state aware tick rate throttling, reducing Worker execution frequency during non gameplay states, would be a technically straightforward optimisation and a clear priority in future development.
+*Gates of Cinder* is a fully client side browser game hosted on GitHub Pages so once the game has loaded, it does not make any network requests and does not communicate with any external servers. This means there is no backend running while the game is being played, which helps reduce energy usage compared to games that constantly rely on server communication.
 
-Our asset pipeline also loads the complete set of sprites, audio, and map data at startup. While this improves runtime performance once gameplay begins, it results in every player downloading content they may not reach within a given session. Transitioning to demand based lazy loading, combined with converting sprite assets from PNG to WebP format, would reduce both initial bandwidth requirements and active memory usage without any perceptible quality degradation.
+But there are still a few inefficiencies in the current version.
 
-One efficiency that emerged from an unrelated decision is our audio implementation. Background music is stored as MIDI files and synthesised at runtime using Tone.js with sine wave oscillators. MIDI files are substantially smaller than compressed audio formats, and sine wave synthesis carries a lower computational cost than square or triangle wave alternatives. This approach was chosen primarily for sound quality and memory management reasons, but it coincidentally produces a more resource efficient audio pipeline.
+One main issue is the Web Worker that runs the game logic, including movement, collisions, and damage calculations. At the moment, it runs continuously at 60 ticks per second, even when the game is paused or the player is in menus. This leads to unnecessary CPU usage and wastes energy on the user’s device. A simple improvement would be to reduce or pause the tick rate when the game is not actively being played.
 
-## 9.3. **Social**
+Another issue is how assets are loaded. All sprites, audio, and map data are currently loaded at the start of the game. This does help performance during gameplay, but it also means players download everything even if they never reach certain parts. A better approach would be lazy loading, where assets are only loaded when needed during play.
 
-Accessibility considerations became a development priority following our Think Aloud usability evaluation, during which several participants demonstrated significant difficulty engaging with core game mechanics. Prior to those sessions, the game provided no onboarding, no contextual guidance, and no explanation of objectives. In response, we implemented a mandatory tutorial screen presenting controls and objectives before gameplay begins, a persistent instruction page accessible via the Escape key during play, and contextual tooltip overlays on the action bar and skill shop displaying skill cooldowns, mana costs, targeting types, and functional descriptions.
+Also, the game currently uses PNG images. These could be changed to WebP format, which would reduce file size and memory usage without really affecting how the game looks.
 
-Three difficulty tiers — Easy, Normal, and Hard were introduced after evaluation participants consistently reported that default enemy wave pacing exceeded comfortable engagement thresholds. This tiering ensures the game remains approachable for players without prior tower defence experience while still offering meaningful challenge to experienced players. Broadening the accessible difficulty range is a direct improvement to inclusivity.
+One positive part of the system is the audio. The game uses MIDI files with Tone.js to generate sound using sine waves. MIDI files are much smaller than normal audio files, and sine waves are simple for the system to generate, so this makes the audio system quite efficient overall.
 
-Acknowledged gaps in the current build include the absence of a colourblind safe rendering mode, no UI scaling functionality for players with visual impairments, and no support for keyboard remapping. These represent concrete accessibility extensions that would be addressed in subsequent development iterations.
 
-## 9.4. **Individual**
 
-Gates of Cinder implements no form of personal data collection. The application requires no user account, integrates no analytics framework, sets no cookies, and writes nothing to local or session storage. A player's entire interaction with the game exists within browser memory and is discarded completely when the session ends. This decision was made at the outset of development, as no gameplay feature justified introducing data collection infrastructure, particularly within the context of an academic project.
+## 9.3 Social
 
-Player autonomy is supported throughout the game's design. The spacebar pauses execution at any point, death results in a respawn mechanic rather than session termination, and no penalty is incurred for exiting mid-session. The game contains no streak systems, no score based social comparisons, and no engagement mechanics designed to extend session duration beyond the player's intent. These choices reflect a deliberate alignment with casual, low commitment play patterns that respect user agency and avoid the compulsive engagement loops common in commercially motivated game design.
+Accessibility became more important after doing Think Aloud testing with users. During these tests, some players said they found the game confusing at the start because there were no proper instructions.
 
-## **9.5 Green Software Foundation Patterns**
+To improve this, a few changes were made. A tutorial screen was added at the beginning to explain the controls and main objectives. There is also an instruction page that can be opened while playing, and tooltips were added to explain abilities, cooldowns, and other gameplay features.
 
-**Patterns Present**
+Another improvement was the addition of difficulty levels: Easy, Normal, and Hard. Before this change, many users felt the game was too hard at the beginning. Adding difficulty options now makes it more suitable for beginners while still keeping it challenging for experienced players.
 
-Avoid Tracking Unnecessary Data: No analytics, cookies, or storage mechanisms of any kind are used. All sessions remain entirely local.
-Keep Request Counts Low: All assets are self-hosted. No external CDN dependencies exist beyond p5.js and Tone.js library imports.
-Defer Work: The snapshot architecture ensures the Main thread only retrieves game state from the Worker on demand rather than receiving continuous data pushes.
+There are still some missing features that could improve accessibility further. The game does not currently support colourblind mode, UI scaling, or keyboard remapping. These would help more players and should be added in future updates if possible.
 
-**Identified Optimisation Opportunities**
 
-Minimise Background Thread Work: Worker execution continues at full tick rate during paused and menu states. Suspending or reducing this would eliminate redundant CPU usage.
 
-Serve Images in Modern Formats: Migrating sprite sheets from PNG to WebP would reduce asset payload while preserving visual fidelity.
-Optimise Asset Dimensions: Several sprites are stored at resolutions exceeding their rendered display size, contributing unnecessary memory overhead.
+## 9.4 Individual
 
-Minify JavaScript Dependencies: Replacing development builds of p5.js and Tone.js with their minified equivalents would reduce the initial script payload delivered on first load.
+The game does not collect any personal data at all. It does not require users to sign in, does not use cookies, and does not store any information either locally or externally. Everything only exists while the game is running and is deleted when the browser is closed.
+
+This keeps the system simple and avoids any privacy concerns.
+
+The game also tries to give players full control over their experience. It can be paused at any time, and if the player dies, they can respawn instead of restarting everything. There is also no punishment for leaving the game early.
+
+The game does not include features like streaks, rankings, or leaderboards and was done on purpose so that players do not feel pressured to keep playing longer than they want as it  makes the experience more relaxed and casual.
+
+
+
+## 9.5 Green Software Foundation Patterns
+
+### Patterns Used
+
+- The game does not collect or track any user data  
+- It uses very low network usage after loading  
+- Most work is done locally in the browser instead of relying on servers  
+
+### Possible Improvements
+
+- The Web Worker could be improved by reducing activity when the game is paused or inactive  
+- Images could be changed from PNG to WebP to reduce file sizes  
+- Some game assets could be resized so they are not larger than needed  
+- Minified versions of libraries like p5.js and Tone.js could be used to improve loading speed  
+
+
 
 <h1 id="contribution" align="center">Contribution</h1>
 
