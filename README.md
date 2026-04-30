@@ -28,7 +28,7 @@
   <a href="https://github.com/orgs/UoB-COMSM0166/projects/153"><img src="https://img.shields.io/badge/📌%20KANBAN%20BOARD-7C4DFF?style=for-the-badge"></a>
 </p>
 
-<h2 align="center">🎮 How to Play </h2>
+<h1 align="center">🎮 How to Play </h1>
 
 ### Play Online 
 Gates of Cinder is hosted on GitHub Pages, so you can jump straight into the action without any installations!
@@ -53,24 +53,25 @@ For those looking to modify the code or play offline, you can host Gates of Cind
 3. **Play:** Open Chrome and navigate to `http://localhost:8000/`
 
 
-<h2 align="center">Table of Contents</h2>
+<h1 align="center">Table of Contents</h1>
 
 <div align="center">
-  
-| #  | Section          | Description                                      |
-|----|------------------|--------------------------------------------------|
-| 0 | [Labs](#labs) | Weekly lab tasks & documentation                |
-| 1 | [Introduction](#introduction) | Game overview & what makes it novel       |
-| 2 | [Requirements](#requirements) | Ideation, use cases & user stories        |
-| 3 | [Design](#design) | System architecture, state machine & class diagrams |
-| 4 | [Implementation](#implementation) | Key technical challenges           |
-| 5 | [Evaluation](#5-evaluation) | Qualitative & quantitative testing     |
-| 6 | [Process](#process) | Team workflow & reflection               |
-| 7 | [Conclusion](#conclusion) | Lessons learnt & future work         |
-| 8 | [Contribution](#contribution) | Individual contributions         |
+
+| #  | Section | Description |
+|----|---------|-------------|
+| 0 | [Introduction](#introduction) | Game overview and key idea |
+| 1 | [Requirements](#requirements) | Ideation, use cases and user stories |
+| 2 | [Design](#design) | System architecture, state machine & class diagrams |
+| 3 | [Implementation](#implementation) | Key technical work and challenges |
+| 4 | [Evaluation](#evaluation) | Qualitative and quantitative testing |
+| 5 | [Testing](#testing) | Testing strategy and results |
+| 6 | [Process](#process) | Team workflow and reflection |
+| 7 | [Conclusion](#conclusion) | Lessons learnt and future work |
+| 8 | [Sustainability](#sustainability-ethics-and-accessibility) | Responsible design considerations |
+| 9 | [Contribution](#contribution) | Individual contributions |
 </div>
 
-<h2 align="center">Group Members</h2>
+<h1 id="group-members" align="center">Group Members</h1>
 
 ![Group Photo](images/group_photo.jpg)
 <div align="center">
@@ -86,10 +87,7 @@ For those looking to modify the code or play offline, you can host Gates of Cind
 
 </div>
 
-
-<p align="center">
-
-<h2 align="center">File Structure</h2>
+<h1 id="repository-structure" align="center">Repository Structure</h1>
 
 ```
 project/
@@ -142,21 +140,8 @@ project/
 │   
 └── weeklyupdates/
 ```
+<h1 id="introduction" align="center">Introduction</h1>
 
-<h3 align="center">Feature Priority</h2>
-
-|Priority Rank - High to Low|System / Features|Time Taken|
-|-|-|-|
-|HIGHEST|Hero - Implement the stats screen funcitons of Hero system.|14%|
-|HIGHER|Enemy - Design the emeny behavior.|13%|
-|HIGH|Buff & Equip - Implement the Buff and Equipment functions, which effect the stats screen.|15%|
-|MID|Skill - Design the skill tree. And implement the active skills with buff, projectile or target entity.|15%|
-|LOW|Controll & Manager - Get the input from p5 libary and apply it to hero controll. Implement the game loop manager.|15%|
-|LOWER|Turrent & UI - Design the turrent. And create a UI system.|14%|
-|LOWEST|Boss - Design the Boss with active skills. Test the game.|14%|
-
-
-## 1. Introduction
 Gates of Cinder is a combination of tower defense and RPG elements designed to create an engaging gameplay experience. The game takes place in an ancient forest, where the Corona Tree provides life energy to all living beings. However, an army of undead has risen to destroy the tree.
 
 The player must defend the tree by choosing one of three heroes to fight against waves of enemies, culminating in a final boss battle. Players must also strategically place towers and use hero abilities effectively to manage incoming enemy waves. Each enemy follows a fixed path toward the Corona Tree.
@@ -167,17 +152,62 @@ There are three heroes to choose from: Warrior, Mage, and Engineer, each offerin
 
 The game features a retro art style and encourages players to adapt their strategies, making each level both challenging and rewarding.
 
+<h1 id="requirements" align="center">Requirements</h1>
 
-## 3. Requirements 
-
-**3.1. Ideation Process** 
+## 3.1. Ideation Process 
 
 In the early stages of our project, we began by exploring what inspired us. Each team member brought one or two games to an in-person meeting, sharing what captivated them whilst considering the practical constraints of developing from scratch. After an initial round of ideas shared via our team group chat, we met to pitch specific inspirations. This resulted in a split between three very distinct genres: tower defence, RPG, and arcade. 
 
 After analysing the strengths of each, the team identified a unique opportunity to create a hybrid mechanic. Rather than replicating existing titles, we decided to integrate the management strategy of _Kingdom Rush_ with the hero-centric mechanics of Diablo 2. Tower defence games offered proven engagement through strategic placement and resource management, whilst action RPGs provided the visceral satisfaction of character progression and skill-based combat.
 
 With this direction established, we divided the research effort. Each team member investigated specific game rules, dynamics, and development challenges to ensure our hybrid concept remained feasible within our technical constraints and timeline. 
-#### 3.2. Game Mechanics 
+
+
+### Game ideas and analysis
+
+| Game                    | Game Description                                                                                                                                                                                                                                                                                                                              | Twist Potential                                                                                                                                                                                                                      | Implementation Challenges                                                                                                                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Super Mario**         | Classic side-scrolling platformer where players jump on enemies, collect coins and power-ups, and reach the end flag.                                                                                                                                                                                                                         | • Power-ups transform Mario into different forms with unique abilities <br>• Hidden blocks, warp zones, and secret areas <br>• Progressive level design that teaches mechanics through gameplay                                      | • Collision detection and sprite management <br>• Jump physics consistency <br>• Level design iteration and pacing <br>• Differentiation from generic platformer                                              |
+| **Smashy Road: Wanted** | Top-down driving game where players escape police by hijacking new vehicles when destroyed. The longer you survive, the more aggressive the pursuit becomes.                                                                                                                                                                                  | • Wanted level escalates from police to SWAT to tanks to helicopters <br>• Vehicle types with different speed and durability stats <br>• Safe zones where wanted level decreases if player hides                                     | • Adaptive AI pathfinding with escalating aggression <br>• Vehicle collision physics and damage system <br>• Map generation with obstacles <br>• Smooth hijacking transitions                                 |
+| **Airplane Survival**   | Top-down plane game where players steer to dodge homing missiles. Survive longer to unlock faster planes and earn higher scores.                                                                                                                                                                                                              | • Missiles with different behaviours like fast, slow, or cluster splits <br>• Bonus points for making missiles collide <br>• Terrain obstacles that block missiles <br>• Unlockable planes with different speeds                     | • Missile homing AI balancing difficulty <br>• Collision detection for missile interactions <br>• Score-based unlock progression <br>• Visual and audio feedback systems                                      |
+| **Tank Trouble**        | Top-down maze combat where players fire bouncing shells to destroy opponents while avoiding their own ricochets.                                                                                                                                                                                                                              | • Maze walls regenerate on timers forcing position changes <br>• Arena shrinks over time for closer combat <br>• Energy system where firing consumes regenerating resource <br>• Directional shields and terrain effects             | • Bounce physics for shell reflections <br>• Safe maze regeneration without trapping players <br>• Multiplayer input handling <br>• Wall regeneration preview system                                          |
+| **Kingdom Rush**        | Kingdom Rush is a fixed-path tower defence game where players strategically place and upgrade towers along enemy routes to survive waves. What makes it interesting is the tower upgrade tree system where each tower branches into specialised forms, plus the addition of a player-controlled hero unit that adds an active tactical layer. | • Towers branch into specialised upgrade paths <br>• Combine adjacent towers into hybrid forms <br>• Enemies evolve if they survive too long <br>• Player-controlled hero unit with abilities                                        | • Enemy pathfinding along set routes <br>• Tower upgrade tree logic and UI <br>• Wave spawning with difficulty scaling <br>• Balance across multiple tower types                                              |
+| **Frogger**             | Frogger is a classic grid-based navigation game where players guide frogs across roads with moving cars and rivers with moving logs to reach lily pads safely. The game's appeal lies in its simple timing-based challenge and clear visual feedback on the grid.                                                                             | • Frog evolution system unlocking new forms with abilities <br>• Dynamic lanes that speed up, reverse, or spawn safe zones <br>• Competitive multiplayer with coin collection <br>• Extended maps with complex obstacle patterns     | • Grid-based movement and timing <br>• Pattern synchronisation for moving obstacles <br>• Lane speed variation and balancing <br>• Precise collision detection                                                |
+| **Crossy Road**         | Endless arcade hopper where players navigate freeways, railways, and rivers whilst avoiding cars and collecting custom characters.                                                                                                                                                                                                            | • Player moves forward in direction cars are travelling <br>• Adaptive environment transitions between road types <br>• Character unlocks with different abilities <br>• Procedurally generated obstacles with increasing complexity | • Designing varied objects within frontend constraints <br>• Programming mechanics for multiple object types <br>• Generating adaptive environments with smooth transitions <br>• Obstacle difficulty scaling |
+| **Pong**                | Pong is one of the earliest arcade games where two players control paddles to deflect a ball back and forth.                                                                                                                                                                                                                                  | • Ball modifiers like splits, gravity changes, or curve or spin <br>• Paddle upgrade options, sizes, shapes, or abilities <br>• Environmental hazards like moving obstacles or portal zones                                             | • Ball physics with consistent bounce angles <br>• Paddle collision detection and response <br>• AI opponent balancing for single-player                                                                    |
+| **Breakout**            | Breakout is a single-player brick-breaking game where players control a paddle to bounce a ball upwards to destroy rows of bricks.                                                                                                                                                                                                            | • Brick types requiring multiple hits or special conditions <br>• Power-ups dropped from destroyed bricks <br>• Dynamic brick layouts that move or regenerate                                                                      | • Ball physics and angle calculations <br>• Brick collision detection and destruction                                                                                                                        |
+
+### **Prototyping** 
+
+<table align="center" width="80%" style="margin: auto; text-align: center;">
+  <!-- ROW 1 -->
+  <tr>
+    <td width="50%" style="padding: 10px;">
+      <img src="images/frogger.gif" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+    <td width="50%" style="padding: 10px; vertical-align: middle;">
+      <h3>Prototype 1: Frogger</h3>
+      <p>
+        A classic 1980s arcade game in which the player controls a frog attempting to cross a busy road and a hazardous river. The goal is to safely guide the frog to its home while avoiding traffic and moving dangers.
+      </p>
+    </td>
+  </tr>
+
+  <!-- ROW 2 -->
+  <tr>
+    <td width="50%" style="padding: 10px;">
+      <img src="images/gates_of_cinder_proto.gif" width="100%" height="250px" style="object-fit: cover;">
+    </td>
+    <td width="50%" style="padding: 10px; vertical-align: middle;">
+      <h3>Prototype 2: Tower Defence RPG</h3>
+      <p>
+        A hybrid of tower defence and role playing mechanics, where the player must protect a magical tree from waves of enemies. Players can cast spells, use special abilities, and purchase upgrades from an in game store to strengthen their defences.
+      </p>
+    </td>
+  </tr>
+</table>
+
+### Game Mechanics (merge this section (keep the gifs but merge with UI/UX into one))
 The game mechanics draw from the energy of two famous games Like Kingdom Rush and League of Legends where the player must defend the objective using towers and use RPG elements.The player must choose  the correct towers and heroes to deal enemies effectively. The game is in a pixelated art style and the story takes place in a forest to defeat the final boss.
 
 <table width="100%">
@@ -196,7 +226,7 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 </table>
 
 
-###  3.3. UI/UX inspiration
+### UI/UX inspiration
 Our game UI is deeply inspired by diablo game which suits our game title and overall game.The hero's design is inspired by World of Warcraft. The skill icons are taken  from a fantasy RPG icon asserts pack from Unreal Engine Market
 <p align="center">
 
@@ -207,9 +237,9 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
 </p>
 
 
----
+## 3.2. Stakeholders
 
-### Stakeholders - Onion Model
+**Add Description of Onion Model! What’s its purpose? What does it capture? Why do we need it?**
 
 <img width="1200" height="896" alt="chart" src="images/OnionDiagram.jpg" />
 
@@ -220,27 +250,7 @@ Onion Model of the System
 
 </div>
 
----
-
-### Game ideas and analysis
-
-| Game                    | Game Description                                                                                                                                                                                                                                                                                                                              | Twist Potential                                                                                                                                                                                                                      | Implementation Challenges                                                                                                                                                                                     |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Super Mario**         | Classic side-scrolling platformer where players jump on enemies, collect coins and power-ups, and reach the end flag.                                                                                                                                                                                                                         | • Power-ups transform Mario into different forms with unique abilities <br>• Hidden blocks, warp zones, and secret areas <br>• Progressive level design that teaches mechanics through gameplay                                      | • Collision detection and sprite management <br>• Jump physics consistency <br>• Level design iteration and pacing <br>• Differentiation from generic platformer                                              |
-| **Smashy Road: Wanted** | Top-down driving game where players escape police by hijacking new vehicles when destroyed. The longer you survive, the more aggressive the pursuit becomes.                                                                                                                                                                                  | • Wanted level escalates from police to SWAT to tanks to helicopters <br>• Vehicle types with different speed and durability stats <br>• Safe zones where wanted level decreases if player hides                                     | • Adaptive AI pathfinding with escalating aggression <br>• Vehicle collision physics and damage system <br>• Map generation with obstacles <br>• Smooth hijacking transitions                                 |
-| **Airplane Survival**   | Top-down plane game where players steer to dodge homing missiles. Survive longer to unlock faster planes and earn higher scores.                                                                                                                                                                                                              | • Missiles with different behaviours like fast, slow, or cluster splits <br>• Bonus points for making missiles collide <br>• Terrain obstacles that block missiles <br>• Unlockable planes with different speeds                     | • Missile homing AI balancing difficulty <br>• Collision detection for missile interactions <br>• Score-based unlock progression <br>• Visual and audio feedback systems                                      |
-| **Tank Trouble**        | Top-down maze combat where players fire bouncing shells to destroy opponents while avoiding their own ricochets.                                                                                                                                                                                                                              | • Maze walls regenerate on timers forcing position changes <br>• Arena shrinks over time for closer combat <br>• Energy system where firing consumes regenerating resource <br>• Directional shields and terrain effects             | • Bounce physics for shell reflections <br>• Safe maze regeneration without trapping players <br>• Multiplayer input handling <br>• Wall regeneration preview system                                          |
-| **Kingdom Rush**        | Kingdom Rush is a fixed-path tower defence game where players strategically place and upgrade towers along enemy routes to survive waves. What makes it interesting is the tower upgrade tree system where each tower branches into specialised forms, plus the addition of a player-controlled hero unit that adds an active tactical layer. | • Towers branch into specialised upgrade paths <br>• Combine adjacent towers into hybrid forms <br>• Enemies evolve if they survive too long <br>• Player-controlled hero unit with abilities                                        | • Enemy pathfinding along set routes <br>• Tower upgrade tree logic and UI <br>• Wave spawning with difficulty scaling <br>• Balance across multiple tower types                                              |
-| **Frogger**             | Frogger is a classic grid-based navigation game where players guide frogs across roads with moving cars and rivers with moving logs to reach lily pads safely. The game's appeal lies in its simple timing-based challenge and clear visual feedback on the grid.                                                                             | • Frog evolution system unlocking new forms with abilities <br>• Dynamic lanes that speed up, reverse, or spawn safe zones <br>• Competitive multiplayer with coin collection <br>• Extended maps with complex obstacle patterns     | • Grid-based movement and timing <br>• Pattern synchronisation for moving obstacles <br>• Lane speed variation and balancing <br>• Precise collision detection                                                |
-| **Crossy Road**         | Endless arcade hopper where players navigate freeways, railways, and rivers whilst avoiding cars and collecting custom characters.                                                                                                                                                                                                            | • Player moves forward in direction cars are travelling <br>• Adaptive environment transitions between road types <br>• Character unlocks with different abilities <br>• Procedurally generated obstacles with increasing complexity | • Designing varied objects within frontend constraints <br>• Programming mechanics for multiple object types <br>• Generating adaptive environments with smooth transitions <br>• Obstacle difficulty scaling |
-| **Pong**                | Pong is one of the earliest arcade games where two players control paddles to deflect a ball back and forth.                                                                                                                                                                                                                                  | • Ball modifiers like splits, gravity changes, or curve or spin <br>• Paddle upgrade options, sizes, shapes, or abilities <br>• Environmental hazards like moving obstacles or portal zones                                             | • Ball physics with consistent bounce angles <br>• Paddle collision detection and response <br>• AI opponent balancing for single-player                                                                    |
-| **Breakout**            | Breakout is a single-player brick-breaking game where players control a paddle to bounce a ball upwards to destroy rows of bricks.                                                                                                                                                                                                            | • Brick types requiring multiple hits or special conditions <br>• Power-ups dropped from destroyed bricks <br>• Dynamic brick layouts that move or regenerate                                                                      | • Ball physics and angle calculations <br>• Brick collision detection and destruction                                                                                                                        |
-
-**Early Stage Design**
-
-By Week 3, we had translated these ideas into a paper prototype during the workshop. Testing sessions were positive, particularly regarding the different player roles we designed. With the fundamental mechanics validated, we moved forward to develop sprites and assets for digital prototyping, which would allow us to test the gameplay loop more thoroughly.
-
-## Epics and User stories
+## 3.3. Epics and User stories
 
 Through the process of creating epics, user stories and acceptance requirements, we obtained a greater awareness of the range of stakeholders our game has. We also developed a deeper understanding of the context that our game exists in.
 
@@ -252,11 +262,12 @@ The process of producing acceptance criteria helped to give precise, actionable 
 
 By considering the plethora of stakeholders around our game, we gained a better understanding of the diverse range of people who may have interests in our game and the importance of considering these people when making decisions regarding the development of our game.
 
+**CHECK IF THESE EPICS ARE ACCURATE/RELAVANT**
 
 | Epic | Description | User Stories | Acceptance Criteria |
 |------|-------------|-------------|---------------------|
-| EPIC 1 – Core Defense Gameplay | The player must defend the Ancient Tree from waves of undead enemies. | As a player, I want enemies to move toward the Ancient Tree, so that I must defend it. <br> As a player, I want enemies to damage the Ancient Tree on contact, so that there is a clear loss condition. <br> As a player, I want to attack enemies, so that I can stop them from reaching the tree. | Enemies follow predefined paths toward the Ancient Tree. <br> Enemy collision with the tree reduces its health. <br> Player attacks register hits consistently and reduce enemy health. <br> Game ends when the Ancient Tree health reaches zero. |
-| EPIC 2 – Enemy Waves & Boss System | The game progresses through waves of enemies, culminating in powerful boss encounters. | As a player, I want enemies to spawn in waves, so that gameplay escalates over time. <br> As a player, I want a boss at the end of each round, so that I face a major challenge. <br> As a player, I want bosses to have unique attack patterns, so that combat feels varied. <br> As an Engineer player, I want bosses to target the Ancient Tree after destroying turrets, so that my gameplay has distinct risks. | Waves spawn enemies at fixed intervals and locations. <br> Boss spawns after all minions in a wave are defeated. <br> Boss has multiple attack behaviours. <br> Boss targeting logic changes depending on player class. |
+| Epic 1 – Core Defense Gameplay | The player must defend the Ancient Tree from waves of undead enemies. | As a player, I want enemies to move toward the Ancient Tree, so that I must defend it. <br> As a player, I want enemies to damage the Ancient Tree on contact, so that there is a clear loss condition. <br> As a player, I want to attack enemies, so that I can stop them from reaching the tree. | Enemies follow predefined paths toward the Ancient Tree. <br> Enemy collision with the tree reduces its health. <br> Player attacks register hits consistently and reduce enemy health. <br> Game ends when the Ancient Tree health reaches zero. |
+| Epic 2 – Enemy Waves & Boss System | The game progresses through waves of enemies, culminating in powerful boss encounters. | As a player, I want enemies to spawn in waves, so that gameplay escalates over time. <br> As a player, I want a boss at the end of each round, so that I face a major challenge. <br> As a player, I want bosses to have unique attack patterns, so that combat feels varied. <br> As an Engineer player, I want bosses to target the Ancient Tree after destroying turrets, so that my gameplay has distinct risks. | Waves spawn enemies at fixed intervals and locations. <br> Boss spawns after all minions in a wave are defeated. <br> Boss has multiple attack behaviours. <br> Boss targeting logic changes depending on player class. |
 | EPIC 3 – Hero Class System | Players choose and control unique hero classes with different mechanics. | As a player, I want to choose between Warrior, Mage, and Engineer, so that I can play different styles. <br> As a player, I want each class to have unique abilities, so that gameplay feels distinct. | Player selects class before gameplay begins. <br> Each class has unique stats, abilities, and mechanics. <br> Class systems are independent and modular. |
 | EPIC 4 – Warrior Mechanics | The Warrior uses melee combat and rage-based abilities. | As a Warrior, I want different weapon types, so that my combat style changes. <br> As a Warrior, I want to generate rage through attacks, so that I can use powerful skills. <br> As a Warrior, I want rage to decay over time, so that I must stay aggressive. <br> As a Warrior, I want to upgrade equipment using gold, so that I become stronger. | Weapons (longsword, rapier, battle axe) affect abilities. <br> Rage increases on attack and decreases over time. <br> Rage resets on death or respawn. <br> Equipment upgrades increase stats. |
 | EPIC 5 – Mage Mechanics | The Mage uses a flexible skill system powered by mana. | As a Mage, I want to combine Ice, Fire, and Lightning skills, so that I can customise my build. <br> As a Mage, I want mana to regenerate over time, so that I can continuously cast spells. <br> As a Mage, I want to spend gold on skills, so that I improve abilities instead of equipment. | Skill combinations are selectable and usable in gameplay. <br> Mana regenerates over time and resets on respawn. <br> Skills consume mana when cast. <br> Gold is used for skill learning and upgrades only. |
@@ -266,8 +277,9 @@ By considering the plethora of stakeholders around our game, we gained a better 
 | EPIC 9 – Game States & Win/Lose Conditions | The game clearly defines victory and defeat conditions. | As a player, I want to win after defeating all waves, so that I feel rewarded. <br> As a player, I want to lose when the tree is destroyed, so that failure is clear. <br> As a player, I want to respawn after death, so that I can continue playing. | Game ends in victory when all enemies are defeated. <br> Game ends in defeat when tree health reaches zero. <br> Respawn system includes a timer and penalty. <br> UI clearly communicates game state changes. |
 | EPIC 10 – Technical Architecture & Scalability | The system is modular and maintainable for future expansion. | As a developer, I want modular systems, so that features are easy to maintain. <br> As a developer, I want class systems separated, so that balancing is easier. <br> As a developer, I want scalable enemy and wave systems, so that new content can be added easily. | Systems separated (Combat, AI, Resources, UI, Classes). <br> Clear update loop and system interactions. <br> Data-driven configs for enemies, waves, and abilities. <br> New classes or enemies can be added without rewriting core systems.|
 
----
-### Usecase Diagram
+## 3.4. Use Case Diagram
+
+**Check USE CASE DIAGRAM - (WOOD????)**
 <img width="1200" height="896" alt="chart" src="images/Use case.png" />
 The use case diagram illustrates the interaction of player with our game Gates of cinder.It illustrates the game lore,hero selection,difficulty level and various aspects of the game.It also defines the gameflow and objectives of the game.The below table summarizes above diagram.
 
@@ -312,70 +324,31 @@ The use case diagram illustrates the interaction of player with our game Gates o
   </table>
 </p>
 
----
 
-### **Prototyping** 
-
-<table align="center" width="80%" style="margin: auto; text-align: center;">
-  <!-- ROW 1 -->
-  <tr>
-    <td width="50%" style="padding: 10px;">
-      <img src="images/frogger.gif" width="100%" height="250px" style="object-fit: cover;">
-    </td>
-    <td width="50%" style="padding: 10px; vertical-align: middle;">
-      <h3>Prototype 1: Frogger</h3>
-      <p>
-        A classic 1980s arcade game in which the player controls a frog attempting to cross a busy road and a hazardous river. The goal is to safely guide the frog to its home while avoiding traffic and moving dangers.
-      </p>
-    </td>
-  </tr>
-
-  <!-- ROW 2 -->
-  <tr>
-    <td width="50%" style="padding: 10px;">
-      <img src="images/gates_of_cinder_proto.gif" width="100%" height="250px" style="object-fit: cover;">
-    </td>
-    <td width="50%" style="padding: 10px; vertical-align: middle;">
-      <h3>Prototype 2: Tower Defence RPG</h3>
-      <p>
-        A hybrid of tower defence and role playing mechanics, where the player must protect a magical tree from waves of enemies. Players can cast spells, use special abilities, and purchase upgrades from an in game store to strengthen their defences.
-      </p>
-    </td>
-  </tr>
-</table>
 
 **Initial Sketch** 
+
 ![Inital Game Layout](images/initalPrototype.jpg)
 
 
+<h4 align=“left">Feature Priority</h3>
 
+|Priority Rank - High to Low|System / Features|Time Taken|
+|-|-|-|
+|HIGHEST|Hero - Implement the stats screen funcitons of Hero system.|14%|
+|HIGHER|Enemy - Design the emeny behavior.|13%|
+|HIGH|Buff & Equip - Implement the Buff and Equipment functions, which effect the stats screen.|15%|
+|MID|Skill - Design the skill tree. And implement the active skills with buff, projectile or target entity.|15%|
+|LOW|Controll & Manager - Get the input from p5 libary and apply it to hero controll. Implement the game loop manager.|15%|
+|LOWER|Turrent & UI - Design the turrent. And create a UI system.|14%|
+|LOWEST|Boss - Design the Boss with active skills. Test the game.|14%|
 
+<h1 id="design" align="center">Design</h1>
 
-**Testing Feedback** 
-
-- 15% ~750 words
-- Early stages design. Ideation process. How did you decide as a team what to develop? Use case diagrams, user stories. 
-
-**Design**
-- System architecture. Class diagrams, behavioural diagrams.
-
-![Class diagram](images/classdiagram.svg)
-
-**Skill Cast Sequence Diagram**
-![Skill Cast diagram](images/SkillCastingSequence.svg)
+## 4.1. System Architecture
 
 **Communication Architecture**
 ![Communication diagram](images/CommunicationArchitecture.svg)
-
-**Front-End Class Diagram**
-![Front-End](images/FrontEnd.svg)
-
-**Back-End Class Diagram**
-![Back-End](images/BackEnd.svg)
-
-All diagram were made using PlantUML.
-
-**System Architecture**
 
 This game runs on 2 processes: `Main` and `Worker`. The `Main` process is responsible for rendering, UI, input, and sound. `Worker` processes are responsible for executing the game logic.
 
@@ -408,6 +381,36 @@ The UI will display the current game status, including hero attributes, wave inf
 **Render**
 
 Render first reads the specified sprite, then determines which portion of the sprite to use based on the unit’s direction provided by the snapshot. Each texture is divided into eight directions; when a particular direction is detected, the corresponding sprite is rendered. During rendering, all entities are placed in a single collection and rendered in ascending order of position.y to correctly display the occlusion relationships between objects in front of and behind others under a 45-degree projection. Apart from heroes, objectives, bosses and minions, which are rendered according to fixed logic, all other entities are rendered by reading the entity’s ID and matching it against the Sprite database; the Sprite that meets the criteria will then be rendered.
+
+## 4.2. Class Diagram
+
+**Frontend Class Diagram**
+
+![Front-End](images/FrontEnd.svg)
+
+**Architect**
+
+![Architect](images/Architect.svg)
+
+**Archmage**
+
+![Archmage](images/Archmage.svg)
+
+**Warrior**
+
+![Warrior](images/Warrior.svg)
+
+
+**Backend Class Diagram**
+![Back-End](images/BackEnd.svg)
+
+All diagram were made using PlantUML.
+
+## 4.3. Sequence Diagram
+
+**Skill Cast Sequence Diagram**
+
+![Skill Cast diagram](images/SkillCastingSequence.svg)
 
 **Sound**
 
@@ -447,7 +450,8 @@ The above sequence diagram illustrates the flow of the game's menu scenes and ho
 
 `activeScene` then iterates through all of its buttons, calling the `wasIClicked()` function for each one. If the `wasIClicked()` function verifies that this button was indeed the one the user clicked, it will invoke its `onClick()` callback function that was passed to the button during the button's creation. Since the `onClick()` method is stored within the button that invokes it, it is represented in the sequence diagram by an arrow from the button pointing back to itself (a self-call).
 
-### State Machine 
+## 4.4. State Machine
+ 
 The following state diagram illustrates the core architectural flow of our game, mapping the transitions between primary states such as the Main Menu, Active Gameplay, and the Game Over sequence. It provides a comprehensive visual breakdown of how the hero interacts with the world and how critical mechanics, including gold accumulation, experience (XP) gain, and the death/respawn cycle, are integrated into the loop.
 
 By tracing the logic within this diagram, one can observe the player's progression through the game environment and the intricate way various system elements interface with the core engine to create a cohesive experience.
@@ -456,14 +460,11 @@ By tracing the logic within this diagram, one can observe the player's progressi
   <img src="images/statediagram.png" width="900"/>
 </p>
 
+<h1 id="implementation" align="center">Implementation</h1>
 
-### Implementation
+Throughout development, we faced a number of complex technical hurdles. These key systems are explored in greater detail below.
 
-**Base System**
-
-This project uses OOP to implement features such as Entity and Unit. The Entity class is used to implement the movement functionality of movable objects in the game, and the Unit class is used to implement features such as unit health and survival status.
-
-## **Challenge 1: Multithreading**
+## 5.1. **Challenge 1: Multithreading**
 
 The game’s logic and front-end are completely decoupled and run independently on separate threads. The front-end serves as the main entry point for the game. Upon initialisation, it creates a dedicated background thread (the Worker), on which the core game logic executes in a continuous loop.
 
@@ -551,7 +552,7 @@ In summary, the steps are：
 </p>
 <p align="center"><em>Rendering of enemies</em>
   
-## **Challenge 2: Skills and Buffs**
+## 5.2. **Challenge 2: Skills and Buffs**
 
 Each hero is equipped with a diverse set of abilities, which players can customise via the Skill Book system. Based on hotkey bindings, skill types include A, Q, W, E, R, and passive skills. Architecturally, every ability is a subclass of the base `Skill` class, inheriting core properties such as mana costs and cooldown timers. Most skills generate skill entities that can move and trigger hit detection. When a hit is detected, a callback function within the skill is executed, which may deal damage or apply debuffs.
 
@@ -647,19 +648,13 @@ Initially, our design involved storing skill-related information in JSON files; 
 <p align="center">
   <img src="images/Book.png" width="700"/>
 </p>
-<p align="center"><em>Skills</em>
+<p align="center"><em>Skill Book</em>
 
-#### Other Challenges:
-
-#### Spatial Mapping and Rendering Logic
-![2D visual projection](images/2D_visual_projection.jpg)
-To bridge the gap between 3D logic and 2D rendering, we implemented a 45 degree projection system that translates spatial coordinates into a visual perspective. We defined the game world using a standard $x, y, z$ coordinate system for logic and collisions, but applied a scaling factor between 0.5 and 0.7 to the $y$ axis to create the rendered $y'$ depth. This compression ensures that circular hitboxes appear as ellipses on screen, providing the player with a clear sense of depth and grounding. To handle verticality, we treated the $z$ axis as a direct vertical offset. This separation of logic and render allowed us to maintain simplified circular collision detection while visually representing complex height changes, such as a character jumping or holding an item aloft. The result is a cohesive 2.5D environment where the character sprites and their shadows remain mathematically aligned with the underlying physics grid.
-
-## 5. Evaluation
+<h1 id="evaluation" align="center">Evaluation</h1>
 
 This week, we invited other team members to try out the newly released version of our game. The overall gameplay response was largely positive, though a few issues were flagged along with a number of helpful suggestions and ideas shared throughout the session. The feedback gathered proved to be invaluable in helping us to better understand how players interact with the game and where improvements can be made. To obtain a well-rounded understanding of our game, we conducted several evaluation methods, including **Think Aloud Evaluation**, **NASA-TLX for workload assessment**, and the **System Usability Scale (SUS)**. These methods allowed us to assess different dimensions of the player experience, from usability and cognitive workload to overall satisfaction and interface design. 
 
-### 5a. Qualitative Evaluation
+## 6.1. Qualitative Evaluation
 
 <p align="center">
   <img src="images/IMG_7880.jpg" alt="ParticipantThinkAloud" width="300" height="400">
@@ -714,7 +709,7 @@ Added game action bar and store tooltips to provide clear, concise information o
 The implemented improvements showed clear results during follow-up testing, with players demonstrating greater confidence and notably less confusion while navigating the game. Usability and overall gameplay experience were meaningfully enhanced as a result. The use of Think-Aloud provided deeper insights into player concerns, helping the team address issues more effectively. However, we remain mindful that social desirability bias may have influenced some participants responses.
 
 
-### 5b. Quantitative Evaluations
+## 6.2. Quantitative Evaluation
 
 To provide a quantitative counterpoint to our qualitative findings, we tasked ten participants (**N=10**) to play under both Easy and Hard conditions within a within-subjects framework. This allowed for an immediate assessment of workload via the **NASA Task Load Index (NASA-TLX)** and usability via the **System Usability Scale (SUS)** at the end of each session. We specifically tracked fluctuations in six specific dimensions of exertion: Mental, Physical and Temporal Demand, alongside Performance, Effort, and Frustration using the NASA-TLX. The resulting SUS scores were then compared to the established industry benchmark of 68, which serves as the baseline for acceptable functional usability. Any performance variations between the two modes were then analysed for statistical significance using the Wilcoxon signed-rank test (**α=0.05**).
 
@@ -800,9 +795,9 @@ The ten contribution scores were then summed (resulting in a total between 0 and
 
 An SUS score of around 68 is widely regarded as average usability. In this study, Easy Mode achieved a mean score of 73.25, while Hard Mode scored 67.5. This places the overall usability of the game at an average level, with Easy Mode approaching good usability. Participants found Easy Mode straightforward to learn, intuitive to use, and generally user-friendly. Importantly, the increase in difficulty had only a modest impact on perceived usability. Players remained able to understand and engage with the core mechanics effectively in both versions. Although Hard Mode fell slightly below the average benchmark, this was anticipated given the greater complexity and cognitive demands.
 
-### **Testing Feedback** 
+<h1 id="testing" align="center">Testing</h1>
 
-#### Black Box Testing
+## 7.1. Black Box Testing
 
 Black box testing was conducted to evaluate the external functionality of the game. This approach focuses on validating user interactions, system responses, and expected outputs based entirely on specific inputs, without examining the internal code structure.
 
@@ -911,13 +906,13 @@ The primary objective was to ensure that all core gameplay systems operated corr
 
 </div>
 
-# Process 
+<h1 id="process" align="center">Process</h1>
 
-**Overview**
+## 8.1. **Overview**
 
 Our development process evolved considerably across the fourteen weeks of the project. We began with the intention of following a structured Scrum based agile methodology, but adapted toward a lighter coordination model as the project progressed. The result was a workflow that was informal in structure but consistent in communication and ultimately sufficient to deliver a complete, playablr game.
 
-**Methodology**
+## 8.2. **Methodology**
 
 At the outset, we planned two formal sprints. The first ran for two weeks and focused on establishing the core architecture, translating epics into GitHub issues, and populating the Kanban board. The second ran for three weeks and covered the majority of active feature implementation. In practice, neither sprint was executed strictly. Most team members had not worked in an agile or Scrum context previously, and under the pressure of the project timeline, we found that tracking what needed to be done was more achievable than enforcing when it had to be done. Sprint reviews and retrospectives were not conducted formally, though the Kanban board remained a useful reference for shared visibility into task status throughout.
 
@@ -936,7 +931,7 @@ At the outset, we planned two formal sprints. The first ran for two weeks and fo
 </p>
 
 
-**Communication and Meeting Cadence**
+## 8.3. **Communication and Meeting Cadence**
 
 Communication was one of the stronger aspects of our process. The team met at least three times per week, either in person after scheduled sessions or remotely via Microsoft Teams. These calls included the full team — Dhanitha Rajapaksa, Rajmugundhan Nagappan, Ayush Raizada, James Crossley, Yiyuan Lu, and Jinhao Han and served as the primary forum for progress updates, integration decisions, and resolving blockers.
 
@@ -956,9 +951,7 @@ Between meetings, WhatsApp was used for real time coordination, quick questions,
   <em>Microsoft Teams was used to conduct regular online meetings, enabling collaboration, discussion, and progress updates among team members</em>
 </p>
 
-**Tools & Methods**
-
-We used different tools to achieve a variety of purposes.
+## 8.4. **Tools & Methods**
 
 **Code & Test**
 
@@ -1008,37 +1001,37 @@ We didn't include a pathfinding system in the map. The presence of enemy bosses 
 
 Heroes can be upgraded by acquiring and spending gold, rather than through experience points as in traditional RPGs. Because each skill only has two levels, most skill upgrades result in mechanic-based rather than numerical improvements. Therefore, experience points become useless once a hero has maxed out all their skills. That's why we've eliminated the experience point system.
 
+<h1 id="conclusion" align="center">Conclusion</h1>
 
-### Conclusion
-**Reflecting on the Project as a Whole**
+## 8.1. **Reflection**
 
 Looking back, developing Gates of Cinder took us through the entire process of creating a game from scratch. We started with just an idea and gradually worked through planning, designing systems, coding, and testing. One thing that became obvious quite quickly was how connected everything is. Features like the event system, combat mechanics, and wave spawning didn’t exist independently they relied on each other to function properly. Because of this, progress often depended on other parts being finished first, which sometimes slowed us down but also showed how important coordination is in a project like this.
 
 Having a clear overall idea of what we wanted the game to be also made a big difference. Early on, we agreed that Gates of Cinder would combine tower defence with RPG style hero mechanics. That helped guide a lot of our decisions later. Whenever we disagreed on features or priorities, we could go back to that original idea and decide what actually fit the game.
 
-**Lessons Learnt**
+## 8.2. **Lessons Learnt**
 
 One of the biggest lessons we learned was about managing scope. At the start, we had a lot of ideas and wanted to include as many features as possible things like a shop system, skill tree, multiple heroes, extra maps, and an inventory system. In the end, this turned out to be too much for the time we had. Some of these features were started but never fully finished. If we were to do it again, we would focus much more on a smaller set of core features and make sure those are fully complete before adding anything extra.
 
 Communication was another important factor. We used WhatsApp, Microsoft Teams, and a Kanban board to keep track of progress and tasks. This helped everyone stay on the same page and made it easier to see what still needed to be done. Without that, it’s likely we would have wasted time or ended up duplicating work.
 
-**Challenges Faced**
+## 8.3. **Challenges Faced**
 
 The main challenge we faced was trying to balance what we wanted to achieve with what we could realistically complete. Early in the project, we were quite ambitious and began working on several features at once. However, as the deadline got closer, it became clear that we wouldn’t be able to finish everything to a good standard. Features like the shop system, hero selection (Archmage, Ranger, and Warrior), and the skill tree were all partially implemented but not fully completed. This showed us that incomplete features can actually be a problem, as they take time to develop but don’t fully add to the final product.
 
-Future Work
+## 8.4. **Future Work**
 
 If we had more time, the first thing we would focus on would be adding more enemies and maps. The way the game is currently structured makes this relatively straightforward, as enemy data is stored in JSON files and behaviours are handled in separate classes. This means new content could be added without major changes to the existing systems. Adding more variety would make the game more interesting and improve replayability.
 
 After that, it would make sense to finish the systems we already started, such as the shop and full hero selection. Since the groundwork for these features is already there, completing them would be a logical next step and would significantly improve the overall experience.
 
-# 8. Sustainability, Ethics, and Accessibility
+<h1 id="sustainability-ethics-and-accessibility" align="center">Sustainability, Ethics, and Accessibility</h1>
 
-**8.1 Sustainability Awareness Framework (SusAF)**
+## **9.1. Sustainability Awareness Framework (SusAF)**
 
 Our analysis of Gates of Cinder's broader impact is structured across three dimensions of the Sustainability Awareness Framework that were most directly influenced by our architectural and design decisions: environmental, social, and individual.
 
-**Environmental**
+## 9.2. **Environmental**
 
 Gates of Cinder is a fully client side browser application hosted on GitHub Pages. Following initial asset load, the game performs no further network requests and maintains no communication with external servers or third party services. This eliminates backend compute overhead entirely during active play sessions, which represents a meaningful reduction in transport and infrastructure costs compared to server dependent games.
 
@@ -1048,7 +1041,7 @@ Our asset pipeline also loads the complete set of sprites, audio, and map data a
 
 One efficiency that emerged from an unrelated decision is our audio implementation. Background music is stored as MIDI files and synthesised at runtime using Tone.js with sine wave oscillators. MIDI files are substantially smaller than compressed audio formats, and sine wave synthesis carries a lower computational cost than square or triangle wave alternatives. This approach was chosen primarily for sound quality and memory management reasons, but it coincidentally produces a more resource efficient audio pipeline.
 
-**Social**
+## 9.3. **Social**
 
 Accessibility considerations became a development priority following our Think Aloud usability evaluation, during which several participants demonstrated significant difficulty engaging with core game mechanics. Prior to those sessions, the game provided no onboarding, no contextual guidance, and no explanation of objectives. In response, we implemented a mandatory tutorial screen presenting controls and objectives before gameplay begins, a persistent instruction page accessible via the Escape key during play, and contextual tooltip overlays on the action bar and skill shop displaying skill cooldowns, mana costs, targeting types, and functional descriptions.
 
@@ -1056,13 +1049,13 @@ Three difficulty tiers — Easy, Normal, and Hard were introduced after evaluati
 
 Acknowledged gaps in the current build include the absence of a colourblind safe rendering mode, no UI scaling functionality for players with visual impairments, and no support for keyboard remapping. These represent concrete accessibility extensions that would be addressed in subsequent development iterations.
 
-**Individual**
+## 9.4. **Individual**
 
 Gates of Cinder implements no form of personal data collection. The application requires no user account, integrates no analytics framework, sets no cookies, and writes nothing to local or session storage. A player's entire interaction with the game exists within browser memory and is discarded completely when the session ends. This decision was made at the outset of development, as no gameplay feature justified introducing data collection infrastructure, particularly within the context of an academic project.
 
 Player autonomy is supported throughout the game's design. The spacebar pauses execution at any point, death results in a respawn mechanic rather than session termination, and no penalty is incurred for exiting mid-session. The game contains no streak systems, no score based social comparisons, and no engagement mechanics designed to extend session duration beyond the player's intent. These choices reflect a deliberate alignment with casual, low commitment play patterns that respect user agency and avoid the compulsive engagement loops common in commercially motivated game design.
 
-**8.2 Green Software Foundation Patterns**
+## **9.5 Green Software Foundation Patterns**
 
 **Patterns Present**
 
@@ -1079,7 +1072,7 @@ Optimise Asset Dimensions: Several sprites are stored at resolutions exceeding t
 
 Minify JavaScript Dependencies: Replacing development builds of p5.js and Tone.js with their minified equivalents would reduce the initial script payload delivered on first load.
 
-### Contribution to Development Process
+<h1 id="contribution" align="center">Contribution</h1>
 
 <div align="center">
 
@@ -1101,7 +1094,7 @@ Minify JavaScript Dependencies: Replacing development builds of p5.js and Tone.j
 Team Contributions
 </div>
 
-### References
+<h1 id="references" align="center">References</h1>
 
 
 1. Reynolds, C.W. (1999) ‘Steering behaviors for autonomous characters’, *Game Developers Conference*, pp. 763–782.
@@ -1111,13 +1104,8 @@ Team Contributions
 3. Unity Technologies (2026) *Animator Controller*. Unity Documentation. Available at: https://docs.unity3d.com/Manual/AnimatorControllers.html (Accessed: 27 April 2026).
 
 4. Rabin, S. (2015) *Game AI Pro 2*. Boca Raton: CRC Press.
-   
-### Additional Marks
 
-You can delete this section in your own repo, it's just here for information. in addition to the marks above, we will be marking you on the following two points:
 
-- **Quality** of report writing, presentation, use of figures and visual material (5% of report grade) 
-  - Please write in a clear concise manner suitable for an interested layperson. Write as if this repo was publicly available.
-- **Documentation** of code (5% of report grade)
-  - Organise your code so that it could easily be picked up by another team in the future and developed further.
-  - Is your repo clearly organised? Is code well commented throughout?
+<h1 id="ai-statement" align="center">AI Statement</h1>
+
+**Need to add**
