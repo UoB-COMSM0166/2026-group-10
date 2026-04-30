@@ -226,17 +226,6 @@ The game mechanics draw from the energy of two famous games Like Kingdom Rush an
 </table>
 
 
-### UI/UX inspiration
-Our game UI is deeply inspired by diablo game which suits our game title and overall game.The hero's design is inspired by World of Warcraft. The skill icons are taken  from a fantasy RPG icon asserts pack from Unreal Engine Market
-<p align="center">
-
-| Diablo | Warcraft | Icons |
-|--------|----------|-------|
-| <img src="images/diablo start menu.jpg" width="300"/> | <img src="images/warcraft.jpg" width="300"/> | <img src="images/icons.jpg" width="300"/> |
-
-</p>
-
-
 ## 3.2. Stakeholders
 
 The stakeholder diagram tells the different groups of people and elements involved in development of our game.The first layer is the game itself,follwed by direct stakeholders,indirect stakeholders,external stake holders and wider environment which helps in binding all layers.
