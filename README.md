@@ -1143,6 +1143,6 @@ We used AI in various parts of our project.We used it places such as Generation 
 
 GAME ASSETS: We used Gemini to generate hero images to upload in our frontend and character selection as known of our teammates where well versed in creating arts in digital format.But we had experience in drawing it in a paper,So we drew by hand and the digital version of it given by gemini.
 
-CODE: We used co-pilot for reference and inspiration of the logic,but no code in our game is AI generated.
+CODE: We used co-pilot for reference and inspiration of the logic,correction of some syntax and improve readabilty of code and some comment suggestions code,but however debugging,game mechanics,frontend,intergration were done by the team.
 
-REPORT: We used AI for checking grammar of the report.
+REPORT: We used AI for checking grammar of the report,word clarity and structring the readme file but all the content is  done and reviwed by the team.
