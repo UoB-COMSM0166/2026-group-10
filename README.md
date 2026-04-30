@@ -335,6 +335,8 @@ The use case diagram illustrates the interaction of player with our game Gates o
 
 ![Inital Game Layout](images/initalPrototype.jpg)
 
+![Inital Game Layout](images/sketchh.jpeg)
+
 
 <h4 align=“left">Feature Priority</h3>
 
