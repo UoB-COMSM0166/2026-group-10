@@ -239,7 +239,7 @@ Our game UI is deeply inspired by diablo game which suits our game title and ove
 
 ## 3.2. Stakeholders
 
-**Add Description of Onion Model! What’s its purpose? What does it capture? Why do we need it?**
+The stakeholder diagram tells the different groups of people and elements involved in development of our game.The first layer is the game itself,follwed by direct stakeholders,indirect stakeholders,external stake holders and wider environment which helps in binding all layers.
 
 <img width="1200" height="896" alt="chart" src="images/OnionDiagram.jpg" />
 
