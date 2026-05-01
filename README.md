@@ -286,7 +286,7 @@ Acceptance criteria: Given that I am playing the game, when I have successfully 
 
 ## 3.4. Use Case Diagram
 
-<img width="1200" height="896" alt="chart" src="images/usecase.png" />
+<img width="1200" height="896" alt="chart" src="images/usecasediagram.jpeg" />
 
 The use case diagram outlines the primary ways a player interacts with the game, ranging from engaging with the lore to selecting a hero and choosing a difficulty level. It maps out the essential game flow and core objectives, detailing how players navigate through various features. The table below provides a concise summary of the interactions shown in the diagram.
 
