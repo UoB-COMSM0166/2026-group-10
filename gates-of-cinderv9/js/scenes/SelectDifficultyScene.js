@@ -1,0 +1,37 @@
+class SelectDifficultyScene {
+    constructor(backgroundImage) {
+        this.backgroundImage = backgroundImage;
+        this.easyButton = new Button(515, 230, 200, 75, "Easy", () => {
+            gameState.selectedDifficulty = "easy";
+            activeScene = new SelectCharacterScene(generalBackground);
+        });
+        this.mediumButton = new Button(515, 320, 200, 75, "Medium", () => {
+            gameState.selectedDifficulty = "medium";
+            activeScene = new SelectCharacterScene(generalBackground);
+        });
+        this.HardButton = new Button(515, 410, 200, 75, "Hard", () => {
+            gameState.selectedDifficulty = "hard";
+            activeScene = new SelectCharacterScene(generalBackground);
+        });
+        this.backButton = new Button(20, 600, 100, 50, "Back", () => {
+            activeScene = new MenuScene(menuBackground);
+        });
+     }
+
+     display() {
+        image(this.backgroundImage, 0, 0, width, height);
+        this.easyButton.display();
+        this.mediumButton.display();
+        this.HardButton.display();
+        this.backButton.display();
+     }
+
+     mousePressed() {
+        this.easyButton.wasIClicked();
+        this.mediumButton.wasIClicked();
+        this.HardButton.wasIClicked();
+        this.backButton.wasIClicked();
+     }
+
+
+    }
